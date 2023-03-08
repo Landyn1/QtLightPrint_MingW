@@ -1,11 +1,10 @@
 ﻿#pragma once
-
 #include <QtWidgets/QMainWindow>
 #include "ui_mainWindow.h"
 #include"MyGraphicsView.h"
 #include"MyGraphicsScene.h"
+#include"PrintParams.h"
 extern int action_state;
-
 class mainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -20,10 +19,10 @@ public:
 
     Ui::mainWindowClass ui;
     void initConnect();
-    
+    PrintParams print_layer[255];
+    bool setLayer(int i, PrintParams p);
 
-
-    
+    bool printItem();
 };
 
 class MyWidget : public QWidget

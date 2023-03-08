@@ -20,14 +20,17 @@ public:
 	}
 
 	~MyGraphicsRecItem();
+	QRectF boundingRect() const;
+	QPainterPath shape() const;
 	//QRectF boundingRect() const;
 	//QPainterPath shape() const;
 	//QRectF boundingRect() const override;
 	//QPainterPath shape() const override;
-
+	QPainterPath ViewPath();
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 	QString name = "";
+	int printLayer = 0;
 private:
 	void initVaiables();
 };

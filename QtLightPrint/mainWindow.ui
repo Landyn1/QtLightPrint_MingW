@@ -1745,7 +1745,7 @@
       <string>TextLabel</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="markButton">
      <property name="geometry">
       <rect>
        <x>270</x>
@@ -1755,7 +1755,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Mark</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_5">

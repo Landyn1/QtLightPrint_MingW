@@ -16,28 +16,30 @@ MyGraphicsRecItem::MyGraphicsRecItem(QGraphicsItem *parent)
 MyGraphicsRecItem::~MyGraphicsRecItem()
 {}
 
-//QRectF MyGraphicsRecItem::boundingRect() const
-//{
-//    QRectF temp_rect = rect().adjusted(-10, -10, 10, 10);
-//    return temp_rect;
-//	
-//}
+QRectF MyGraphicsRecItem::boundingRect() const
+{
+    QRectF temp_rect = rect();
+    return temp_rect;
+	
+}
 //
-//QPainterPath MyGraphicsRecItem::shape() const
-//{
-//    QPainterPath temp;
-//    float temp_safe_dis = 10 / 1;
-//
-//    QRectF temp_rect = rect();
-//    temp.addRect(temp_rect);
-//
-//    QPainterPathStroker ps;
-//
-//    ps.setWidth(temp_safe_dis * 2);
-//    QPainterPath p = ps.createStroke(temp);
-//
-//    return p;
-//}
+QPainterPath MyGraphicsRecItem::shape() const
+{
+    QPainterPath temp;
+
+    QRectF temp_rect = rect();
+    temp.addRect(temp_rect);
+    return temp;
+}
+
+QPainterPath MyGraphicsRecItem::ViewPath()
+{
+
+    QPainterPath path;
+    QRectF temp(mapToScene(rect()).value(3).x(), mapToScene(rect()).value(3).y(), rect().width(), rect().height());
+    path.addRect(temp);
+    return path;
+}
 
 void MyGraphicsRecItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {

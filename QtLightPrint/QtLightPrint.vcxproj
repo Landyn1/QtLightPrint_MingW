@@ -230,12 +230,14 @@
     <ClCompile Include="MyleftKedu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainWindow.cpp" />
+    <ClCompile Include="PrintParams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CUDrvE.h" />
     <ClInclude Include="MyGraphicsCircleItem.h" />
     <ClInclude Include="MyGraphicsEllipseItem.h" />
     <ClInclude Include="MyGraphicsRecItem.h" />
+    <ClInclude Include="PrintParams.h" />
     <QtMoc Include="MyGraphicsScene.h">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DynamicSource>
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</DynamicSource>

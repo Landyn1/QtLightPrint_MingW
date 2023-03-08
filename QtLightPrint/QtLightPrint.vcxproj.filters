@@ -80,6 +80,9 @@
     <ClCompile Include="mainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PrintParams.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CUDrvE.h">
@@ -115,6 +118,9 @@
     <QtMoc Include="mainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="PrintParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\moc_MyGraphicsScene.cpp">

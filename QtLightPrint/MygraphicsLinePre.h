@@ -44,7 +44,7 @@ public:
     }
     void setrect(QRectF rectt)
     {
-        qDebug() << rectt <<"    set" << endl;
+        //qDebug() << rectt <<"    set" << endl;
         rect = rectt;
         update();
     }

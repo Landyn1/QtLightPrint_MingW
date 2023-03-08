@@ -36,7 +36,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
     double x1 = offset*scale;
     double width1 = viewWidth ;
 
-    qDebug() << width1 << endl;
+    //qDebug() << width1 << endl;
 
     painter->scale(1, -1);
     painter->translate(0, 0);
@@ -80,7 +80,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
     {
         temp = temp1 + 1;
     }
-    qDebug() << temp << x2 << "ddd" << endl;
+    //qDebug() << temp << x2 << "ddd" << endl;
    // int i = x2 * 1000 + 0.5;
    // int x = t / scale * 1000 + 0.5;
     if (scale >= 1.9 || scale <1)
@@ -110,7 +110,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
             }
             if (i == 0)
             {
-                qDebug() << "" << endl;
+                //qDebug() << "" << endl;
             }
             ++temp;
         }

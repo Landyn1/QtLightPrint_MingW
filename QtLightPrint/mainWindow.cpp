@@ -8,6 +8,7 @@
 #include<qlist.h>
 #include<QInputDialog.h>
 #include "MyKedu.h"
+#include"CUDrvE.h"
 int action_state;
 mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -447,31 +448,7 @@ void mainWindow::initConnect()
         setItemMoveble(false);
         });
 
-    connect(ui.bianji_8, &QPushButton::clicked, this, [=]() {
-        QList<QGraphicsItem*> items = scene->items();
-        for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
-        {
-            QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            
-            int id1 = node->data(0).value<int>();
-                if (node->type() == 1)
-                {
-                    MyGraphicsRecItem* rect;
-                    rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
-                    //qDebug() << id1 << rect->name << endl;
-                    if (id1 == 1)
-                    {
-                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                        rect->setSelected(true);
-                       
-                        scene->update();
-                    }
-                        
-                }
-            }
-
-        
-        });
+    
 
 
     connect(scene,&QGraphicsScene::selectionChanged, [=]() {
@@ -525,7 +502,7 @@ void mainWindow::initConnect()
         });
 
     
-
+    connect(ui.markButton, &QPushButton::clicked, this, &mainWindow::printItem);
     
 }
 
@@ -548,3 +525,46 @@ void mainWindow::setItemMoveble(bool moveble)
 
 mainWindow::~mainWindow()
 {}
+
+
+
+
+bool mainWindow::setLayer(int i, PrintParams p)
+{
+    try
+    {
+        print_layer[i].processnums = p.processnums;
+        print_layer[i].speed = p.speed;
+        print_layer[i].power = p.power;
+        print_layer[i].frequence = p.frequence;
+        print_layer[i].maikuan = p.maikuan;
+        print_layer[i].openDelay = p.openDelay;
+        print_layer[i].closeDelay = p.closeDelay;
+        print_layer[i].endDelay = p.endDelay;
+        print_layer[i].turnDelay = p.turnDelay;
+        return true;
+    }
+    catch (const std::exception&)
+    {
+        return false;
+    }
+}
+
+bool mainWindow::printItem()
+{
+    QList<QGraphicsItem*> items = scene->items();
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        int id = node->data(0).value<int>();
+        if (node->type() == 1 && id>0)
+        {
+            MyGraphicsRecItem* rect = qgraphicsitem_cast<MyGraphicsRecItem*>(*it);
+            qDebug() << rect->ViewPath() << endl;
+            
+        }
+       
+
+    }
+    return true;
+}

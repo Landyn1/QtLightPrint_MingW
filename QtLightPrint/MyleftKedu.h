@@ -33,6 +33,12 @@ public:
         offset = value;
         update();
     }
+
+    void setViewHeight(double value)
+    {
+        viewHeight = value;
+        update();
+    }
 private:
     QColor backgroundColor{ Qt::white };//背景色
     QColor textAndLineColor{ Qt::black };//文本和刻度颜色
@@ -44,4 +50,5 @@ private:
     float horizontalDPI;
     float verticalDPI;
     double scale = 1;
+    double viewHeight = 0;
 };

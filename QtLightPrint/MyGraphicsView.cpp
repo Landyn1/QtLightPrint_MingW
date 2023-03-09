@@ -222,6 +222,9 @@ void MyGraphicsView::wheelEvent(QWheelEvent* event)
     int wheelDeltaValue = event->delta();
     // 向上滚动，放大
     qreal currentscale = this->matrix().m11();
+
+    int ccc = currentscale * 100 + 0.5;
+    currentscale = qreal(ccc) / 100;
     QString str;
     int t = 1;
 
@@ -559,8 +562,8 @@ void MyGraphicsView::preProcessItem()
     scene()->addItem(myGrid);
     
     //左侧刻度
-    //leftkedu->setZValue(3);
-    //scene()->addItem(leftkedu);
+    leftkedu->setZValue(3);
+    scene()->addItem(leftkedu);
     topkedu->setZValue(3);
     scene()->addItem(topkedu);
 }

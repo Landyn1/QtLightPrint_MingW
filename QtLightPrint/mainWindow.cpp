@@ -174,21 +174,13 @@ mainWindow::mainWindow(QWidget *parent)
 
 
 
-  //  RulerWidget* leftRuler = new RulerWidget(Qt::Vertical);
-  //  ui.dock_leftKedu->setWidget(leftRuler);
-//leftRuler->setSlidingLinePos(27);
     connect(view->verticalScrollBar(), &QScrollBar::valueChanged, [=]
         {
-           // leftRuler->setOffset(-view->mapToScene(0, 0).y());
             view->topkedu->setPos(0, view->mapToScene(0, 0).y() );
             view->myGrid->setshuzhi_Offset(view->mapToScene(0, 0).y());
             view->mainarea->setOffset(view->mapToScene(0, 0).y());
             view->leftkedu->setOffset(view->mapToScene(0, 0).y());
-            /*qDebug() << view->mapToScene(0, 0).y() << "y" << endl;
-            qDebug() << view->size() << endl;*/
-            //view->myGrid->setrect(QRectF(view->mapToScene(0, 0).x(), view->mapToScene(0, 0).y(), view->size().width(), view->size().height()));
-            //view->myGrid->setrect(view->sceneRect());
-           // view->myGrid->setrect(QRectF(-385, 312, 794, 648));
+            view->leftkedu->setViewHeight(view->size().height());
             scene->update();
         });
 
@@ -198,11 +190,8 @@ mainWindow::mainWindow(QWidget *parent)
             view->topkedu->setPos(0, view->mapToScene(0, 0).y());
             view->myGrid->setshuzhi_Offset(view->mapToScene(0, 0).y());
             view->mainarea->setOffset(view->mapToScene(0, 0).y());
-           // qDebug() << view->mapToScene(0, 0).y() << "y" << endl;
-           // view->leftkedu->setOffset(view->mapToScene(0, 0).y());
-           // qDebug() << view->size() << endl;
             view->myGrid->setrect(view->sceneRect());
-            
+            view->leftkedu->setViewHeight(view->size().height());
             scene->update();
         });
     //ui.dock_leftKedu->setVisible(false);
@@ -553,6 +542,7 @@ bool mainWindow::setLayer(int i, PrintParams p)
 bool mainWindow::printItem()
 {
     QList<QGraphicsItem*> items = scene->items();
+    CULaserOut(ST_MO, 1, 3);
     for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
@@ -560,11 +550,75 @@ bool mainWindow::printItem()
         if (node->type() == 1 && id>0)
         {
             MyGraphicsRecItem* rect = qgraphicsitem_cast<MyGraphicsRecItem*>(*it);
-            qDebug() << rect->ViewPath() << endl;
-            
+            LightDraw(rect->ViewPath(), node, 1);           
         }
        
+        
+    }
+    CULaserOut(ST_MO, 0, 3);
+    return true;
+}
 
+bool mainWindow::LightDraw(QPainterPath path,QGraphicsItem *item,int type)
+{
+    switch (type)
+    {
+    case 1:
+        MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
+        
+        unsigned int speed = print_layer[rect->printLayer].speed/100*65536;//转化
+        CUSchSetSpeed(speed, 3);
+        unsigned int power = print_layer[rect->printLayer].power*2.56; //0-255之间代表0-100
+        CULaserOut(ST_DATA, power, 3);
+        unsigned int frequnce = print_layer[rect->printLayer].frequence * 1000;
+        CUSetPWM(PWM2, frequnce, 3, false);
+        unsigned int openDealy = print_layer[rect->printLayer].openDelay;
+        unsigned int closeDealy = print_layer[rect->printLayer].closeDelay;
+        unsigned int endDealy = print_layer[rect->printLayer].endDelay;
+        unsigned int turnDealy = print_layer[rect->printLayer].turnDelay;
+        CUSetOpenDelayUs(openDealy,3);//2023-1-12
+        CUSetCloseDelayUs(closeDealy, 3);//2023-1-13
+        CUSetTuneDelayUs(turnDealy, 3);//2023-1-13        
+        //结束延时没找到啊
+
+        //开始画
+        //QPolygonF polu = path.toFillPolygon();
+
+        for (int i = 0; i < path.elementCount(); i++)
+        {
+            QPainterPath::Element element = path.elementAt(i);
+            QPointF po = element;
+            QPoint printpo = view2print(po);
+            qDebug() << printpo << endl;
+            if (element.isMoveTo())
+            {
+                CUSchJmpLinear(printpo.x(), printpo.y(), 3);
+            }
+            else if (element.isLineTo())
+            {
+                CUSchOutLinear(printpo.x(), printpo.y(), 3);
+            }
+        }
+        break;
     }
     return true;
+
+}
+
+QPoint mainWindow::view2print(QPointF position)
+{
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
+    auto tx = (dpiX * 10) / 254;
+    auto ty = (dpiY * 10) / 254;
+
+    QPointF p(position.x() / tx, position.y() / ty);
+
+    int x = p.x() * 1000 + 0.5;
+    int y = p.y() * 1000 + 0.5;
+    double xx = double(x) / 1000;
+    double yy = double(y) / 1000;
+    QPointF pf((xx+50.000)*655.36, (yy+50.000)*655.36);
+    QPoint pp = pf.toPoint();
+    return pp;
 }

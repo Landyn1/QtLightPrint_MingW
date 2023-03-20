@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/draw">
+        <file>Res/Font.png</file>
+        <file>Res/Line.png</file>
+        <file>Res/Rectangle.png</file>
+        <file>Res/RegularPolygon.png</file>
+        <file>Res/Select.png</file>
+        <file>Res/Select-origin.png</file>
+        <file>Res/Circle.png</file>
+        <file>Res/Ellipse.png</file>
+    </qresource>
+</RCC>

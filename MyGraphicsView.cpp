@@ -25,6 +25,7 @@
 #include"MyMianArea.h"
 #include "MygraphicsLinePre.h"
 #include<math.h>
+#include<qcursor.h>
 MyGraphicsView::MyGraphicsView(QWidget *parent)
 	: QGraphicsView(parent)
 {
@@ -34,6 +35,24 @@ MyGraphicsView::MyGraphicsView(QWidget *parent)
 
 MyGraphicsView::~MyGraphicsView()
 {}
+
+
+void MyGraphicsView::leaveEvent(QEvent *event)
+{
+
+    if(isPaintLine )
+    {
+        emit mouseleave(0);
+    }
+    else if(isPaintCurve)
+    {
+        emit mouseleave(1);
+    }
+    else
+    {
+        emit mouseleave(2);
+    }
+}
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {

@@ -25,6 +25,7 @@ public:
     bool LightDraw(QPainterPath path, QGraphicsItem* item, int type);
     bool printItem();
     QPoint view2print(QPointF position);
+    int kkkk = 2;
 };
 
 class MyWidget : public QWidget

@@ -10,6 +10,7 @@
 #include "MyKedu.h"
 #include"CUDrvE.h"
 #include<iostream>
+#include<qmessagebox.h>
 using namespace std;
 int action_state;
 int k;
@@ -553,38 +554,163 @@ mainWindow::mainWindow(QWidget *parent)
 
 void mainWindow::initConnect()
 {
+
+    connect(view,&MyGraphicsView::mouseleave,this,[&](int k){
+       kkkk=k;
+
+    });
+
+
     connect(ui.draw_sanjiao, &QPushButton::clicked, this, [&]() {
-        action_state = 1;
-        setItemMoveble(false);
+
+        if(kkkk == 2)
+        {
+            action_state = 1;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+
         });
     connect(ui.bianji, &QPushButton::clicked, this, [&]() {
-        action_state = 0;
-        setItemMoveble(true);
+        if(kkkk == 2)
+        {
+            action_state = 0;
+            setItemMoveble(true);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
         });
     connect(ui.draw_yuan, &QPushButton::clicked, this, [&]() {
-        action_state = 3;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 3;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
         });
     connect(ui.draw_ellipse, &QPushButton::clicked, this, [&]() {
-        action_state = 2;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 2;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
         });
 
     connect(ui.draw_line, &QPushButton::clicked, this, [&]() {
-        action_state = 4;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 4;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        else
+        {
+
+        }
         });
     connect(ui.draw_polygon, &QPushButton::clicked, this, [&]() {
-        action_state = 5;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 5;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
         });
     connect(ui.draw_wenzi, &QPushButton::clicked, this, [&]() {
-        action_state = 6;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 6;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
         });
     connect(ui.draw_quline, &QPushButton::clicked, this, [&]() {
-        action_state = 7;
-        setItemMoveble(false);
+        if(kkkk == 2)
+        {
+            action_state = 7;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
         });
 
     connect(scene,&QGraphicsScene::selectionChanged, [=]() {

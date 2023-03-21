@@ -48,6 +48,9 @@ public:
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+
+    //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     MyKedu* topkedu = new MyKedu();
     MygraphicsLinePre* myGrid = new MygraphicsLinePre();
     MyMianArea* mainarea = new MyMianArea(NULL);
@@ -109,4 +112,6 @@ signals:
     void mouseMovePos(QPoint p);
     void ScaleChanged(double p);
     void addItem(int row,QGraphicsItem * item);
+
+    void mouseleave(int k);
 };

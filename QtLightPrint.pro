@@ -28,6 +28,7 @@ HEADERS += ./CUDrvE.h \
     ./mainWindow.h \
     mygraphicscurvelineitem.h \
     mygraphicslineitem.h \
+    mygraphicspixmapitem.h \
     mygraphicspolygonitem.h \
     mygraphicstextitem.h
 SOURCES += ./ItemAdjust.cpp \
@@ -45,6 +46,7 @@ SOURCES += ./ItemAdjust.cpp \
     ./PrintParams.cpp \
     mygraphicscurvelineitem.cpp \
     mygraphicslineitem.cpp \
+    mygraphicspixmapitem.cpp \
     mygraphicspolygonitem.cpp \
     mygraphicstextitem.cpp
 FORMS += ./mainWindow.ui

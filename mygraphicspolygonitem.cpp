@@ -1,6 +1,7 @@
 #include "mygraphicspolygonitem.h"
 #include<complex>
 #include<math.h>
+#include"MyGraphicsView.h"
 MyGraphicsPolygonItem::MyGraphicsPolygonItem(QGraphicsRectItem *parent) : QGraphicsRectItem(parent)
 {
 
@@ -16,10 +17,12 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
 {
 
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
-    //pen.setColor(QColor(0, 160, 230));
-    pen.setWidthF(1);
+   //pen.setColor(QColor(0, 160, 230));
+    QList<QGraphicsView*> list = scene()->views();
+    QGraphicsView* view = list.first();
+    double s = view->matrix().m11();
+    pen.setWidthF(1/s);
     painter->setPen(pen);
-
     //QPolygonF p;
     QPainterPath p;
     p.moveTo(QPointF(0,rect().height()/2));

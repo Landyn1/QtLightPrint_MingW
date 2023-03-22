@@ -16,6 +16,7 @@
 #include"mygraphicspolygonitem.h"
 #include"mygraphicstextitem.h"
 #include"mygraphicscurvelineitem.h"
+#include"mygraphicspixmapitem.h"
 class QMenu;
 class QMouseEvent;
 class QResizeEvent;
@@ -94,6 +95,7 @@ private:
     QPainterPath                        *_tempCurvePath = new QPainterPath();
     MyGraphicsPolygonItem               *_tempPolygonItemPtr = new MyGraphicsPolygonItem();
     MyGraphicsTextItem                  *_tempTextItemPtr = new MyGraphicsTextItem();
+    MyGraphicsPixMapItem                *_tempPixMapItemPtr = new MyGraphicsPixMapItem();
     QStatusBar* _statusBarPtr;             // 指向主窗口状态栏的对象
     QLabel* _posLabel;                 // 状态栏位置指示对象
     QLabel* _objLabel;                 // 状态栏对象指示

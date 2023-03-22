@@ -11,6 +11,8 @@
 #include"CUDrvE.h"
 #include<iostream>
 #include<qmessagebox.h>
+#include<qfiledialog.h>
+#include<qimagereader.h>
 using namespace std;
 int action_state;
 int k;
@@ -122,9 +124,6 @@ mainWindow::mainWindow(QWidget *parent)
     view->setStatusBarPtr(ui.statusBar);
 
 
-    //QPen pen;   // 瀹氫箟涓?涓敾绗旓紝璁剧疆鐢荤瑪棰滆壊鍜屽搴?
-    //pen.setColor(QColor(0, 160, 230));
-    //pen.setWidth(10);
     scene->setBackgroundBrush(Qt::white);
     scene->setSceneRect(-10000, -10000, 20000, 20000);
     view->setAlignment(Qt::AlignCenter);
@@ -156,7 +155,7 @@ mainWindow::mainWindow(QWidget *parent)
             scene->update();
         });
 
-    //璁剧疆鍙充晶琛ㄦ牸
+
     //ui.colortable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
     ui.colortable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -164,7 +163,7 @@ mainWindow::mainWindow(QWidget *parent)
     
     ui.dock_leftKedu->setVisible(false);
     ui.dock_topKedu->setVisible(false);
-    //璁剧疆琛ㄦ牸
+    //设置图元表
     ui.itemtable->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);//楂樺害鍥哄畾
     ui.itemtable->verticalHeader()->setDefaultSectionSize(20);
     //ui.itemtable->setFrameShape(QFrame::NoFrame);
@@ -211,7 +210,7 @@ mainWindow::mainWindow(QWidget *parent)
             view->topkedu->setslidingLinePos(pos.x());
         });
 
-    //缂╂斁鐨勪俊鍙峰拰妲?
+    //调整scale
     connect(view, &MyGraphicsView::ScaleChanged, [=](double scale)
         {
            // topRuler->setscale(scale);
@@ -223,11 +222,10 @@ mainWindow::mainWindow(QWidget *parent)
             scene->update();
         });
     
-    //娣诲姞琛ㄦ牸淇℃伅鐨勪俊鍙峰拰妲?
+    //添加
     connect(view, &MyGraphicsView::addItem,ui.itemtable, [=](int row,QGraphicsItem * item) {
         int type = item->type();
         row = scene->items().length()-12;
-        qDebug()<<row<<endl;
         QTableWidgetItem* item0;
         QTableWidgetItem* item1;
         QTableWidgetItem* item2;
@@ -328,7 +326,7 @@ mainWindow::mainWindow(QWidget *parent)
         });
 
 
-    //鍙屽嚮琛ㄦ牸淇敼鍚嶇О
+    //修改名字
     connect(ui.itemtable, &QTableWidget::itemDoubleClicked, this, [&]() {
         int row = ui.itemtable->currentRow();
         QTableWidgetItem* item1 = new QTableWidgetItem;
@@ -420,7 +418,7 @@ mainWindow::mainWindow(QWidget *parent)
 
 
 
-    //鍗曞嚮鏌愯鑾峰彇鍥惧厓淇℃伅
+    //显示坐标
     connect(ui.itemtable, &QTableWidget::itemSelectionChanged, this, [&]() {
         QList<QTableWidgetItem*> selectItems = ui.itemtable->selectedItems();
         QSet<int> rows;
@@ -473,11 +471,105 @@ mainWindow::mainWindow(QWidget *parent)
                         if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
                         {
                             youshangy = rect->mapToScene(rect->rect()).value(2).y();
-                        }
-                        
-                        
+                        }                        
                         scene->update();
                         
+                    }
+
+                    else if(node->type() == 2)
+                    {
+                        MyGraphicsEllipseItem* rect;
+                        rect = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                        if (action_state == 0)
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        rect->setSelected(true);
+                        if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                        {
+                            zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                        }
+                        if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                        {
+                            zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                        }
+                        if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                        {
+                            youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                        }
+                        if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                        {
+                            youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                        }
+                        scene->update();
+                    }
+
+                    else if(node->type() == 3)
+                    {
+                        MyGraphicsCircleItem* rect;
+                        rect = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                        if (action_state == 0)
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        rect->setSelected(true);
+                        if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                        {
+                            zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                        }
+                        if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                        {
+                            zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                        }
+                        if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                        {
+                            youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                        }
+                        if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                        {
+                            youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                        }
+                        scene->update();
+                    }
+
+                    else if(node->type() == 4)
+                    {
+                        MyGraphicsLineItem* line;
+                        line = qgraphicsitem_cast<MyGraphicsLineItem*>(node);
+                        if (action_state == 0)
+                        {
+                            line->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            line->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        line->setSelected(true);
+                        if (zuoxiax > line->getRect().x())
+                        {
+                            zuoxiax = line->getRect().x();
+                        }
+                        if (zuoxiay > line->getRect().y())
+                        {
+                            zuoxiay = line->getRect().y();
+                        }
+                        if (youshangx < line->getRect().x()+line->getRect().width())
+                        {
+                            youshangx = line->getRect().x()+line->getRect().width();
+                        }
+                        if (youshangy < line->getRect().y()+line->getRect().height())
+                        {
+                            youshangy = line->getRect().y()+line->getRect().height();
+                        }
+                        scene->update();
                     }
                 }
             }
@@ -519,23 +611,19 @@ mainWindow::mainWindow(QWidget *parent)
                 int id1 = node->data(0).value<int>();
                 if (node->isVisible() && id == QString::number(id1))
                 {
-                    if (node->type() == 1)
-                    {
-                        MyGraphicsRecItem* rect;
-                        rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
-                        
+
                         if (action_state == 0)
                         {
-                            rect->setSelected(false);
+                            node->setSelected(false);
                         }
                         else
                         {
-                            rect->setSelected(false);
-                            rect->setFlags(NULL);
+                            node->setSelected(false);
+                            node->setFlags(NULL);
                             
                         }                      
                         scene->update();
-                    }
+
                 }
             }
         }
@@ -713,6 +801,51 @@ void mainWindow::initConnect()
         }
         });
 
+
+
+    connect(ui.draw_pixmap, &QPushButton::clicked, this, [&]() {
+        if(kkkk == 2)
+        {
+            action_state = 8;
+            MyGraphicsPixMapItem *item = new MyGraphicsPixMapItem();
+            QFileDialog dialog(this);
+            QStringList fileNames;
+            dialog.setNameFilter("Images (*.png *.xpm *.jpg)");
+            if (dialog.exec()) {
+                fileNames = dialog.selectedFiles();
+                QString fileName = fileNames[0];
+                if (QImageReader::imageFormat(fileName) == "") {
+                    QMessageBox::warning(this, "Error", "Selected file is not an image file.");
+                } else {
+                    QPixmap pixmap(fileName);
+                    item->setPixmap(pixmap);
+                    int w,h;
+                    w=item->boundingRect().width();
+                    h = item->boundingRect().height();
+                    item->setPos(-w/2,-h/2);
+                    scene->addItem(item);
+                }
+            }
+
+
+
+
+
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        });
     connect(scene,&QGraphicsScene::selectionChanged, [=]() {
         QList<QGraphicsItem*> items = scene->selectedItems();
         QList<int> ids;
@@ -740,7 +873,7 @@ void mainWindow::initConnect()
                     ui.itemtable->setItemSelected(ui.itemtable->item(i, 1), true);
                     ui.itemtable->blockSignals(false);
                     ui.itemtable->setItemSelected(ui.itemtable->item(i, 2), true);
-                    
+
                     //ui.itemtable->setItemSelected(ui.itemtable->item(i, 3), true);
                     k = 1;
                     break;
@@ -774,37 +907,74 @@ void mainWindow::initConnect()
         w = -5000;
         h = -5000;
 
+
         //先确定左下角的坐标
-        qDebug()<<"选中的有"<<endl;
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            qDebug()<<node->data(0)<<endl;
-            switch (node->type())
+
+            if(node->type() == 1)
             {
-            case 1:
                 MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-                
+
                 if (x > rect->mapRectToScene(rect->rect()).x())
                 {
                     x = rect->mapRectToScene(rect->rect()).x();
-                 
+
                 }
                 if (y > rect->mapRectToScene(rect->rect()).y())
                 {
                     y = rect->mapRectToScene(rect->rect()).y();
                 }
-              
-                break;
             }
+            else if( node ->type() == 2)
+            {
+                MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+
+                if (x > item->mapRectToScene(item->rect()).x())
+                {
+                    x = item->mapRectToScene(item->rect()).x();
+
+                }
+                if (y > item->mapRectToScene(item->rect()).y())
+                {
+                    y = item->mapRectToScene(item->rect()).y();
+                }
+            }
+            else if(node->type() == 3)
+            {
+                MyGraphicsCircleItem * item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
+
+                if (x > item->mapRectToScene(item->rect()).x())
+                {
+                    x = item->mapRectToScene(item->rect()).x();
+
+                }
+                if (y > item->mapRectToScene(item->rect()).y())
+                {
+                    y = item->mapRectToScene(item->rect()).y();
+                }
+            }
+            else if(node->type() == 4)
+            {
+                MyGraphicsLineItem * item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+                if(x > item->getRect().x())
+                {
+                    x = item->getRect().x();
+                }
+                if(y > item->getRect().y())
+                {
+                    y = item->getRect().y();
+                }
+            }
+
         }
         //再确定宽高
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            switch (node->type())
+            if(node->type() == 1)
             {
-            case 1:
                 MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
                 if (w < rect->mapToScene(rect->rect()).value(1).x() - x)
                 {
@@ -815,9 +985,46 @@ void mainWindow::initConnect()
                 {
                     h = rect->mapToScene(rect->rect()).value(2).y() - y;
                 }
-                break;
+            }
+            else if(node->type()==2)
+            {
+                MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                if (w < item->mapToScene(item->rect()).value(1).x() - x)
+                {
+                    w = item->mapToScene(item->rect()).value(1).x() - x;
+
+                }
+                if (h < item->mapToScene(item->rect()).value(2).y() - y)
+                {
+                    h = item->mapToScene(item->rect()).value(2).y() - y;
+                }
+            }
+            else if(node->type() == 3)
+            {
+                MyGraphicsCircleItem * item = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                if (w < item->mapToScene(item->rect()).value(1).x() - x)
+                {
+                    w = item->mapToScene(item->rect()).value(1).x() - x;
+                }
+                if (h < item->mapToScene(item->rect()).value(2).y() - y)
+                {
+                    h = item->mapToScene(item->rect()).value(2).y() - y;
+                }
+            }
+            else if(node->type() == 4)
+            {
+                MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+                if(w<item->getRect().x()+item->getRect().width() - x)
+                {
+                    w = item->getRect().x()+item->getRect().width() - x;
+                }
+                if(h<item->getRect().y()+item->getRect().height() - y)
+                {
+                    h = item->getRect().y()+item->getRect().height() - y;
+                }
             }
         }
+
         view->itemad->setPos(x - 10 / view->itemad->scale, y - 10 / view->itemad->scale);
         view->itemad->setRect(0, 0, w + 20 / view->itemad->scale, h + 20 / view->itemad->scale);
         view->itemad->setRec(QRectF(0, 0, w , h ));

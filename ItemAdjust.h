@@ -10,7 +10,12 @@ public:
 	QRectF boundingRect() const;
 	double scale = 1;
 	QRectF rec = QRectF(0.0, 0.0, 0.00, 0.00);
-
+    enum { Type = 0 };
+    int type() const
+    {
+        // 针对该 item 启用 qgraphicsitem_cast
+        return Type;
+    }
 	QRectF lefttop;
 	QRectF midtop;
 	QRectF righttop;

@@ -57,7 +57,9 @@ void MyGraphicsView::leaveEvent(QEvent *event)
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
 
-    k=0;
+    //k=0;
+    if(moveble)
+        k=0;
     moveble = false;
     selectedId.clear();
 
@@ -200,33 +202,91 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     {
 
         QList<QGraphicsItem*> items = scene()->items();
-
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
             if(node->data(0)>0)
             {
-                switch (node->type()) {
-                case 1:
-                    MyGraphicsRecItem *rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
-                    QPointF p = rect->mapFromScene(mapToScene(_lastMousePos));
-                    if(rect->selectEvent(p))
+                    if(node->type()==1)
                     {
-                        if(k==0)
+                        MyGraphicsRecItem *rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
+                        QPointF p = rect->mapFromScene(mapToScene(_lastMousePos));
+                        if(rect->selectEvent(p))
                         {
-                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                            for(QGraphicsItem* selectitem : selectItems)
+                            if(k==0)
                             {
-                                if(rect->data(0)!= selectitem->data(0))
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
                                 {
-                                    selectitem->setFlags(NULL);
+                                    if(rect->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
                                 }
                             }
                         }
                     }
-                    break;
+                    else if(node->type()==2)
+                    {
+                        MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
 
-                }
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+                    else if(node->type() == 3)
+                    {
+                        MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(node->type() == 4)
+                    {
+                        MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+                    }
             }
 
         }
@@ -290,17 +350,24 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         {
             isPaintLine = false;
             _tempLineItemPtr->setPath(*_tempLinePath);
+            if( _tempLinePath->length()>1)
+            {
+
+                MyGraphicsLineItem *item = new MyGraphicsLineItem();
+                item->setPath(_tempLineItemPtr->path());
+                item->setVisible(true);
+                item->setData(0, item_id);
+                QString str = QString::number(row+1);
+                item->name="直线"+str;
+                scene()->addItem(item);
+                emit addItem(row,item);
+                row++;
+                item_id++;
+            }
             _tempLinePath->clear();
-            MyGraphicsLineItem *item = new MyGraphicsLineItem();
-            item->setPath(_tempLineItemPtr->path());
-            item->setVisible(true);
-            item->setData(0, item_id);
-            QString str = QString::number(row+1);
-            item->name="直线"+str;
-            scene()->addItem(item);
-            emit addItem(row,item);
-            row++;
-            item_id++;
+            _tempLineItemPtr->setVisible(false);
+
+
         }
     }
 
@@ -382,13 +449,17 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
 void MyGraphicsView::keyPressEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_Control)
+
+    {
         k = 1;
-    QGraphicsView::keyPressEvent(event);
+
+    }
 }
 void MyGraphicsView::keyReleaseEvent(QKeyEvent *event)
 {
-    k=0;
-    QGraphicsView::keyReleaseEvent(event);
+    if(event->key()==Qt::Key_Control)
+        k=0;
+
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
@@ -416,16 +487,14 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
     {
         setCursor(Qt::SizeAllCursor);
         QList<QGraphicsItem*> items = scene()->selectedItems();
-        itemad->setPos(itemad->pos().x() + offsetPos.x(),itemad->pos().y()-offsetPos.y());
+        double s = this->matrix().m11();
+        itemad->setPos(itemad->pos().x() + offsetPos.x()/s,itemad->pos().y()-offsetPos.y()/s);
 
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            if(node->data(0)!=1000)
-            {
-                node->setPos(node->pos().x() + offsetPos.x(), node->pos().y() - offsetPos.y());
+            node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
 
-            }
         }
 
     }
@@ -842,9 +911,8 @@ void MyGraphicsView::setItemAd(QList<QGraphicsItem*> items)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
 
-        switch (node->type())
+        if(node->type() == 1)
         {
-        case 1:
             MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
 
             if (x > rect->mapRectToScene(rect->rect()).x())
@@ -856,17 +924,29 @@ void MyGraphicsView::setItemAd(QList<QGraphicsItem*> items)
             {
                 y = rect->mapRectToScene(rect->rect()).y();
             }
-
-            break;
         }
+        else if( node ->type() == 2)
+        {
+            MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+
+            if (x > item->mapRectToScene(item->rect()).x())
+            {
+                x = item->mapRectToScene(item->rect()).x();
+
+            }
+            if (y > item->mapRectToScene(item->rect()).y())
+            {
+                y = item->mapRectToScene(item->rect()).y();
+            }
+        }
+
     }
     //再确定宽高
     for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-        switch (node->type())
+        if(node->type() == 1)
         {
-        case 1:
             MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
             if (w < rect->mapToScene(rect->rect()).value(1).x() - x)
             {
@@ -877,7 +957,19 @@ void MyGraphicsView::setItemAd(QList<QGraphicsItem*> items)
             {
                 h = rect->mapToScene(rect->rect()).value(2).y() - y;
             }
-            break;
+        }
+        else if(node->type()==2)
+        {
+            MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+            if (w < item->mapToScene(item->rect()).value(1).x() - x)
+            {
+                w = item->mapToScene(item->rect()).value(1).x() - x;
+
+            }
+            if (h < item->mapToScene(item->rect()).value(2).y() - y)
+            {
+                h = item->mapToScene(item->rect()).value(2).y() - y;
+            }
         }
     }
     itemad->setPos(x - 10 / itemad->scale, y - 10 / itemad->scale);
@@ -936,7 +1028,7 @@ void MyGraphicsView::preProcessItem()
 
     itemad->setPos(0, 0);
     itemad->setVisible(false);
-    itemad->setData(0,1000);
+    //itemad->setData(0,1000);
     scene()->addItem(itemad);
 
     //加直线

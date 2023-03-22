@@ -21,4 +21,10 @@ public:
     int printLayer = 0;
 
     QString name="";
+
+    bool selectEvent(QPointF p);
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };

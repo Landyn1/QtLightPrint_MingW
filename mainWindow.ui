@@ -1628,9 +1628,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="bianji_9">
+       <widget class="QPushButton" name="draw_pixmap">
         <property name="text">
-         <string/>
+         <string>图片</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

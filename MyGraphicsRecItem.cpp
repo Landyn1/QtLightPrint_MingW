@@ -49,21 +49,14 @@ void MyGraphicsRecItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
    // QPen pen = ScaleManager::get_instance().getMainViewItemPen();
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
     //pen.setColor(QColor(0, 160, 230));
-    pen.setWidthF(1);
+    QList<QGraphicsView*> list = scene()->views();
+    QGraphicsView* view = list.first();
+    double s = view->matrix().m11();
+    pen.setWidthF(1/s);
     painter->setPen(pen);
 
-    if ((option->state & QStyle::State_Selected) ) {
-        float penWidth = pen.widthF();
+    painter->drawRect(this->rect());
 
-        //painter->setPen(QPen(option->palette.windowText(), 0, Qt::DashLine));
-
-        painter->setBrush(Qt::NoBrush);
-        painter->drawRect(this->rect());
-       // emit item_selected();
-    }
-    else {
-        painter->drawRect(this->rect());
-    }
 
 }
 

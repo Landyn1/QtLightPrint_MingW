@@ -21,8 +21,14 @@ public:
         return Type;
     }
     int printLayer = 0;
-
+    bool selectEvent(QPointF p);
     QString name="";
+    bool isOnLine(QLine l , QPoint p);
+    QRect getRect();
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
 
 };

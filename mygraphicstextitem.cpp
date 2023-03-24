@@ -1,25 +1,82 @@
 #include "mygraphicstextitem.h"
 #include<qdebug.h>
-MyGraphicsTextItem::MyGraphicsTextItem(QGraphicsTextItem *p,QString str):QGraphicsTextItem()
+#include"mainWindow.h"
+#include <QPen>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPainterPathStroker>
+#include <QStyle>
+#include <QStyleOptionGraphicsItem>
+#include<QKeyEvent>
+MyGraphicsTextItem::MyGraphicsTextItem(QGraphicsTextItem *p,QString str):QGraphicsRectItem()
 {
 
-    this->setPlainText(str);
-
-    QFont font("微软雅黑",36);
-    //font.setStretch(50);//字体拉伸
-
-    this->setFont(font);
-    QFontMetrics fm(font);
-
-    //setRotation(-90);
-    //setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-    QTransform t(1,0,0,0,-1,0,0,0,1);
-    setTransform(t);
-
-    qDebug()<<fm.boundingRect(str)<<endl;;
+    this->str = str;
 }
 
+
+void MyGraphicsTextItem::setStr(QString str,QFont font)
+{
+
+    this->str = str;
+    this->font = font;
+
+}
+void MyGraphicsTextItem::setRectF()
+{
+    QFontMetrics fm(this->font);
+    rectf = fm.boundingRect(str);
+}
+
+void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+    QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
+    //pen.setColor(QColor(0, 160, 230));
+    QList<QGraphicsView*> list = scene()->views();
+    QGraphicsView* view = list.first();
+    double s = view->matrix().m11();
+    pen.setWidthF(1/s);
+    painter->setPen(pen);
+    painter->scale(1,-1);
+
+    QPainterPath path;
+
+    path.addText(rect().x(),-rect().y(), font, str);
+
+    painter->drawPath(path);
+
+    painter->drawRect(rect());
+}
 MyGraphicsTextItem::~MyGraphicsTextItem()
+{
+
+}
+
+bool MyGraphicsTextItem::selectEvent(QPointF p)
+{
+
+    if(isSelected())
+        return true;
+    if(rect().contains(p))
+    {
+        setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+        this->setSelected(true);
+        return true;
+    }
+    this->setFlags(NULL);
+    this->setSelected(false);
+    return false;
+}
+
+void MyGraphicsTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsTextItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 
 }

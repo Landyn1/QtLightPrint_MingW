@@ -571,6 +571,37 @@ mainWindow::mainWindow(QWidget *parent)
                         }
                         scene->update();
                     }
+                    else if(node->type() == 5)
+                    {
+                        MyGraphicsPolygonItem* line;
+                        line = qgraphicsitem_cast<MyGraphicsPolygonItem*>(node);
+                        if (action_state == 0)
+                        {
+                            line->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            line->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        line->setSelected(true);
+                        if (zuoxiax > line->getRect().x())
+                        {
+                            zuoxiax = line->getRect().x();
+                        }
+                        if (zuoxiay > line->getRect().y())
+                        {
+                            zuoxiay = line->getRect().y();
+                        }
+                        if (youshangx < line->getRect().x()+line->getRect().width())
+                        {
+                            youshangx = line->getRect().x()+line->getRect().width();
+                        }
+                        if (youshangy < line->getRect().y()+line->getRect().height())
+                        {
+                            youshangy = line->getRect().y()+line->getRect().height();
+                        }
+                        scene->update();
+                    }
                 }
             }
         }
@@ -968,6 +999,46 @@ void mainWindow::initConnect()
                 }
             }
 
+            else if(node->type() == 5)
+            {
+                MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+                if(x > item->getRect().x())
+                {
+                    x = item->getRect().x();
+                }
+                if(y > item->getRect().y())
+                {
+                    y = item->getRect().y();
+                }
+            }
+            else if(node->type() == 6)
+            {
+                MyGraphicsTextItem * item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+                if (x > item->mapRectToScene(item->rect()).x())
+                {
+                    x = item->mapRectToScene(item->rect()).x();
+
+                }
+                if (y > item->mapRectToScene(item->rect()).y())
+                {
+                    y = item->mapRectToScene(item->rect()).y();
+                }
+
+            }
+            else if(node->type() == 7)
+            {
+                MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+                if(x> item->getRect()[0])
+                {
+                    x = item->getRect()[0];
+                }
+                if(y > item->getRect()[1])
+                {
+                    y = item->getRect()[1];
+                }
+
+            }
+
         }
         //再确定宽高
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
@@ -1023,8 +1094,45 @@ void mainWindow::initConnect()
                     h = item->getRect().y()+item->getRect().height() - y;
                 }
             }
-        }
+            else if(node->type() == 5)
+            {
+                MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+                if(w<item->getRect().x()+item->getRect().width() - x)
+                {
+                    w = item->getRect().x()+item->getRect().width() - x;
+                }
+                if(h<item->getRect().y()+item->getRect().height() - y)
+                {
+                    h = item->getRect().y()+item->getRect().height() - y;
+                }
+            }
+            else if(node->type() == 6)
+            {
+                MyGraphicsTextItem * item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+                if (w < item->mapToScene(item->rect()).value(1).x() - x)
+                {
+                    w = item->mapToScene(item->rect()).value(1).x() - x;
 
+                }
+                if (h < item->mapToScene(item->rect()).value(2).y() - y)
+                {
+                    h = item->mapToScene(item->rect()).value(2).y() - y;
+                }
+            }
+            else if(node->type() == 7)
+            {
+                MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+                if(w<item->getRect()[2] - x)
+                {
+                    w = item->getRect()[2] - x;
+                }
+                if(h<item->getRect()[3] - y)
+                {
+                    h = item->getRect()[3]-y;
+                }
+            }
+        }
+        //qDebug()<<x<<y<<w<<h<<endl;
         view->itemad->setPos(x - 10 / view->itemad->scale, y - 10 / view->itemad->scale);
         view->itemad->setRect(0, 0, w + 20 / view->itemad->scale, h + 20 / view->itemad->scale);
         view->itemad->setRec(QRectF(0, 0, w , h ));

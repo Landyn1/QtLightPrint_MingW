@@ -33,7 +33,14 @@ public:
 
     QString name="";
     int num = 5;
-
+    bool selectEvent(QPointF p);
+    QPainterPath path;
+    bool isOnLine(QLine l , QPoint p);
+    QRect getRect();
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
 
 };

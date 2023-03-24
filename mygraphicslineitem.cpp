@@ -77,6 +77,8 @@ bool MyGraphicsLineItem::selectEvent(QPointF p)
             return true;
         }
     }
+    this->setFlags(NULL);
+    this->setSelected(false);
     return false;
 
 }

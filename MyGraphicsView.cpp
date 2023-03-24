@@ -287,6 +287,63 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
                             }
                         }
                     }
+                    else if(node->type() == 5)
+                    {
+                        MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(node->type() == 6)
+                    {
+                        MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(node->type() == 7)
+                    {
+                        MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                        if(item->selectEvent(p))
+                        {
+                            if( k==0 )
+                            {
+                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                                for(QGraphicsItem* selectitem : selectItems)
+                                {
+                                    if(item->data(0)!= selectitem->data(0))
+                                    {
+                                        selectitem->setFlags(NULL);
+                                    }
+                                }
+                            }
+                        }
+                    }
             }
 
         }
@@ -384,12 +441,17 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     {
         QPointF p = mapToScene(_lastMousePos);
         MyGraphicsTextItem *item = new MyGraphicsTextItem();
-        item->setPos(p.x(),p.y()+12);
+        item->setPos(p);
+        item->setRectF();
+        item->setRect(-(item->rectf.width()/2),-(item->rectf.height()-item->rectf.height()/3*1.2)/2,item->rectf.width(),item->rectf.height()-item->rectf.height()/3*1.2);
+        qDebug()<<item->rect()<<endl;
         item->setVisible(true);
         item->setData(0, item_id);
         QString str = QString::number(row+1);
         item->name="文本"+str;
         scene()->addItem(item);
+        scene()->update();
+        //item->update();
         emit addItem(row,item);
         row++;
         item_id++;
@@ -430,6 +492,8 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         {
             isPaintCurve = false;
             _tempCurveItemPtr->setPath(*_tempCurvePath);
+
+            //qDebug()<<*_tempCurvePath<<endl;
             _tempCurvePath->clear();
             MyGraphicsCurveLineItem *item = new MyGraphicsCurveLineItem();
             item->setPath(_tempCurveItemPtr->path());

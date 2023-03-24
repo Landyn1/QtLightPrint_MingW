@@ -4,19 +4,18 @@
 #include <QObject>
 #include <QWidget>
 #include<qgraphicsitem.h>
-class MyGraphicsTextItem : public QGraphicsTextItem
+
+class MyGraphicsTextItem : public QGraphicsRectItem
 {
 public:
-    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "这是一串字符串");
+    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "TEXT");
     ~MyGraphicsTextItem();
 
     QRectF boundingRect() const
     {
-        QRectF temp_rect(0,12,420,66);
-
-        return temp_rect;
+        return rect();
     }
-
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     enum { Type = 6 };
 
     int type() const
@@ -25,8 +24,18 @@ public:
         return Type;
     }
     int printLayer = 0;
-
+    QString str="";
+    QRectF rectf;
     QString name="";
+    QFont font = QFont(u8"微软雅黑",72);
+    void setStr(QString str,QFont font);
+    bool selectEvent(QPointF p);
+    void setRectF();
+
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // MYGRAPHICSTEXTITEM_H

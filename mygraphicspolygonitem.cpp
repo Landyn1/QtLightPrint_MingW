@@ -24,8 +24,8 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     pen.setWidthF(1/s);
     painter->setPen(pen);
     //QPolygonF p;
-    QPainterPath p;
-    p.moveTo(QPointF(0,rect().height()/2));
+    path.clear();
+    path.moveTo(QPointF(0,rect().height()/2));
     int bili1 = rect().width()*100/rect().height();
     double bili = double(bili1)/100;
     int t = 360*100/num;
@@ -38,7 +38,7 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
         {
             double x = r*sin(tt*M_PI/180);
             double y = r*cos(tt*M_PI/180);
-            p.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*bili,y));
         }
 
         else if(tt>90&&tt<=180)
@@ -47,7 +47,7 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
             double temp = tt-90;
             x = r*cos(temp*M_PI/180);
             y = -r*sin(temp*M_PI/180);
-            p.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*bili,y));
         }
 
         else if(tt>180&&tt<=270)
@@ -56,7 +56,7 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
             double temp = tt-180;
             x = -r*sin(temp*M_PI/180);
             y = -r*cos(temp*M_PI/180);
-            p.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*bili,y));
         }
 
         else if(tt>270&&tt<360)
@@ -65,11 +65,99 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
             double temp = tt-270;
             x = -r*cos(temp*M_PI/180);
             y = r*sin(temp*M_PI/180);
-            p.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*bili,y));
         }
         tt = tt + ttt;
     }
 
-    p.lineTo(QPointF(0,rect().height()/2));
-    painter->drawPath(p);
+    path.lineTo(QPointF(0,rect().height()/2));
+    painter->drawPath(path);
+}
+
+
+
+
+bool MyGraphicsPolygonItem::selectEvent(QPointF p)
+{
+    if(isSelected())
+        return true;
+
+    for (int i = 0; i < path.elementCount() - 1; i++)
+    {
+        QPointF p1 = path.elementAt(i);
+        QPointF p2 = path.elementAt(i+1);
+        QLine l(p1.toPoint(),p2.toPoint());
+        if(isOnLine(l,p.toPoint()))
+        {
+
+            this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            this->setSelected(true);
+            return true;
+        }
+    }
+    this->setFlags(NULL);
+    this->setSelected(false);
+    return false;
+
+}
+
+QRect MyGraphicsPolygonItem::getRect()
+{
+    int x,y,w,h;
+    QPoint zuoxia(10000,10000),youshang(-10000,-10000);
+
+    for (int i = 0; i < path.elementCount() ;i++)
+    {
+        QPointF p1 = path.elementAt(i);
+        if(zuoxia.x()>p1.toPoint().x())
+        {
+            zuoxia.setX( p1.toPoint().x());
+        }
+        if(zuoxia.y()>p1.toPoint().y())
+        {
+            zuoxia.setY(p1.toPoint().y());
+        }
+        if(youshang.x()<p1.toPoint().x())
+        {
+            youshang.setX(p1.toPoint().x());
+        }
+        if(youshang.y()<p1.toPoint().y())
+        {
+            youshang.setY(p1.toPoint().y());
+        }
+    }
+    QPoint pos = this->pos().toPoint();
+    x = zuoxia.x()+pos.x();
+    y = zuoxia.y()+pos.y();
+    w = youshang.x()-zuoxia.x();
+    h = youshang.y()-zuoxia.y();
+    return QRect(x,y,w,h);
+}
+bool MyGraphicsPolygonItem::isOnLine(QLine l , QPoint p)
+{
+    qreal ab = (l.x1() -l.x2())*(l.x1()-l.x2()) + (l.y1()-l.y2())*(l.y1()-l.y2());
+    ab = sqrt(ab);
+    qreal ac = (l.x1()-p.x())*(l.x1()-p.x()) + (l.y1()-p.y())*(l.y1()-p.y());
+    ac = sqrt(ac);
+    qreal bc = (l.x2()-p.x())*(l.x2()-p.x()) + (l.y2()-p.y())*(l.y2()-p.y());
+    bc = sqrt(bc);
+    qreal x = ac+bc-ab;
+    if(x<0.1&&x>-0.1)
+    {
+        return true;
+    }
+    return false;
+}
+
+void MyGraphicsPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsPolygonItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsPolygonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+
 }

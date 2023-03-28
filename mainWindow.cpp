@@ -316,6 +316,18 @@ mainWindow::mainWindow(QWidget *parent)
              QString s = QString::number(id);
              item3 = new QTableWidgetItem(s);
         }
+        else if(type == 8)
+        {
+            MyGraphicsPixMapItem* node;
+             node = qgraphicsitem_cast<MyGraphicsPixMapItem*>(item);
+             item0 = new QTableWidgetItem(node->name);
+
+             item1 = new QTableWidgetItem("图片");
+             item2 = new QTableWidgetItem("");
+             id = node->data(0).value<int>();
+             QString s = QString::number(id);
+             item3 = new QTableWidgetItem(s);
+        }
         ui.itemtable->setRowCount(row + 1);
         
         ui.itemtable->setItem(row, 0, item0);
@@ -404,6 +416,14 @@ mainWindow::mainWindow(QWidget *parent)
                     {
                         MyGraphicsCurveLineItem* rect;
                         rect = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node);
+                        rect->name = text;
+                        item2->setText(text);
+                        ui.itemtable->setItem(row, 0, item2);
+                    }
+                    else if(node->type() == 8)
+                    {
+                        MyGraphicsPixMapItem *rect;
+                        rect = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
                         rect->name = text;
                         item2->setText(text);
                         ui.itemtable->setItem(row, 0, item2);
@@ -602,6 +622,104 @@ mainWindow::mainWindow(QWidget *parent)
                         }
                         scene->update();
                     }
+
+                    //TODO:
+                    else if(node->type() == 6)
+                    {
+                        MyGraphicsTextItem* rect;
+                        rect = qgraphicsitem_cast<MyGraphicsTextItem*>(node);
+                        if (action_state == 0)
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        rect->setSelected(true);
+                        if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                        {
+                            zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                        }
+                        if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                        {
+                            zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                        }
+                        if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                        {
+                            youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                        }
+                        if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                        {
+                            youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                        }
+                        scene->update();
+
+                    }
+                    else if(node->type() == 7)
+                    {
+                        MyGraphicsCurveLineItem* rect;
+                        rect = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node);
+                        if (action_state == 0)
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        rect->setSelected(true);
+
+
+                        if (zuoxiax > rect->getRect()[0])
+                        {
+                            zuoxiax = rect->getRect()[0];
+                        }
+                        if (zuoxiay > rect->getRect()[1])
+                        {
+                            zuoxiay = rect->getRect()[1];
+                        }
+                        if (youshangx < rect->getRect()[2])
+                        {
+                            youshangx = rect->getRect()[2];
+                        }
+                        if (youshangy < rect->getRect()[3])
+                        {
+                            youshangy = rect->getRect()[3];
+                        }
+                        scene->update();
+                    }
+                    else if(node->type() == 8)
+                    {
+                            MyGraphicsPixMapItem* rect;
+                            rect = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
+                            if (action_state == 0)
+                            {
+                                rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                            }
+                            else
+                            {
+                                rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                            }
+                            rect->setSelected(true);
+                            if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                            {
+                                zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                            }
+                            if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                            {
+                                zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                            }
+                            if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                            {
+                                youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                            }
+                            if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                            {
+                                youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                            }
+                            scene->update();
+                     }
                 }
             }
         }
@@ -854,7 +972,11 @@ void mainWindow::initConnect()
                     w=item->boundingRect().width();
                     h = item->boundingRect().height();
                     item->setPos(-w/2,-h/2);
+                    item->setData(0,view->item_id);
+                    QString str = QString::number(view->row + 1);
+                    item->name = u8"图片" + str;
                     scene->addItem(item);
+                    emit view->addItem(view->row,item);
                 }
             }
 
@@ -1036,7 +1158,20 @@ void mainWindow::initConnect()
                 {
                     y = item->getRect()[1];
                 }
+            }
+            else if(node->type() == 8)
+            {
+                MyGraphicsPixMapItem * rect = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
 
+                if (x > rect->mapRectToScene(rect->rect()).x())
+                {
+                    x = rect->mapRectToScene(rect->rect()).x();
+
+                }
+                if (y > rect->mapRectToScene(rect->rect()).y())
+                {
+                    y = rect->mapRectToScene(rect->rect()).y();
+                }
             }
 
         }
@@ -1129,6 +1264,19 @@ void mainWindow::initConnect()
                 if(h<item->getRect()[3] - y)
                 {
                     h = item->getRect()[3]-y;
+                }
+            }
+            else if(node->type() == 8)
+            {
+                MyGraphicsPixMapItem * item = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
+                if (w < item->mapToScene(item->rect()).value(1).x() - x)
+                {
+                    w = item->mapToScene(item->rect()).value(1).x() - x;
+
+                }
+                if (h < item->mapToScene(item->rect()).value(2).y() - y)
+                {
+                    h = item->mapToScene(item->rect()).value(2).y() - y;
                 }
             }
         }

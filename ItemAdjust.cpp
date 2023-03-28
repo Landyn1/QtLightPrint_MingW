@@ -47,6 +47,11 @@ void ItemAdjust::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->drawRect(righttop);
 	painter->drawRect(leftmid);
 	painter->drawRect(rightmid);
+
+    QPen pen1;
+    pen1.setWidth(3);
+    pen1.setColor(QColor(Qt::blue));
+    painter->setPen(pen1);
 	painter->drawLine(QPointF( mid.left(), mid.top()),QPointF(mid.right(),mid.bottom()));
 	painter->drawLine(QPointF( mid.left(), mid.bottom()),QPointF(mid.right(),mid.top()));
 

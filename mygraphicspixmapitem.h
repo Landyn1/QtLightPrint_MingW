@@ -17,8 +17,14 @@ public:
     }
     int printLayer = 0;
     QRectF boundingRect() const;
-
+    QRectF rect();
+    bool selectEvent(QPointF p);
     QString name="";
+
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 };
 

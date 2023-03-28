@@ -1,5 +1,5 @@
 #include "mygraphicspixmapitem.h"
-
+#include<qdebug.h>
 MyGraphicsPixMapItem::MyGraphicsPixMapItem(QGraphicsPixmapItem *parent):QGraphicsPixmapItem(parent)
 {
     setFlags(GraphicsItemFlag::ItemIsMovable | GraphicsItemFlag::ItemIsSelectable);
@@ -38,5 +38,43 @@ void MyGraphicsPixMapItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
     painter->scale(1,-1);
 
     painter->drawPixmap(QRect(0,-h,w,h),pix,pix.rect());
+
+}
+
+bool MyGraphicsPixMapItem::selectEvent(QPointF p)
+{
+    if(isSelected())
+        return true;
+    if(boundingRect().contains(p))
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
+    else
+    {
+        setFlags(NULL);
+        setSelected(false);
+        return false;
+    }
+
+
+
+}
+QRectF MyGraphicsPixMapItem::rect()
+{
+    return boundingRect();
+}
+
+void MyGraphicsPixMapItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsPixMapItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+
+}
+void MyGraphicsPixMapItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
 
 }

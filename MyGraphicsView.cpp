@@ -58,9 +58,10 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
 
     //k=0;
-    if(moveble)
+    if(moveble || lefttop_move)
         k=0;
     moveble = false;
+    lefttop_move = false;
     selectedId.clear();
 
     if (event->button() == Qt::RightButton) {                 // 右键粘贴菜单
@@ -180,7 +181,8 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     _lastMousePos = event->pos();
 
     moveble = QRectF(itemad->pos().x() + itemad->mid.x(), itemad->pos().y() + itemad->mid.y(), itemad->mid.width(), itemad->mid.height()).contains(mapToScene( event->pos()));
-    if(moveble)
+    lefttop_move = QRectF(itemad->pos().x() + itemad->lefttop.x(),itemad->pos().y() + itemad->lefttop.y(),itemad->lefttop.width(),itemad->lefttop.height()).contains(mapToScene(event->pos()));
+    if(moveble || lefttop_move)
         k=1;
 
 
@@ -200,154 +202,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     //}
     if(action_state == 0)
     {
-
-        QList<QGraphicsItem*> items = scene()->items();
-        for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
-        {
-            QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            if(node->data(0)>0)
-            {
-                    if(node->type()==1)
-                    {
-                        MyGraphicsRecItem *rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
-                        QPointF p = rect->mapFromScene(mapToScene(_lastMousePos));
-                        if(rect->selectEvent(p))
-                        {
-                            if(k==0)
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(rect->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if(node->type()==2)
-                    {
-                        MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-
-
-                    }
-                    else if(node->type() == 3)
-                    {
-                        MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if(node->type() == 4)
-                    {
-                        MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if(node->type() == 5)
-                    {
-                        MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if(node->type() == 6)
-                    {
-                        MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if(node->type() == 7)
-                    {
-                        MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
-                        QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
-                        if(item->selectEvent(p))
-                        {
-                            if( k==0 )
-                            {
-                                QList<QGraphicsItem *> selectItems = scene()->selectedItems();
-                                for(QGraphicsItem* selectitem : selectItems)
-                                {
-                                    if(item->data(0)!= selectitem->data(0))
-                                    {
-                                        selectitem->setFlags(NULL);
-                                    }
-                                }
-                            }
-                        }
-                    }
-            }
-
-        }
-
+        setSelecT();
     }
 
     else if (action_state == 1) {
@@ -526,6 +381,19 @@ void MyGraphicsView::keyReleaseEvent(QKeyEvent *event)
 
 }
 
+void MyGraphicsView::lefttop_set()
+{
+    QList<QGraphicsItem*> items = scene()->selectedItems();
+    double s = this->matrix().m11();
+    //itemad->setPos(itemad->pos().x() + offsetPos.x()/s,itemad->pos().y()-offsetPos.y()/s);
+
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        //node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
+    }
+}
+
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -540,7 +408,10 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
     if (action_state == 0  && QRectF(itemad->pos().x() + itemad->mid.x(), itemad->pos().y() + itemad->mid.y(), itemad->mid.width(), itemad->mid.height()).contains(mapToScene( event->pos())))
     {
         setCursor(Qt::SizeAllCursor);
-
+    }
+    else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->lefttop.x(),itemad->pos().y() + itemad->lefttop.y(),itemad->lefttop.width(),itemad->lefttop.height()).contains(mapToScene(event->pos())))
+    {
+        setCursor(Qt::SizeFDiagCursor);
     }
     else
     {
@@ -558,11 +429,13 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
             node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
-
         }
 
     }
-
+    if(action_state == 0 && (event->buttons()& Qt::LeftButton)&&lefttop_move)
+    {
+        setCursor(Qt::SizeFDiagCursor);
+    }
 
     if(isPaintLine)
     {
@@ -1125,5 +998,176 @@ void MyGraphicsView::setStatusBarPtr(QStatusBar* statusBarPtr)
     
     _statusBarPtr->addWidget(_posLabel);
     _statusBarPtr->addWidget(_scaleLabel);
+}
+
+
+void MyGraphicsView::setSelecT()
+{
+    QList<QGraphicsItem*> items = scene()->items();
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->data(0)>0)
+        {
+                if(node->type()==1)
+                {
+                    MyGraphicsRecItem *rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
+                    QPointF p = rect->mapFromScene(mapToScene(_lastMousePos));
+                    if(rect->selectEvent(p))
+                    {
+                        if(k==0)
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(rect->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type()==2)
+                {
+                    MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+                else if(node->type() == 3)
+                {
+                    MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type() == 4)
+                {
+                    MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type() == 5)
+                {
+                    MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type() == 6)
+                {
+                    MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type() == 7)
+                {
+                    MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(node->type() == 8)
+                {
+                    MyGraphicsPixMapItem *item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
+                    QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+
+    }
+
 }
 

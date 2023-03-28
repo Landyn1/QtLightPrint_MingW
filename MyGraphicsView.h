@@ -59,10 +59,15 @@ public:
     ItemAdjust* itemad = new ItemAdjust();
     QRectF p ;
     bool moveble;
+    bool lefttop_move;
+    void lefttop_set();
     void setItemAd(QList<QGraphicsItem*> items);
     QList<int> selectedId;
     bool isPaintLine = false;
     bool isPaintCurve = false;
+    int item_id = 1;
+    int row = 0;
+    void setSelecT();
 private:
    // QMenu* _generalMenu;              // 主要的右键菜单
 
@@ -107,8 +112,8 @@ private:
     int slidingLinePos{ 0 };
     int offset{ 0 };
     QFont font{ "微软雅黑",8 };
-    int row = 0;
-    int item_id = 1;
+
+
     
 signals:
     void mouseMovePos(QPoint p);

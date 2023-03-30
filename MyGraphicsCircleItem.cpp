@@ -10,11 +10,9 @@ MyGraphicsCircleItem::~MyGraphicsCircleItem()
 {}
 QRectF MyGraphicsCircleItem::boundingRect() const
 {
-    auto r = qMax(this->rect().width(), this->rect().height());
 
-    QRectF temp_rect(this->rect().left(), this->rect().top(), r, r);
     
-    return temp_rect;
+    return rect();
 
 }
 void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -32,9 +30,8 @@ void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
         pen.setColor(Qt::blue);
     }
     painter->setPen(pen);
-    auto r = qMax(this->rect().width(), this->rect().height());
 
-    painter->drawEllipse(QPointF(0, 0), r / 2, r / 2);
+    painter->drawEllipse(QPointF(0, 0), rect().width() / 2, rect().height() / 2);
 
 
 }

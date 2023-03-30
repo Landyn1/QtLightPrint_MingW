@@ -50,6 +50,7 @@ public:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void save_lefttop();
+    void save_midtop();
     //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     MyKedu* topkedu = new MyKedu();
@@ -60,8 +61,8 @@ public:
     QRectF p ;
     bool moveble;
     bool lefttop_move;
-    bool leftmid_move;
-    void leftmid_set(QPointF p1,QPointF p2);
+    bool midtop_move;
+    void midtop_set(QPointF p1,QPointF p2);
     void lefttop_set(QPointF p1,QPointF p2);
     void setItemAd(QList<QGraphicsItem*> items);
     QList<int> selectedId;

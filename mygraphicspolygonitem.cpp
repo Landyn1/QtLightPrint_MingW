@@ -22,8 +22,23 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     QGraphicsView* view = list.first();
     double s = view->matrix().m11();
     pen.setWidthF(1/s);
+    if(data(0).toInt() == -1)
+    {
+        pen.setColor(Qt::blue);
+    }
     painter->setPen(pen);
-    //QPolygonF p;
+
+    painter->drawPath(path);
+}
+
+void MyGraphicsPolygonItem::setPath(QPainterPath path)
+{
+    this->path.clear();
+    this->path = path;
+}
+
+void MyGraphicsPolygonItem::setDefault_Path()
+{
     path.clear();
     path.moveTo(QPointF(0,rect().height()/2));
     int bili1 = rect().width()*100/rect().height();
@@ -69,12 +84,8 @@ void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsI
         }
         tt = tt + ttt;
     }
-
     path.lineTo(QPointF(0,rect().height()/2));
-    painter->drawPath(path);
 }
-
-
 
 
 bool MyGraphicsPolygonItem::selectEvent(QPointF p)

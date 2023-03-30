@@ -20,7 +20,9 @@ public:
     QRectF rect();
     bool selectEvent(QPointF p);
     QString name="";
-
+    QRect rectf;
+    void setDefault_Rect();
+    void setRectF(QRect re);
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

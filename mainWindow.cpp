@@ -969,14 +969,19 @@ void mainWindow::initConnect()
                     QPixmap pixmap(fileName);
                     item->setPixmap(pixmap);
                     int w,h;
+                    item->setDefault_Rect();
                     w=item->boundingRect().width();
                     h = item->boundingRect().height();
                     item->setPos(-w/2,-h/2);
                     item->setData(0,view->item_id);
+
+
                     QString str = QString::number(view->row + 1);
                     item->name = u8"图片" + str;
                     scene->addItem(item);
                     emit view->addItem(view->row,item);
+                    view->item_id++;
+                    view->row++;
                 }
             }
 
@@ -1059,7 +1064,6 @@ void mainWindow::initConnect()
         y = 5000;
         w = -5000;
         h = -5000;
-
 
         //先确定左下角的坐标
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
@@ -1299,14 +1303,7 @@ void mainWindow::setItemMoveble(bool moveble)
     for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-        if (node->type() == 0)
-            continue;
-        if(moveble)
-            //node->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-            ;
-
-        else
-            node->setFlags(NULL);
+        node->setFlags(NULL);
 
     }
 }

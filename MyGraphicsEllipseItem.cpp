@@ -28,6 +28,10 @@ void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     QGraphicsView* view = list.first();
     double s = view->matrix().m11();
     pen.setWidthF(1/s);
+    if(data(0).toInt() == -1)
+    {
+        pen.setColor(Qt::blue);
+    }
     painter->setPen(pen);
     
         

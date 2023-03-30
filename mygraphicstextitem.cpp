@@ -28,6 +28,10 @@ void MyGraphicsTextItem::setRectF()
     rectf = fm.boundingRect(str);
 }
 
+void MyGraphicsTextItem::setDefault_Path()
+{
+    path.addText(rect().x(),-rect().y(), font, str);
+}
 void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
@@ -36,16 +40,16 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     QGraphicsView* view = list.first();
     double s = view->matrix().m11();
     pen.setWidthF(1/s);
+    if(data(0).toInt() == -1)
+    {
+        pen.setColor(Qt::blue);
+    }
     painter->setPen(pen);
     painter->scale(1,-1);
 
-    QPainterPath path;
-
-    path.addText(rect().x(),-rect().y(), font, str);
-
     painter->drawPath(path);
 
-    painter->drawRect(rect());
+
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

@@ -27,6 +27,10 @@ void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
     QGraphicsView* view = list.first();
     double s = view->matrix().m11();
     pen.setWidthF(1/s);
+    if(data(0).toInt() == -1)
+    {
+        pen.setColor(Qt::blue);
+    }
     painter->setPen(pen);
     auto r = qMax(this->rect().width(), this->rect().height());
 

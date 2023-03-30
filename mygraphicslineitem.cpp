@@ -18,6 +18,10 @@ void MyGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     QGraphicsView* view = list.first();
     double s = view->matrix().m11();
     pen.setWidthF(1/s);
+    if(data(0).toInt() == -1)
+    {
+        pen.setColor(Qt::blue);
+    }
     painter->setPen(pen);
     painter->drawPath(this->path());
 

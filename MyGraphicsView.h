@@ -49,7 +49,7 @@ public:
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-
+    void save_lefttop();
     //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     MyKedu* topkedu = new MyKedu();
@@ -60,7 +60,9 @@ public:
     QRectF p ;
     bool moveble;
     bool lefttop_move;
-    void lefttop_set();
+    bool leftmid_move;
+    void leftmid_set(QPointF p1,QPointF p2);
+    void lefttop_set(QPointF p1,QPointF p2);
     void setItemAd(QList<QGraphicsItem*> items);
     QList<int> selectedId;
     bool isPaintLine = false;
@@ -68,6 +70,7 @@ public:
     int item_id = 1;
     int row = 0;
     void setSelecT();
+    QPointF lastPos;
 private:
    // QMenu* _generalMenu;              // 主要的右键菜单
 

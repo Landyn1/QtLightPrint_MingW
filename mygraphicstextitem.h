@@ -8,7 +8,7 @@
 class MyGraphicsTextItem : public QGraphicsRectItem
 {
 public:
-    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "TEXT");
+    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "HP");
     ~MyGraphicsTextItem();
 
     QRectF boundingRect() const
@@ -31,7 +31,13 @@ public:
     void setStr(QString str,QFont font);
     bool selectEvent(QPointF p);
     void setRectF();
-
+    QPainterPath path;
+    void setDefault_Path();
+    void setPath(QPainterPath path)
+    {
+        this->path.clear();
+        this->path = path;
+    }
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

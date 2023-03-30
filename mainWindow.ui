@@ -103,7 +103,7 @@
   <widget class="QDockWidget" name="dock2">
    <property name="minimumSize">
     <size>
-     <width>47</width>
+     <width>250</width>
      <height>44</height>
     </size>
    </property>
@@ -237,7 +237,7 @@
   <widget class="QDockWidget" name="dock3">
    <property name="minimumSize">
     <size>
-     <width>109</width>
+     <width>300</width>
      <height>136</height>
     </size>
    </property>

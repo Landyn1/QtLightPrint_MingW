@@ -35,6 +35,8 @@ public:
     int num = 5;
     bool selectEvent(QPointF p);
     QPainterPath path;
+    void setPath(QPainterPath path);
+    void setDefault_Path();
     bool isOnLine(QLine l , QPoint p);
     QRect getRect();
 private:

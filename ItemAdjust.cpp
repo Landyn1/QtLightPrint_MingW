@@ -55,7 +55,6 @@ void ItemAdjust::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 	painter->drawLine(QPointF( mid.left(), mid.top()),QPointF(mid.right(),mid.bottom()));
 	painter->drawLine(QPointF( mid.left(), mid.bottom()),QPointF(mid.right(),mid.top()));
 
-
 	//painter->drawRect(QRectF(0, rect().height() + (15 / scale), 5 / scale, 5 / scale));
 
 }

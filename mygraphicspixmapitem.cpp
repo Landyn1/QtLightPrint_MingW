@@ -2,7 +2,8 @@
 #include<qdebug.h>
 MyGraphicsPixMapItem::MyGraphicsPixMapItem(QGraphicsPixmapItem *parent):QGraphicsPixmapItem(parent)
 {
-    setFlags(GraphicsItemFlag::ItemIsMovable | GraphicsItemFlag::ItemIsSelectable);
+    setFlags(NULL);
+    setSelected(false);
 }
 
 MyGraphicsPixMapItem::~MyGraphicsPixMapItem(){
@@ -10,6 +11,14 @@ MyGraphicsPixMapItem::~MyGraphicsPixMapItem(){
 }
 
 QRectF MyGraphicsPixMapItem::boundingRect() const
+{
+    QPixmap pix = this->pixmap();
+    int w,h;
+    w=rectf.width();
+    h=rectf.height();
+    return QRectF(0,0,w,h);
+}
+void MyGraphicsPixMapItem::setDefault_Rect()
 {
     QPixmap pix = this->pixmap();
     int w,h;
@@ -21,7 +30,12 @@ QRectF MyGraphicsPixMapItem::boundingRect() const
         w = w/3;
         h = h/3;
     }
-    return QRectF(0,0,w,h);
+    rectf = QRect(0,-h,w,h);
+}
+
+void MyGraphicsPixMapItem::setRectF(QRect re)
+{
+    this->rectf = re;
 }
 
 void MyGraphicsPixMapItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -29,34 +43,33 @@ void MyGraphicsPixMapItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
     QPixmap pix = this->pixmap();
 
-    int w,h;
-    w=boundingRect().width();
-    h = boundingRect().height();
 
 
 
     painter->scale(1,-1);
-
-    painter->drawPixmap(QRect(0,-h,w,h),pix,pix.rect());
+    painter->drawPixmap(rectf,pix,pix.rect());
 
 }
 
 bool MyGraphicsPixMapItem::selectEvent(QPointF p)
 {
+    qDebug()<<p<<endl;
     if(isSelected())
         return true;
-    if(boundingRect().contains(p))
+    int w,h;
+    w=rectf.width();
+    h=rectf.height();
+    QRectF rrr(0,0,w,h);
+    if(rrr.contains(p))
     {
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
         setSelected(true);
         return true;
     }
-    else
-    {
-        setFlags(NULL);
-        setSelected(false);
-        return false;
-    }
+    setFlags(NULL);
+    setSelected(false);
+    return false;
+
 
 
 

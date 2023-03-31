@@ -128,20 +128,11 @@ void MyGraphicsView::save_lefttop()
                         QList<QPointF> list;
                         list.append(item1->mapToScene(item1->rect()).value(0));
                         list.append(item1->mapToScene(item1->rect()).value(2));
-                        if(list[1].x()-list[0].x()>0)
-                        {
-                            double w = list[1].x()-list[0].x();
-                            double h = list[1].y()-list[0].y();
-                            item2->setPos(list[0].x(),list[0].y());
-                            item2->setRect(-w/2,-h/2,w,h);
-                        }
-                        else
-                        {
-                            double w = -list[1].x()+list[0].x();
-                            double h = -list[1].y()+list[0].y();
-                            item2->setPos(list[0].x(),list[0].y());
-                            item2->setRect(-w/2,-h/2,w,h);
-                        }
+                        double minx = fmin(list[0].x(),list[1].x()), miny = fmin(list[0].y(),list[1].y());
+                        double w = qAbs( list[1].x()-list[0].x());
+                        double h = qAbs( list[1].y()-list[0].y());
+                        item2->setPos(minx+(w/2),miny+(h/2));
+                        item2->setRect(-w/2,-h/2,w,h);
                         item2->setDefault_Path();
                         break;
                     }
@@ -706,7 +697,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
                 bili = fmin(t1,t2);
             }
             tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(0,0,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
@@ -954,8 +945,6 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
         else if(node->type() == 3)
         {
             MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
@@ -1003,6 +992,24 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                 }
             }
             tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 5)
+        {
+            MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+            MyGraphicsPolygonItem *tmp = new MyGraphicsPolygonItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setDefault_Path();
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);

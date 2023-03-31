@@ -26,6 +26,7 @@ HEADERS += ./CUDrvE.h \
     ./MyGraphicsScene.h \
     ./MyGraphicsView.h \
     ./mainWindow.h \
+    CUDrvE.h \
     mygraphicscurvelineitem.h \
     mygraphicslineitem.h \
     mygraphicspixmapitem.h \
@@ -51,4 +52,4 @@ SOURCES += ./ItemAdjust.cpp \
     mygraphicstextitem.cpp
 FORMS += ./mainWindow.ui
 RESOURCES += mainWindow.qrc
-LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\debug\ -lCUDrvE
+LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\libs\ -lCUDrvE

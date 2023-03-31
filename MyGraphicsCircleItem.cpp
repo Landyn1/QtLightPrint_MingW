@@ -48,7 +48,6 @@ bool MyGraphicsCircleItem::selectEvent(QPointF p)
     double x = p.x();
     double y = p.y();
 
-    qDebug()<<x<<y<<r<<endl;
     if((x*x)/(r*r)+(y*y)/(r*r) - 1 >= -0.2 && (x*x)/(r*r)+(y*y)/(r*r) - 1 <=0.2)
     {
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);

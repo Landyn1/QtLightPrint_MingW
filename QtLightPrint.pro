@@ -27,6 +27,7 @@ HEADERS += ./CUDrvE.h \
     ./MyGraphicsView.h \
     ./mainWindow.h \
     CUDrvE.h \
+    CUDrvE_global.h \
     mygraphicscurvelineitem.h \
     mygraphicslineitem.h \
     mygraphicspixmapitem.h \

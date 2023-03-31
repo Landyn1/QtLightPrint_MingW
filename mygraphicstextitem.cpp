@@ -49,7 +49,7 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     painter->drawPath(path);
 
-
+    //painter->drawRect(rect());
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

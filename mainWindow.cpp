@@ -1403,7 +1403,6 @@ bool mainWindow::LightDraw(QPainterPath path,QGraphicsItem *item,int type)
             QPainterPath::Element element = path.elementAt(i);
             QPointF po = element;
             QPoint printpo = view2print(po);
-            qDebug() << printpo << endl;
             if (element.isMoveTo())
             {
              //   CUSchJmpLinear(printpo.x(), printpo.y(), 3);

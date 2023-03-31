@@ -1,17 +1,13 @@
-//#ifndef CUDRVE_H
-//#define CUDRVE_H
-#pragma once
+#ifndef CUDRVE_H
+#define CUDRVE_H
 
-#ifdef CUDRVE_EXPORTS
-#define CUDRVE_API __declspec(dllexport)
-#else
-#define CUDRVE_API __declspec(dllimport)
-#endif
+#include "CUDrvE_global.h"
 
 #define WINDLL __stdcall
 
 #define ushort unsigned short
-#define byte unsigned char
+//#define byte unsigned char
+typedef unsigned char byte;
 #define uint unsigned int
 
 #define BOOL int
@@ -201,7 +197,7 @@ extern uint uiCULBufferLength;					//本地缓冲数据长度
 
 #define MSG_LEN 64								// 消息长度，这里定长64
 #define BUFFER_SIZE 300							// 上层缓冲区长度
-extern uint buffer_index;						// 缓冲区index
+uint buffer_index;								// 缓冲区index
 
 typedef struct
 {
@@ -296,7 +292,7 @@ typedef struct
     X_LIMIT_P		= MotorStatus.0		X轴限位+
 */
 
-CUDRVE_API BOOL WINDLL CUOpenDevice(int HIDNums=1);
+CUDRVE_EXPORT BOOL WINDLL CUOpenDevice(int HIDNums=1);
 //CH：串口实现，发一串标志，收一串标志。或者就打开指定串口，或者是RAWHID
 /*3  laser control
     函数功能:	打开控制器
@@ -313,7 +309,7 @@ CUDRVE_API BOOL WINDLL CUOpenDevice(int HIDNums=1);
         CUOpenDevice(1,CUIP,10000);//只有一个板卡，IP为“192.168.1.10”,连接超时时间为10000ms
 */
 
-CUDRVE_API void WINDLL CUCloseDevice();
+CUDRVE_EXPORT void WINDLL CUCloseDevice();
 /*1
     函数功能:	关闭控制器
     输入参数:	无
@@ -325,7 +321,7 @@ CH：可以不实现
 */
 
 
-CUDRVE_API BOOL WINDLL CUIsOpen();
+CUDRVE_EXPORT BOOL WINDLL CUIsOpen();
 /*2
     函数功能:	返回控制器是否打开的状态
     输入参数:	无
@@ -336,7 +332,7 @@ CUDRVE_API BOOL WINDLL CUIsOpen();
 CH：可以同开设备一样实现，或者不实现，常开状态。
 */
 
-CUDRVE_API bool WINDLL CUReadData(uint data_length, byte* data);
+CUDRVE_EXPORT bool WINDLL CUReadData(uint data_length, byte* data);
 /*
     函数功能:	从串口读取接收缓冲区的内容
     输入参数:	UINT data_length		读取的数据长度
@@ -349,7 +345,7 @@ CUDRVE_API bool WINDLL CUReadData(uint data_length, byte* data);
 */
 
 
-CUDRVE_API int WINDLL CUSetNullDelayUs(uint DelayTimes, ushort mode);//2
+CUDRVE_EXPORT int WINDLL CUSetNullDelayUs(uint DelayTimes, ushort mode);//2
 /*
     函数功能:	设置空延时
     输入参数:	uint DelayTimes			延时时间,单位为	10ns(CUSetNullDelay)
@@ -363,7 +359,7 @@ CH：LASERCONTROL中没有什么内容，二处，其中一处应该没有什么
 */
 
 
-CUDRVE_API int WINDLL CUSchSetSpeed(uint SchSpeed,ushort mode);
+CUDRVE_EXPORT int WINDLL CUSchSetSpeed(uint SchSpeed,ushort mode);
 /*1
     函数功能:	设置振镜速度
     输入参数:	uint SchSpeed			振镜速度,单位pps(脉冲/秒)
@@ -376,7 +372,7 @@ CUDRVE_API int WINDLL CUSchSetSpeed(uint SchSpeed,ushort mode);
 CH：LASERCONTROL中没有什么内容。只是调用，要看上层。
 */
 
-CUDRVE_API int WINDLL CUSchOutLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
+CUDRVE_EXPORT int WINDLL CUSchOutLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
 /*1
     函数功能:	振镜直线插补
     输入参数:	ushort DA16_X_DATA			x轴坐标
@@ -392,7 +388,7 @@ CH：LASERCONTROL中没有什么内容。只是调用，要看上层。	应该�
 
 
 
-CUDRVE_API int WINDLL CUIOOut(byte IOMask, byte IOstatus, ushort mode);
+CUDRVE_EXPORT int WINDLL CUIOOut(byte IOMask, byte IOstatus, ushort mode);
 /*2
     函数功能:	IO输出
     输入参数:	byte IOMask							IO允许,与8位IO一一对应,1为允许改变该IO状态,0为禁止改变该IO状态
@@ -406,7 +402,7 @@ CUDRVE_API int WINDLL CUIOOut(byte IOMask, byte IOstatus, ushort mode);
 CH：这个也只是调用，而且调用应该有错，0的时候不允许，这个就有点没有必要了，应该是都允许吧。
 */
 
-CUDRVE_API int WINDLL CULaserOut(byte LaserCtrl,byte LaserPower, ushort mode);
+CUDRVE_EXPORT int WINDLL CULaserOut(byte LaserCtrl,byte LaserPower, ushort mode);
 /*4
     函数功能:	激光输出控制
     输入参数:	byte LaserCtrl						IO允许,与8位IO一一对应,1为允许改变该IO状态,0为禁止改变该IO状态
@@ -420,7 +416,7 @@ CUDRVE_API int WINDLL CULaserOut(byte LaserCtrl,byte LaserPower, ushort mode);
 CH：四处在同一函数中调用，有干货。LaserCtrl的解释是不正确的。应该是不同的指令，如LATCH等。
 */
 
-CUDRVE_API int WINDLL CURedLightStart();
+CUDRVE_EXPORT int WINDLL CURedLightStart();
 /*1 PathPlan
     函数功能:	通过快速指令启动红光边框扫描
     输入参数:	无
@@ -430,7 +426,7 @@ CUDRVE_API int WINDLL CURedLightStart();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CURedLightEnd();
+CUDRVE_EXPORT int WINDLL CURedLightEnd();
 /*1 PaghPlan
     函数功能:	通过快速指令停止红光边框扫描
     输入参数:	无
@@ -441,7 +437,7 @@ CUDRVE_API int WINDLL CURedLightEnd();
 */
 
 
-CUDRVE_API int WINDLL CUMotorOutXY(uint x, uint y, uint MotorSpeedCorner, uint MotorSpeedMax, uint DecPoint, byte MotorMode, ushort mode);
+CUDRVE_EXPORT int WINDLL CUMotorOutXY(uint x, uint y, uint MotorSpeedCorner, uint MotorSpeedMax, uint DecPoint, byte MotorMode, ushort mode);
 /*1
     函数功能:	步进电机独立输出
     输入参数:	所有参数功能及意义同CUMotorOutXYZ
@@ -451,7 +447,7 @@ CUDRVE_API int WINDLL CUMotorOutXY(uint x, uint y, uint MotorSpeedCorner, uint M
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUMotorOutXYZ(uint x, uint y, uint z, uint MotorSpeedCorner,uint MotorSpeedMax,uint DecPoint, byte MotorMode, ushort mode);
+CUDRVE_EXPORT int WINDLL CUMotorOutXYZ(uint x, uint y, uint z, uint MotorSpeedCorner,uint MotorSpeedMax,uint DecPoint, byte MotorMode, ushort mode);
 /*1
     函数功能:	步进电机独立输出
     输入参数:	uint x								X轴坐标值,实际有效位数为24位
@@ -476,7 +472,7 @@ CUDRVE_API int WINDLL CUMotorOutXYZ(uint x, uint y, uint z, uint MotorSpeedCorne
                             );
 */
 
-CUDRVE_API int WINDLL CUMotorOutZ(uint z,ushort ZDir,ushort mode);
+CUDRVE_EXPORT int WINDLL CUMotorOutZ(uint z,ushort ZDir,ushort mode);
 /*1
     函数功能:	Z轴步进电机输出
     输入参数:	uint z								Z轴步数
@@ -490,7 +486,7 @@ CUDRVE_API int WINDLL CUMotorOutZ(uint z,ushort ZDir,ushort mode);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUMotorGoHome(	ushort	xyz,
+CUDRVE_EXPORT int WINDLL CUMotorGoHome(	ushort	xyz,
                             ushort	home_stop_dist,
                             uint	home_max_dist,
                             ushort	mode);
@@ -508,7 +504,7 @@ CUDRVE_API int WINDLL CUMotorGoHome(	ushort	xyz,
 */
 
 
-CUDRVE_API int WINDLL CUMotorGoHomeLogic(ushort xyz,ushort mode);
+CUDRVE_EXPORT int WINDLL CUMotorGoHomeLogic(ushort xyz,ushort mode);
 /*1
     函数功能:	步进电机内部逻辑回原点，机械保持不变
     输入参数:	uint xyz							指定回原点的轴,0x01为X轴,0x02为Y轴,0x04为Z轴，0x07为三轴同时回原点（DTA_BUF_MODE模式时）
@@ -522,8 +518,8 @@ CUDRVE_API int WINDLL CUMotorGoHomeLogic(ushort xyz,ushort mode);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUMotorStop(ushort xyz);//1
-CUDRVE_API int WINDLL CUMotorSetSpeed(uint SSPEED,
+CUDRVE_EXPORT int WINDLL CUMotorStop(ushort xyz);//1
+CUDRVE_EXPORT int WINDLL CUMotorSetSpeed(uint SSPEED,
                             uint ESPEED,
                             uint ACC,
                             uint ESPEED_Idle,
@@ -544,7 +540,7 @@ CUDRVE_API int WINDLL CUMotorSetSpeed(uint SSPEED,
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUMotorRunMode(ushort Motor_Mode, ushort mode);
+CUDRVE_EXPORT int WINDLL CUMotorRunMode(ushort Motor_Mode, ushort mode);
 /*1
     函数功能:	步进电机速度模式选择
     输入参数:	ushort Motor_Mode					速度模式,MOTOR_SPEED为正常运行模式,IDLE_SPEED为空程模式
@@ -556,7 +552,7 @@ CUDRVE_API int WINDLL CUMotorRunMode(ushort Motor_Mode, ushort mode);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUWriteBuf();
+CUDRVE_EXPORT int WINDLL CUWriteBuf();
 /*1
     函数功能:	在DTA_BUF_MODE(上位机缓冲模式)下,将上位机缓冲数据传输到控制器
     输入参数:	无
@@ -566,7 +562,7 @@ CUDRVE_API int WINDLL CUWriteBuf();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUBufEnd();
+CUDRVE_EXPORT int WINDLL CUBufEnd();
 /*1
     函数功能:	终止当前任务缓冲
     输入参数:	无
@@ -576,7 +572,7 @@ CUDRVE_API int WINDLL CUBufEnd();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUSetPWM(ushort PWMWay,uint Freq, byte duty,ushort mode,BOOL Reverse = false);
+CUDRVE_EXPORT int WINDLL CUSetPWM(ushort PWMWay,uint Freq, byte duty,ushort mode,BOOL Reverse = false);
 /*1
     函数功能:	设置PWM
     输入参数:	ushort PWMWay					PWM通道,有效值为PWM0/PWM1/PWM2
@@ -590,7 +586,7 @@ CUDRVE_API int WINDLL CUSetPWM(ushort PWMWay,uint Freq, byte duty,ushort mode,BO
 */
 
 
-CUDRVE_API int WINDLL CUSetPWMUs(ushort PWMWay, uint Freq, uint HighPulseTimeUs, ushort mode, BOOL Reverse = false);
+CUDRVE_EXPORT int WINDLL CUSetPWMUs(ushort PWMWay, uint Freq, uint HighPulseTimeUs, ushort mode, BOOL Reverse = false);
 /*9
     函数功能:	设置PWM
     输入参数:	ushort PWMWay					PWM通道,有效值为PWM0/PWM1/PWM2
@@ -608,7 +604,7 @@ CUDRVE_API int WINDLL CUSetPWMUs(ushort PWMWay, uint Freq, uint HighPulseTimeUs,
 
 */
 
-CUDRVE_API int WINDLL CUGetStatus(CUStatusdef **CUStatus);
+CUDRVE_EXPORT int WINDLL CUGetStatus(CUStatusdef **CUStatus);
 /*7
     函数功能:	读取状态
     输入参数:	CUStatusdef **CUStatus		返回状态缓冲区指针
@@ -621,7 +617,7 @@ CUDRVE_API int WINDLL CUGetStatus(CUStatusdef **CUStatus);
 
 */
 
-CUDRVE_API int WINDLL CUSetup(uint SetupData, ushort SetupCmd, ushort mode);
+CUDRVE_EXPORT int WINDLL CUSetup(uint SetupData, ushort SetupCmd, ushort mode);
 /*2
     函数功能:	系统设置
     输入参数:	uint SetupData：		设置参数（默认值0x0000）
@@ -661,7 +657,7 @@ CUDRVE_API int WINDLL CUSetup(uint SetupData, ushort SetupCmd, ushort mode);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUPausePara(CUSavedDataStruct lCUSavedDataStruct,ushort mode);
+CUDRVE_EXPORT int WINDLL CUPausePara(CUSavedDataStruct lCUSavedDataStruct,ushort mode);
 /*2
     函数功能:	暂停振镜插补过程
     输入参数:	CUSavedDataStruct lCUSavedDataStruct	详见CUSavedDataStruct的定义
@@ -671,7 +667,7 @@ CUDRVE_API int WINDLL CUPausePara(CUSavedDataStruct lCUSavedDataStruct,ushort mo
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUPause();
+CUDRVE_EXPORT int WINDLL CUPause();
 /*1
     函数功能:	暂停振镜插补过程
     输入参数:
@@ -681,7 +677,7 @@ CUDRVE_API int WINDLL CUPause();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUReset();
+CUDRVE_EXPORT int WINDLL CUReset();
 /*1
     函数功能:	系统复位
     输入参数:	无
@@ -691,7 +687,7 @@ CUDRVE_API int WINDLL CUReset();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUCancel();
+CUDRVE_EXPORT int WINDLL CUCancel();
 /*2
     函数功能:	取消当前运动过程
     输入参数:	无
@@ -700,7 +696,7 @@ CUDRVE_API int WINDLL CUCancel();
     说明:
     调用示例：
 */
-CUDRVE_API uint WINDLL CUGetBufferLength();
+CUDRVE_EXPORT uint WINDLL CUGetBufferLength();
 /*1
     函数功能:	获取本地缓冲区已用长度
     输入参数:	无
@@ -709,7 +705,7 @@ CUDRVE_API uint WINDLL CUGetBufferLength();
     说明:
     调用示例：
 */
-CUDRVE_API BOOL WINDLL CUBufferIsNotFull();
+CUDRVE_EXPORT BOOL WINDLL CUBufferIsNotFull();
 /*1
     函数功能:	返回本地缓冲区使用状态，
     输入参数:	无
@@ -719,7 +715,7 @@ CUDRVE_API BOOL WINDLL CUBufferIsNotFull();
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUBufStart(void);
+CUDRVE_EXPORT int WINDLL CUBufStart(void);
 /*1
     函数功能:	标记缓冲器指令的开始
     输入参数:	无
@@ -730,7 +726,7 @@ CUDRVE_API int WINDLL CUBufStart(void);
 */
 
 
-CUDRVE_API int WINDLL CUWaitHome(uint interval,
+CUDRVE_EXPORT int WINDLL CUWaitHome(uint interval,
                        uint uiTimeout,
                        BOOL XHomeEn,
                        byte XHomeLevel,
@@ -756,7 +752,7 @@ CUDRVE_API int WINDLL CUWaitHome(uint interval,
     调用示例：
 */
 
-CUDRVE_API void WINDLL CUWriteBufEnable(BOOL Enable);
+CUDRVE_EXPORT void WINDLL CUWriteBufEnable(BOOL Enable);
 /*1
     函数功能:	调用该函数后，动态库自动判断写缓冲是否满，满则立即向板卡发送
     输入参数:	BOOL Enable  true  自动判断缓冲满并发送
@@ -767,7 +763,7 @@ CUDRVE_API void WINDLL CUWriteBufEnable(BOOL Enable);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUBufFill(void);
+CUDRVE_EXPORT int WINDLL CUBufFill(void);
 /*1
     函数功能:	调用该函数后，将强制填充板卡缓冲区，使板卡中的所有指令立即执行
     输入参数:	无
@@ -779,7 +775,7 @@ CUDRVE_API int WINDLL CUBufFill(void);
     调用示例：
 */
 
-CUDRVE_API int WINDLL CUCorrectTableInit(ushort line, ushort column, ushort x, ushort y);
+CUDRVE_EXPORT int WINDLL CUCorrectTableInit(ushort line, ushort column, ushort x, ushort y);
 /*1
     函数功能:	校正表初始化
     输入参数:	ushort line			行数 0～64 其中32为中心点
@@ -837,4 +833,4 @@ extern void UnsignedIntTobyte(uint origin, byte* data, int data_index);
 
 extern void IntTobyte(int origin, byte* data, int data_index);
 
-//#endif
+#endif // CUDRVE_H

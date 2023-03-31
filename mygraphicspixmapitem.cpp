@@ -53,7 +53,6 @@ void MyGraphicsPixMapItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
 bool MyGraphicsPixMapItem::selectEvent(QPointF p)
 {
-    qDebug()<<p<<endl;
     if(isSelected())
         return true;
     int w,h;

@@ -76,11 +76,12 @@ bool MyGraphicsRecItem::selectEvent(QPointF p)
 {
     if(this->isSelected())
         return true;
-
-    QLine *lin1 = new QLine(0,0,rect().width(),0);
-    QLine *lin2 = new QLine(rect().width(),0,rect().width(),rect().height());
-    QLine *lin3 = new QLine(0,rect().height(),rect().width(),rect().height());
-    QLine *lin4 = new QLine(0,0,0,rect().height());
+    double w = rect().width();
+    double h = rect().height();
+    QLine *lin1 = new QLine(-w/2,-h/2,w/2,-h/2);
+    QLine *lin2 = new QLine(w/2,-h/2,w/2,h/2);
+    QLine *lin3 = new QLine(-w/2,h/2,w/2,h/2);
+    QLine *lin4 = new QLine(-w/2,-h/2,-w/2,h/2);
 
     if(isOnLine(*lin1,p.toPoint()))
     {

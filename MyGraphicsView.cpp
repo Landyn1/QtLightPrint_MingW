@@ -188,9 +188,9 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
 
     //k=0;
-    if(moveble || lefttop_move || righttop_move || leftbuttom_move)
+    if(moveble || lefttop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move || rightmid_move)
         k=0;
-    if(lefttop_move || midtop_move || righttop_move || leftbuttom_move)
+    if(lefttop_move || midtop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move || rightmid_move)
     {
         save_lefttop();
     }
@@ -199,6 +199,10 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
     midtop_move = false;
     righttop_move = false;
     leftbuttom_move = false;
+    midbuttom_move = false;
+    rightbuttom_move = false;
+    leftmid_move = false;
+    rightmid_move = false;
     emit scene()->selectionChanged();
 
     scene()->update();
@@ -325,7 +329,12 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     midtop_move = QRectF(itemad->pos().x() + itemad->midtop.x(),itemad->pos().y() + itemad->midtop.y(),itemad->midtop.width(),itemad->midtop.height()).contains(mapToScene(event->pos()));
     righttop_move = QRectF(itemad->pos().x() + itemad->righttop.x(),itemad->pos().y() + itemad->righttop.y(),itemad->righttop.width(),itemad->righttop.height()).contains(mapToScene(event->pos()));
     leftbuttom_move = QRectF(itemad->pos().x() + itemad->leftbuttom.x(),itemad->pos().y() + itemad->leftbuttom.y(),itemad->leftbuttom.width(),itemad->leftbuttom.height()).contains(mapToScene(event->pos()));
-    if(moveble || lefttop_move || midtop_move || righttop_move || leftbuttom_move)
+    midbuttom_move = QRectF(itemad->pos().x() + itemad->midbuttom.x(),itemad->pos().y() + itemad->midbuttom.y(),itemad->midbuttom.width(),itemad->midbuttom.height()).contains(mapToScene(event->pos()));
+    rightbuttom_move = QRectF(itemad->pos().x() + itemad->rightbuttom.x(),itemad->pos().y() + itemad->rightbuttom.y(),itemad->rightbuttom.width(),itemad->rightbuttom.height()).contains(mapToScene(event->pos()));
+    leftmid_move = QRectF(itemad->pos().x() + itemad->leftmid.x(),itemad->pos().y() + itemad->leftmid.y(),itemad->leftmid.width(),itemad->leftmid.height()).contains(mapToScene(event->pos()));
+    rightmid_move = QRectF(itemad->pos().x() + itemad->rightmid.x(),itemad->pos().y() + itemad->rightmid.y(),itemad->rightmid.width(),itemad->rightmid.height()).contains(mapToScene(event->pos()));
+
+    if(moveble || lefttop_move || midtop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move ||rightmid_move)
         k=1;
 
 
@@ -1589,7 +1598,6 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
     QPointF roof;
     roof.setX(itemad->mapToScene(itemad->rect()).value(2).x()-10/s);
     roof.setY(itemad->mapToScene(itemad->rect()).value(2).y()-10/s);
-    qDebug()<<roof<<endl;
     for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
@@ -1949,6 +1957,1228 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
     }
     scene()->update();
 }
+
+void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
+{
+    QList<QGraphicsItem*> items = scene()->selectedItems();
+
+    double s = this->matrix().m11();
+    QList<QGraphicsItem *> itemss = scene()->items();
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+
+        if(node->data(0).toInt()<0)
+        {
+            scene()->removeItem(node);
+        }
+    }
+    QPointF roof;
+    roof.setX(itemad->mapToScene(itemad->rect()).value(2).x()-10/s);
+    roof.setY(itemad->mapToScene(itemad->rect()).value(2).y()-10/s);
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->type() == 1)
+        {
+            MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
+            QPointF poss (p3.x(),p2.y());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setRect(-item->rect().width(),0,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 2)
+        {
+            MyGraphicsEllipseItem* item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsEllipseItem *tmp = new MyGraphicsEllipseItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 3)
+        {
+            MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
+            MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 4)
+        {
+            MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+            QRectF rect = item->getRect();
+            QPointF p2 (rect.x(),rect.y());
+            QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
+            MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            QPointF poss = item->pos();
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            QPointF offset = tmp->pos() - item->pos();
+
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setX(item->mapFromScene(po).x());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 5)
+        {
+            MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+            MyGraphicsPolygonItem *tmp = new MyGraphicsPolygonItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setDefault_Path();
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 6)
+        {
+            MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+            MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            QPainterPath path1 = item->path;
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setX(item->mapFromScene(po).x());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 7)
+        {
+            MyGraphicsCurveLineItem* item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+            MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setX(item->mapFromScene(po).x());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 8)
+        {
+            MyGraphicsPixMapItem* item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
+            MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = t2;
+            tmp->setPixmap(item->pixmap());
+            tmp->setPos( poss.x(),((poss-roof)*bili+poss).y());
+            double w = qAbs(item->rect().width());
+            double h = qAbs(item->rect().height()*(1+bili));
+            if(item->rect().height()*(1+bili)<0)
+            {
+                tmp->setPos(tmp->pos()-QPointF(0,h));
+            }
+
+            tmp->setRectF(QRect(0,-h,w,h));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+    }
+    scene()->update();
+}
+
+void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
+{
+    QList<QGraphicsItem*> items = scene()->selectedItems();
+
+    double s = this->matrix().m11();
+    QList<QGraphicsItem *> itemss = scene()->items();
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+
+        if(node->data(0).toInt()<0)
+        {
+            scene()->removeItem(node);
+        }
+    }
+    QPointF roof;
+    roof.setX(itemad->mapToScene(itemad->rect()).value(3).x()+10/s);
+    roof.setY(itemad->mapToScene(itemad->rect()).value(3).y()-10/s);
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->type() == 1)
+        {
+            MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
+            QPointF poss (p3.x(),p2.y());
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+
+            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 2)
+        {
+            MyGraphicsEllipseItem* item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsEllipseItem *tmp = new MyGraphicsEllipseItem();
+            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+
+            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 3)
+        {
+            MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
+            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+
+            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 4)
+        {
+            MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+            QRectF rect = item->getRect();
+            QPointF p2 (rect.x(),rect.y());
+            QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
+            MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
+            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            tmp->setPos((poss-roof)*bili+poss);
+            QPointF offset = tmp->pos() - item->pos();
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+            }
+
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 5)
+        {
+            MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+            QRectF rect = item->getRect();
+            QPointF p2 (rect.x(),rect.y());
+            QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
+            MyGraphicsPolygonItem *tmp = new MyGraphicsPolygonItem();
+            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setDefault_Path();
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 6)
+        {
+            MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
+            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
+            QPointF poss = item->pos();
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+            QPainterPath path1 = item->path;
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos((poss-roof)*bili+poss);
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 7)
+        {
+            MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+            QList<double> list = item->getRect();
+            MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
+            QPointF poss = item->pos();
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos((poss-roof)*bili+poss);
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 8)
+        {
+            MyGraphicsPixMapItem* item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
+            MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
+            double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
+            double bili = 1;
+            if(t1>0&&t2>0)
+            {
+                bili = fmin(t1,t2);
+            }
+            else if(t1<0 && t2 <0)
+            {
+                bili = fmax(t1,t2);
+            }
+            else
+            {
+                bili = fmin(t1,t2);
+            }
+            tmp->setPixmap(item->pixmap());
+            tmp->setPos((poss-roof)*bili+poss);
+            double w = qAbs(item->rect().width()*(1+bili));
+            double h = qAbs(item->rect().height()*(1+bili));
+            if(item->rect().width()*(1+bili)<0)
+            {
+                tmp->setPos((poss-roof)*bili+poss-QPointF(w,h));
+            }
+
+            tmp->setRectF(QRect(0,-h,w,h));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+    }
+    scene()->update();
+}
+
+void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
+{
+    QList<QGraphicsItem*> items = scene()->selectedItems();
+
+    double s = this->matrix().m11();
+    QList<QGraphicsItem *> itemss = scene()->items();
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+
+        if(node->data(0).toInt()<0)
+        {
+            scene()->removeItem(node);
+        }
+    }
+    QPointF roof;
+    roof.setX(itemad->mapToScene(itemad->rect()).value(1).x()-10/s);
+    roof.setY(itemad->mapToScene(itemad->rect()).value(1).y()+10/s);
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->type() == 1)
+        {
+            MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
+            QPointF poss (p3.x(),p2.y());
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 2)
+        {
+            MyGraphicsEllipseItem* item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsEllipseItem *tmp = new MyGraphicsEllipseItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 3)
+        {
+            MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
+            MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 4)
+        {
+            MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+            QRectF rect = item->getRect();
+            QPointF p2 (rect.x(),rect.y());
+            QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
+            MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            QPointF poss = item->pos();
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();
+
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 5)
+        {
+            MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+            MyGraphicsPolygonItem *tmp = new MyGraphicsPolygonItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setDefault_Path();
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 6)
+        {
+            MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+            MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path;
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 7)
+        {
+            MyGraphicsCurveLineItem* item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+            MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 8)
+        {
+            MyGraphicsPixMapItem* item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
+            MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
+            QPointF poss = item->pos();
+            double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPixmap(item->pixmap());
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            double w = qAbs(item->rect().width()*(1+bili));
+            double h = qAbs(item->rect().height());
+            if(item->rect().width()*(1+bili)<0)
+            {
+                tmp->setPos(tmp->pos()-QPointF(w,0));
+            }
+
+            tmp->setRectF(QRect(0,-h,w,h));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+    }
+    scene()->update();
+}
+
+void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
+{
+    QList<QGraphicsItem*> items = scene()->selectedItems();
+
+    double s = this->matrix().m11();
+    QList<QGraphicsItem *> itemss = scene()->items();
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+
+        if(node->data(0).toInt()<0)
+        {
+            scene()->removeItem(node);
+        }
+    }
+    QPointF roof;
+    roof.setX(itemad->mapToScene(itemad->rect()).value(0).x()+10/s);
+    roof.setY(itemad->mapToScene(itemad->rect()).value(0).y()+10/s);
+    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->type() == 1)
+        {
+            MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
+            QPointF poss (p3.x(),p2.y());
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 2)
+        {
+            MyGraphicsEllipseItem* item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
+            QPointF p2 = item->mapToScene(item->rect()).value(0);
+            QPointF p3 = item->mapToScene(item->rect()).value(2);
+            MyGraphicsEllipseItem *tmp = new MyGraphicsEllipseItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 3)
+        {
+            MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
+            MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 4)
+        {
+            MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
+            QRectF rect = item->getRect();
+            QPointF p2 (rect.x(),rect.y());
+            QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
+            MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            QPointF poss = item->pos();
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();
+
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 5)
+        {
+            MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(node);
+            MyGraphicsPolygonItem *tmp = new MyGraphicsPolygonItem();
+            QPointF poss = item->pos();
+            //QPointF offset(w/2,-h/2);
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setData(0,-1);
+            tmp->setDefault_Path();
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 6)
+        {
+            MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(node);
+            MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
+            QPointF poss = item->pos();
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path;
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 7)
+        {
+            MyGraphicsCurveLineItem* item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
+            MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
+            QPointF poss = item->pos();
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            QPainterPath path1 = item->path();
+            QPainterPath path2 ;
+            int k=0;
+            QPointF c1,c2;
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
+            for (int i = 0; i < path1.elementCount(); i++)
+            {
+
+                QPainterPath::Element element = path1.elementAt(i);
+                QPointF po = element;
+                po = item->mapToScene(po);
+                QPointF po2 = (po-roof)*(bili)+po;
+
+                po2 = item->mapFromScene(po2);
+                po2 = po2-offset;
+                po2.setY(item->mapFromScene(po).y());
+                if (element.isMoveTo())
+                {
+                    path2.moveTo(po2);
+                }
+                else if (element.isLineTo())
+                {
+                    path2.lineTo(po2);
+                }
+                else if(element.isCurveTo())
+                {
+
+                    c1 = po2;
+                    k++;
+                    //path2.cubicTo(po2);
+                }
+                else
+                {
+                    if(k%3 == 1)
+                    {
+
+                        c2 = po2;
+                        k++;
+                    }
+                    else if(k%3 == 2)
+                    {
+                        path2.cubicTo(c1,c2,po2);
+                        k++;
+                    }
+
+                }
+            }
+            tmp->setPath(path2);
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+        else if(node->type() == 8)
+        {
+            MyGraphicsPixMapItem* item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(node);
+            MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
+            QPointF poss = item->pos();
+            double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
+            double bili = t2;
+            tmp->setPixmap(item->pixmap());
+            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            double w = qAbs(item->rect().width()*(1+bili));
+            double h = qAbs(item->rect().height());
+            if(item->rect().width()*(1+bili)<0)
+            {
+                tmp->setPos(tmp->pos()-QPointF(w,0));
+            }
+
+            tmp->setRectF(QRect(0,-h,w,h));
+            tmp->setData(0,-1);
+            tmp->setData(1,item->data(0).toInt());
+            tmp->setVisible(true);
+            scene()->addItem(tmp);
+        }
+    }
+    scene()->update();
+}
+
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -1980,6 +3210,22 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
     else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->leftbuttom.x(),itemad->pos().y() + itemad->leftbuttom.y(),itemad->leftbuttom.width(),itemad->leftbuttom.height()).contains(mapToScene(event->pos())))
     {
         setCursor(Qt::SizeBDiagCursor);
+    }
+    else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->midbuttom.x(),itemad->pos().y() + itemad->midbuttom.y(),itemad->midbuttom.width(),itemad->midbuttom.height()).contains(mapToScene(event->pos())))
+    {
+        setCursor(Qt::SizeVerCursor);
+    }
+    else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->rightbuttom.x(),itemad->pos().y() + itemad->rightbuttom.y(),itemad->rightbuttom.width(),itemad->rightbuttom.height()).contains(mapToScene(event->pos())))
+    {
+        setCursor(Qt::SizeFDiagCursor);
+    }
+    else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->leftmid.x(),itemad->pos().y() + itemad->leftmid.y(),itemad->leftmid.width(),itemad->leftmid.height()).contains(mapToScene(event->pos())))
+    {
+        setCursor(Qt::SizeHorCursor);
+    }
+    else if(action_state == 0 && QRectF(itemad->pos().x() + itemad->rightmid.x(),itemad->pos().y() + itemad->rightmid.y(),itemad->rightmid.width(),itemad->rightmid.height()).contains(mapToScene(event->pos())))
+    {
+        setCursor(Qt::SizeHorCursor);
     }
     else
     {
@@ -2019,6 +3265,26 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
     {
         setCursor(Qt::SizeBDiagCursor);
         leftbuttom_set(scenePos,mapToScene(_lastMousePos));
+    }
+    if(action_state == 0 && (event->buttons()& Qt::LeftButton)&& midbuttom_move)
+    {
+        setCursor(Qt::SizeVerCursor);
+        midbuttom_set(scenePos,mapToScene(_lastMousePos));
+    }
+    if(action_state == 0 && (event->buttons()& Qt::LeftButton)&&rightbuttom_move)
+    {
+        setCursor(Qt::SizeFDiagCursor);
+        rightbuttom_set(scenePos,mapToScene(_lastMousePos));
+    }
+    if(action_state == 0 && (event->buttons()& Qt::LeftButton)&&leftmid_move)
+    {
+        setCursor(Qt::SizeHorCursor);
+        leftmid_set(scenePos,mapToScene(_lastMousePos));
+    }
+    if(action_state == 0 && (event->buttons()& Qt::LeftButton)&&rightmid_move)
+    {
+        setCursor(Qt::SizeHorCursor);
+        rightmid_set(scenePos,mapToScene(_lastMousePos));
     }
     if(isPaintLine)
     {

@@ -63,11 +63,20 @@ public:
     bool midtop_move;
     bool righttop_move;
     bool leftbuttom_move;
+    bool midbuttom_move;
+    bool rightbuttom_move;
+    bool leftmid_move;
+    bool rightmid_move;
     void midtop_set(QPointF p1,QPointF p2);
     void lefttop_set(QPointF p1,QPointF p2);
     void righttop_set(QPointF p1,QPointF p2);
     void leftbuttom_set(QPointF p1,QPointF p2);
+    void midbuttom_set(QPointF p1,QPointF p2);
+    void rightbuttom_set(QPointF p1,QPointF p2);
+    void leftmid_set(QPointF p1,QPointF p2);
+    void rightmid_set(QPointF p1,QPointF p2);
     void setItemAd(QList<QGraphicsItem*> items);
+
     QList<int> selectedId;
     bool isPaintLine = false;
     bool isPaintCurve = false;

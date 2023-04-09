@@ -3841,11 +3841,17 @@ void MyGraphicsView::preProcessItem()
 void MyGraphicsView::setStatusBarPtr(QStatusBar* statusBarPtr)
 {
     _statusBarPtr = statusBarPtr;
+    QList<QLabel*> labelList = _statusBarPtr->findChildren<QLabel*>();
+    for(int i = 0; i < labelList.size(); i++)
+    {
+        QLabel* label = labelList.at(i);
+        _statusBarPtr->removeWidget(label);
+    }
     _posLabel = new QLabel("x: 0.00, y : 0.00 px", this);
     _posLabel->setMinimumWidth(375);
     _scaleLabel = new QLabel(u8"缩放倍数：1.00", this);
     _scaleLabel->setMidLineWidth(375);
-    
+
     _statusBarPtr->addWidget(_posLabel);
     _statusBarPtr->addWidget(_scaleLabel);
 }

@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 QT += core gui widgets \
     quick
+QT += xml
 TEMPLATE = app
 TARGET = QtLightPrint
 DESTDIR = ../QtLightPrint/debug
@@ -28,11 +29,13 @@ HEADERS += ./CUDrvE.h \
     ./mainWindow.h \
     CUDrvE.h \
     CUDrvE_global.h \
+    itemfileclass.h \
     mygraphicscurvelineitem.h \
     mygraphicslineitem.h \
     mygraphicspixmapitem.h \
     mygraphicspolygonitem.h \
-    mygraphicstextitem.h
+    mygraphicstextitem.h \
+    mylabel.h
 SOURCES += ./ItemAdjust.cpp \
     ./MyGraphicsCircleItem.cpp \
     ./MyGraphicsEllipseItem.cpp \
@@ -46,11 +49,13 @@ SOURCES += ./ItemAdjust.cpp \
     ./main.cpp \
     ./mainWindow.cpp \
     ./PrintParams.cpp \
+    itemfileclass.cpp \
     mygraphicscurvelineitem.cpp \
     mygraphicslineitem.cpp \
     mygraphicspixmapitem.cpp \
     mygraphicspolygonitem.cpp \
-    mygraphicstextitem.cpp
+    mygraphicstextitem.cpp \
+    mylabel.cpp
 FORMS += ./mainWindow.ui
 RESOURCES += mainWindow.qrc
 LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\libs\ -lCUDrvE

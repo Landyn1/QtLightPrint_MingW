@@ -2,6 +2,7 @@
 
 #include <QGraphicsRectItem>
 #include<math.h>
+#include<qdebug.h>
 class QRectF;
 class MyGraphicsRecItem  : public QGraphicsRectItem
 {

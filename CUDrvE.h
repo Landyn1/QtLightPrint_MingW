@@ -32,6 +32,7 @@ const byte MOTOR_STOP							= 0x0f;//6'd15;
 const byte ROTARY_VSPD							= 0x10;//6'd16
 const byte MOTOR_XY								= 0x11;//6'd17
 const byte RATIO_SET							= 0x12;//6'd18
+const byte DA16_XYZ								= 0x13;//6'd0		振镜直线插补指令
 
 const byte CU_SETUP_SET							= 0x14;//6'd20		系统设置
 const byte CU_PAUSE								= 0x15;//6'd21		振镜暂停指令
@@ -58,6 +59,18 @@ const byte BUF_END								= 0x29;//6'd41
 const byte SET_NUL_DELAY_EXT					= 0x2a;//6'd42
 const byte PWM2I								= 0x2b;//6'd43;
 
+const byte DA16_XYJMP = 0x30;// new 23-1-9
+const byte SET_RorL = 0x31;// new 23-1-14
+
+const byte IMG_PARA = 0x3a;// new 23-2-25 设置图像加工参数
+
+const byte JUMP_DLY = 0x3c;// new 23-1-13
+const byte TUNE_DLY = 0x3d;// new 23-1-12
+const byte OPEN_DLY = 0x3e;// new 23-1-9
+const byte CLOSE_DLY = 0x3f;// new 23-1-12
+
+
+const byte  NULLOP = 0x40;//空指令
 
 const byte QRY_CMD_R							= 0x00 ;
 const byte QRY_CMD_W							= 0x01 ;
@@ -195,9 +208,11 @@ const ushort CU_CORRECT_TAB						= 0x23;//6'd35		校正表
 
 extern uint uiCULBufferLength;					//本地缓冲数据长度
 
-#define MSG_LEN 64								// 消息长度，这里定长64
-#define BUFFER_SIZE 300							// 上层缓冲区长度
-uint buffer_index;								// 缓冲区index
+#define MSG_LEN 512								// 消息长度，这里定长512
+#define DRVBUF_SIZE 65536*140						// 驱动缓冲区长度：8M  //设计的大一点
+#define BUFFER_SIZE 65536*7						// 控制卡缓冲区长度，先写死，以后在初始化函数中，通过与控制卡通信获得。
+
+uint buffer_index[4];							// 缓冲区index
 
 typedef struct
 {
@@ -291,22 +306,17 @@ typedef struct
     X_LIMIT_M		= MotorStatus.1		X轴限位-
     X_LIMIT_P		= MotorStatus.0		X轴限位+
 */
+CUDRVE_EXPORT BOOL WINDLL CUSetCurCard(int curcard);
+//CH：设置当前工作的板卡
 
 CUDRVE_EXPORT BOOL WINDLL CUOpenDevice(int HIDNums=1);
-//CH：串口实现，发一串标志，收一串标志。或者就打开指定串口，或者是RAWHID
+//CH：RAWHID，打开多个HID
 /*3  laser control
     函数功能:	打开控制器
-    输入参数:	int NetNums				板卡数量，最大5
-                char *CUIP[]			板卡IP地址列表，ip地址为“192.168.1.16”的形式
-                uint SleepTimes
-                uint RcvTimeout			接收超时，单位ms
-
-    输出参数:	无
-    返回值:		见函数返回值列表
-    说明:		本卡默认IP为192.168.1.16，如有多个板卡一起工作，则IP最后一段依次递增
+    输入参数:	HIDNums				打开的板卡数量，最大5
+    返回值:		实际打开的板卡数量
     调用示例：
-        char *CUIP[] = {"192.168.1.16","192.168.1.17","192.168.1.18","192.168.1.19","192.168.1.20"};
-        CUOpenDevice(1,CUIP,10000);//只有一个板卡，IP为“192.168.1.10”,连接超时时间为10000ms
+        CUOpenDevice(2);//打开2张板卡
 */
 
 CUDRVE_EXPORT void WINDLL CUCloseDevice();
@@ -340,10 +350,17 @@ CUDRVE_EXPORT bool WINDLL CUReadData(uint data_length, byte* data);
     输出参数:	无
     返回值:		无
     说明:
-    调用示例:	byte*temp_data = new byte[3];
+    调用示例:	byte*command = new byte[3];
+                CUReadData(3, command);
                 CUReadData(3, temp_data);
 */
+CUDRVE_EXPORT int WINDLL CUSetImgPara(ushort width, ushort height, unsigned char pixspacex, unsigned char pixspacey, ushort mode);//2023-2-25
+CUDRVE_EXPORT int WINDLL CUOutImg(byte *pdata, ushort startx, ushort starty);//2023-3-4
 
+CUDRVE_EXPORT int WINDLL CUSetOpenDelayUs(uint DelayTimes, ushort mode);//2023-1-12
+CUDRVE_EXPORT int WINDLL CUSetCloseDelayUs(uint DelayTimes, ushort mode);//2023-1-13
+CUDRVE_EXPORT int WINDLL CUSetTuneDelayUs(uint DelayTimes, ushort mode);//2023-1-13
+CUDRVE_EXPORT int WINDLL CUSetJumpDelayUs(uint DelayTimes, ushort mode);//2023-1-13
 
 CUDRVE_EXPORT int WINDLL CUSetNullDelayUs(uint DelayTimes, ushort mode);//2
 /*
@@ -370,6 +387,19 @@ CUDRVE_EXPORT int WINDLL CUSchSetSpeed(uint SchSpeed,ushort mode);
     说明:
     调用示例：
 CH：LASERCONTROL中没有什么内容。只是调用，要看上层。
+*/
+CUDRVE_EXPORT int WINDLL CUSchJMPLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
+/*1
+函数功能:	振镜直线跳转（不出光）
+输入参数:	ushort DA16_X_DATA			x轴坐标
+ushort DA16_Y_DATA			y轴坐标
+ushort mode					指令模式,见指令模式列表
+
+输出参数:	无
+返回值:		见函数返回值列表
+说明:
+调用示例：
+CH：LASERCONTROL中没有什么内容。只是调用，要看上层。	应该是在固件中实现的，如果在软件中实现，就有点意思了。
 */
 
 CUDRVE_EXPORT int WINDLL CUSchOutLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
@@ -416,6 +446,7 @@ CUDRVE_EXPORT int WINDLL CULaserOut(byte LaserCtrl,byte LaserPower, ushort mode)
 CH：四处在同一函数中调用，有干货。LaserCtrl的解释是不正确的。应该是不同的指令，如LATCH等。
 */
 
+CUDRVE_EXPORT int WINDLL CUSetRedLight(byte rol, ushort mode);
 CUDRVE_EXPORT int WINDLL CURedLightStart();
 /*1 PathPlan
     函数功能:	通过快速指令启动红光边框扫描
@@ -795,7 +826,7 @@ CUDRVE_EXPORT int WINDLL CUCorrectTableInit(ushort line, ushort column, ushort x
         }
 */
 
-extern int WriteDataWithMode(ushort mode, uint data_length, byte* data);
+extern int WriteDataWithMode(ushort mode, byte* data, uint data_length=7);
 /*
     函数功能:	写入数据
     输入参数:	ushort mode				指令模式

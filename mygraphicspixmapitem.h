@@ -21,6 +21,7 @@ public:
     bool selectEvent(QPointF p);
     QString name="";
     QRect rectf;
+    QString filename = "";
     void setDefault_Rect();
     void setRectF(QRect re);
 private:

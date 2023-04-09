@@ -26,6 +26,18 @@ public:
     bool printItem();
     QPoint view2print(QPointF position);
     int kkkk = 2;
+    int filenum = 1;
+    int fileid = 0;
+    QWidget *files = new QWidget();
+    QHBoxLayout *m_file = new QHBoxLayout();
+    QList<MyGraphicsScene *> scenes;
+    QList<MyGraphicsView *> views;
+    QList<bool> isfirst;
+    void creatnewfile(QString filename);
+public slots:
+    void creatnewfile();
+    void savefile();
+    void openfile();
 };
 
 class MyWidget : public QWidget

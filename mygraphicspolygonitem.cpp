@@ -11,7 +11,26 @@ MyGraphicsPolygonItem::~MyGraphicsPolygonItem()
 {
 
 }
+QPainterPath MyGraphicsPolygonItem::ViewPath()
+{
+    QPainterPath p;
+    QPainterPath path = this->path;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
+        }
+    }
+    return p;
 
+}
 
 void MyGraphicsPolygonItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {

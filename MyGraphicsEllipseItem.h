@@ -22,7 +22,7 @@ public:
 		return Type;
 	}
     int printLayer = 0;
-
+    QPainterPath ViewPath();
     QString name="";
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

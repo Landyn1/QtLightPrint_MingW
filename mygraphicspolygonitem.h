@@ -15,7 +15,7 @@ public:
     MyGraphicsPolygonItem(QGraphicsRectItem *parent = nullptr);
     ~MyGraphicsPolygonItem();
 
-
+    QPainterPath ViewPath();
     QRectF boundingRect() const
     {
         return rect();

@@ -2,6 +2,9 @@
 #include<qdebug.h>
 #include<qgraphicsscene.h>'
 #include<qgraphicsview.h>
+#include<math.h>
+#include<QApplication>
+#include<QScreen>
 MyGraphicsEllipseItem::MyGraphicsEllipseItem(QGraphicsEllipseItem *parent)
 	: QGraphicsEllipseItem(parent)
 {}
@@ -18,6 +21,79 @@ QRectF MyGraphicsEllipseItem::boundingRect() const
 	
 }
 
+QPainterPath MyGraphicsEllipseItem::ViewPath()
+{
+    QPainterPath p;
+    double w = this->rect().width();
+    double h = this->rect().height();
+    p.moveTo(mapToScene(0,h/2));
+    int s = 6*w+4*(w-h);
+
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+
+    double ms1 = (dpiX * 10) / 254; //1mm是几个像素
+    int num = s/ms1*10;//mm*10 一微米一个线段;
+    int t = 360*100/num;
+
+    double tt = double(t)/100;
+    double ttt = tt;
+    double r;
+    for(int i=1;i<num;i++)
+    {
+        if(tt <= 90)
+        {
+
+            double hudu = tt*M_PI/180;
+            r = w*w*h*h/(4*((h*h*sin(hudu)*sin(hudu))+(w*w*cos(hudu)*cos(hudu))));
+            r = sqrt(r);
+            double x = r*sin(tt*M_PI/180);
+            double y = r*cos(tt*M_PI/180);
+            p.lineTo(mapToScene(QPointF(x,y)));
+        }
+
+        else if(tt>90&&tt<=180)
+        {
+            double temp = tt-90;
+            double hudu = temp*M_PI/180;
+            r = w*w*h*h/(4*(h*h*cos(hudu)*cos(hudu)+w*w*sin(hudu)*sin(hudu)));
+            r = sqrt(r);
+            double x,y;
+
+            x = r*cos(temp*M_PI/180);
+            y = -r*sin(temp*M_PI/180);
+            p.lineTo(mapToScene(QPointF(x,y)));
+        }
+
+        else if(tt>180&&tt<=270)
+        {
+            double temp = tt-180;
+            double hudu = temp*M_PI/180;
+            r = w*w*h*h/(4*(h*h*sin(hudu)*sin(hudu)+w*w*cos(hudu)*cos(hudu)));
+            r = sqrt(r);
+            double x,y;
+
+            x = -r*sin(temp*M_PI/180);
+            y = -r*cos(temp*M_PI/180);
+            p.lineTo(mapToScene(QPointF(x,y)));
+        }
+
+        else if(tt>270&&tt<360)
+        {
+            double temp = tt-270;
+            double hudu = temp*M_PI/180;
+            r = w*w*h*h/(4*(h*h*cos(hudu)*cos(hudu)+w*w*sin(hudu)*sin(hudu)));
+            r = sqrt(r);
+            double x,y;
+
+            x = -r*cos(temp*M_PI/180);
+            y = r*sin(temp*M_PI/180);
+            p.lineTo(mapToScene(QPointF(x,y)));
+        }
+        tt = tt + ttt;
+    }
+    p.lineTo(mapToScene(0,h/2));
+    return p;
+}
 void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     /*QPen pen = ScaleManager::get_instance().getMainViewItemPen();

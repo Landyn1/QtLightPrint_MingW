@@ -14,7 +14,7 @@ public:
     //QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 4 };
-
+    QPainterPath ViewPath();
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast

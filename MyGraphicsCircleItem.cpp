@@ -15,6 +15,66 @@ QRectF MyGraphicsCircleItem::boundingRect() const
     return rect();
 
 }
+
+QPainterPath MyGraphicsCircleItem::ViewPath()
+{
+    QPainterPath path;
+
+    path.moveTo(mapToScene(0,rect().height()/2));
+    double r = rect().height()/2;
+    int s = 6*r;
+
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+
+    double ms1 = (dpiX * 10) / 254; //1mm是几个像素
+    int num = s/ms1*10;//mm*10 一微米一个线段;
+    int t = 360*100/num;
+
+    double tt = double(t)/100;
+    double ttt = tt;
+
+    for(int i=1;i<num;i++)
+    {
+        if(tt <= 90)
+        {
+            double x = r*sin(tt*M_PI/180);
+            double y = r*cos(tt*M_PI/180);
+            path.lineTo(mapToScene(x,y));
+        }
+
+        else if(tt>90&&tt<=180)
+        {
+            double x,y;
+            double temp = tt-90;
+            x = r*cos(temp*M_PI/180);
+            y = -r*sin(temp*M_PI/180);
+            path.lineTo(mapToScene(x,y));
+        }
+
+        else if(tt>180&&tt<=270)
+        {
+            double x,y;
+            double temp = tt-180;
+            x = -r*sin(temp*M_PI/180);
+            y = -r*cos(temp*M_PI/180);
+            path.lineTo(mapToScene(x,y));
+        }
+
+        else if(tt>270&&tt<360)
+        {
+            double x,y;
+            double temp = tt-270;
+            x = -r*cos(temp*M_PI/180);
+            y = r*sin(temp*M_PI/180);
+            path.lineTo(mapToScene(x,y));
+        }
+        tt = tt + ttt;
+    }
+    path.lineTo(mapToScene(0,rect().height()/2));
+
+    return path;
+
+}
 void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     /*QPen pen = ScaleManager::get_instance().getMainViewItemPen();

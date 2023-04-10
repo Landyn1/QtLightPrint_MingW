@@ -110,9 +110,15 @@ mainWindow::mainWindow(QWidget *parent)
 
     ui.dock7->setWidget(ui.widget_5);
 
-    ui.dock_file->setWidget(ui.scrollArea_3);
+    ui.dock_file->setWidget(ui.widget_24);
+    connect(ui.leftmove,&QPushButton::clicked,[=](){
 
+        ui.scrollArea_3->horizontalScrollBar()->setValue(ui.scrollArea_3->horizontalScrollBar()->value()-10);
+    });
+    connect(ui.rightmove,&QPushButton::clicked,[=](){
 
+        ui.scrollArea_3->horizontalScrollBar()->setValue(ui.scrollArea_3->horizontalScrollBar()->value()+10);
+    });
     //添加默认文件 及名字。
     QWidget *widgetfile = new QWidget();
     widgetfile->setParent(ui.scrollArea_3);
@@ -275,9 +281,9 @@ mainWindow::mainWindow(QWidget *parent)
     ui.itemtable->setColumnHidden(3, true); // 闅愯棌绗笁鍒?
     ui.itemtable->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+    ui.scrollArea_3->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-
-
+    ui.scrollArea_3->verticalScrollBar()->hide();
 
 
 
@@ -291,23 +297,22 @@ mainWindow::mainWindow(QWidget *parent)
 void mainWindow::savefile()
 {
 
-        QFile file(".//test2.xml");
+        QString fileName = QFileDialog::getSaveFileName(this,
+            tr("保存"),
+            "",
+            tr("TEXT Files (*.dat)"));
+        if(fileName.isNull())
+        {
+            return;
+        }
+        QFile file(fileName);
         if (!file.open(QFileDevice::WriteOnly | QFileDevice::Truncate))
         {
             QMessageBox::warning(this, "Error", "打开文件错误!");
         }
-        QDomDocument doc;
-        QDomProcessingInstruction instruction;
-        // 创建XML头部格式
-        instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
-
-        doc.appendChild(instruction);
-        //根节点
-        QDomElement root = doc.createElement("Items");
-        doc.appendChild(root);
 
         //下附各个图元
-
+        QDataStream out(&file);
         QList<QGraphicsItem*> items = scene->items();
         for(QGraphicsItem * node:items)
         {
@@ -357,6 +362,7 @@ void mainWindow::savefile()
                     iff->id = item->data(0).toInt();
                     iff->rec = item->rect();
                     iff->pos = item->pos();
+                    iff->path = item->path;
                     iff->bian_num = item->num;
                     iff->type =item->type();
                 }
@@ -390,133 +396,18 @@ void mainWindow::savefile()
                     iff->pos = item->pos();
                     iff->pixAdr = item->filename;
                     iff->type =item->type();
-                    iff->pixmap = item->pixmap();
+                    QImage img = item->pixmap().toImage();
+
+                    QByteArray ba;
+                    QBuffer buf(&ba);
+                    img.save(&buf, "png");
+                    iff->pix = ba.toBase64();
+
                 }
-                QDomElement item = doc.createElement("Item");
+                out<<*iff;
 
-                    // 给节点创建属性
-                item.setAttribute("ID", iff->id);
-                item.setAttribute("Name", iff->name);	// 参数一是字符串，参数二可以是任何类型
-                item.setAttribute("type", iff->type);
-                item.setAttribute("Bian_num",iff->bian_num);
-
-                QDomElement pos = doc.createElement("Pos");
-
-
-                    // 设置尖括号中的值
-                QDomText text_pos = doc.createTextNode(QString::number(iff->pos.x())+","+QString::number(iff->pos.y()));
-                    // 添加关系
-                pos.appendChild(text_pos);
-                item.appendChild(pos);
-
-                //layer
-                QDomElement layer = doc.createElement("Layer");
-                QDomText text_layer = doc.createTextNode(QString::number(iff->layer));
-                layer.appendChild(text_layer);
-                item.appendChild(layer);
-
-                //rect
-                QDomElement rect = doc.createElement("rect");
-                QDomText text_rect = doc.createTextNode("("+ QString::number(iff->rec.x())+","+QString::number(iff->rec.y())+","+QString::number(iff->rec.width())+","+QString::number(iff->rec.height())+")");
-                rect.appendChild(text_rect);
-                item.appendChild(rect);
-
-                //text
-                QDomElement text = doc.createElement("Text");
-                QDomText text_text = doc.createTextNode(iff->text);
-                text.appendChild(text_text);
-                item.appendChild(text);
-
-                //pixAddr
-                QDomElement pixAddr = doc.createElement("PixAddr");
-                QDomText text_pixAddr = doc.createTextNode(iff->pixAdr);
-                pixAddr.appendChild(text_pixAddr);
-                item.appendChild(pixAddr);
-
-                //font
-                QDomElement font = doc.createElement("Font");
-                QDomText text_font = doc.createTextNode(iff->font.family());
-                font.appendChild(text_font);
-                item.appendChild(font);
-
-                //path
-                QDomElement pa = doc.createElement("path");
-
-                QPainterPath path = iff->path;
-                int k=0;
-                QPointF c1,c2;  //用来计算path2的pos差值
-                for (int i = 0; i < path.elementCount(); i++)
-                {
-
-                    QPainterPath::Element element = path.elementAt(i);
-                    QPointF po = element;
-                    if (element.isMoveTo())
-                    {
-                        QDomElement moveto = doc.createElement("moveto");
-                        QDomText text_move = doc.createTextNode(QString::number(po.x())+","+QString::number(po.y()));
-                        moveto.appendChild(text_move);
-                        pa.appendChild(moveto);
-                    }
-                    else if (element.isLineTo())
-                    {
-                        QDomElement moveto = doc.createElement("lineto");
-                        QDomText text_move = doc.createTextNode(QString::number(po.x())+","+QString::number(po.y()));
-                        moveto.appendChild(text_move);
-                        pa.appendChild(moveto);
-                    }
-                    else if(element.isCurveTo())
-                    {
-                        QDomElement moveto = doc.createElement("c1");
-                        QDomText text_move = doc.createTextNode(QString::number(po.x())+","+QString::number(po.y()));
-                        moveto.appendChild(text_move);
-                        pa.appendChild(moveto);
-                        c1 = po;
-                        k++;
-                        //path2.cubicTo(po2);
-                    }
-                    else
-                    {
-                        if(k%3 == 1)
-                        {
-                            QDomElement moveto = doc.createElement("c2");
-                            QDomText text_move = doc.createTextNode(QString::number(po.x())+","+QString::number(po.y()));
-                            moveto.appendChild(text_move);
-                            pa.appendChild(moveto);
-                            c2 = po;
-                            k++;
-                        }
-                        else if(k%3 == 2)
-                        {
-
-                            QDomElement moveto = doc.createElement("cubicto");
-                            QDomText text_move = doc.createTextNode(QString::number(po.x())+","+QString::number(po.y()));
-                            moveto.appendChild(text_move);
-                            pa.appendChild(moveto);
-                            k++;
-                        }
-
-                    }
-                }
-
-
-                item.appendChild(pa);
-
-                QPixmap inPixmap = iff->pixmap;//store it in a QByteArray
-                QByteArray inByteArray;
-                QBuffer inBuffer( &inByteArray );
-                inBuffer.open( QIODevice::WriteOnly );
-                inPixmap.save( &inBuffer, "PNG" );
-                QString map = inByteArray.toBase64();
-
-                QDomElement pixm = doc.createElement("PixMap");
-                QDomText text_pix = doc.createTextNode(map);
-                pixm.appendChild(text_pix);
-                item.appendChild(pixm);
-                root.appendChild(item);
             }
         }
-        QTextStream stream(&file);
-        doc.save(stream, 4);
         file.close();
 }
 
@@ -529,38 +420,176 @@ void mainWindow::openfile()
         fileNames = dialog.selectedFiles();
         QString fileName = fileNames[0];
         QFile file(fileName);
-        //creatnewfile("test2");
+        QStringList name = fileName.split('/');
+        creatnewfile(name[name.length()-1]);
         if (!file.open (QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::warning(this, "Error", "Selected file is not  correct.");
         }
         else {
-            ItemFileClass t;
-            QDataStream in(&file);
 
+            QDataStream in(&file);
+            QList<QGraphicsItem *> items;
             while (!in.atEnd())
             {
+                ItemFileClass t;
+                in>>t;
+                if(t.type == 1)
+                {
+                    MyGraphicsRecItem *item = new MyGraphicsRecItem();
+                    item->setPos(t.pos);
+                    item->setRect(t.rec);
+                    item->name = t.name;
+                    item->setData(0,t.id);
+                    scene->addItem(item);
+                    item->setVisible(true);
+                    scene->update();
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 2)
+                {
+                    MyGraphicsEllipseItem* item = new MyGraphicsEllipseItem();
+                    item->setPos(t.pos);
+                    item->setRect(t.rec);
+                    item->name = t.name;
+                    item->setData(0,t.id);
+                    scene->addItem(item);
+                    item->setVisible(true);
+                    scene->update();
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 3)
+                {
+                    MyGraphicsCircleItem *item = new MyGraphicsCircleItem();
+                    item->setPos(t.pos);
+                    item->setRect(t.rec);
+                    item->name = t.name;
+                    item->setData(0,t.id);
+                    scene->addItem(item);
+                    item->setVisible(true);
+                    scene->update();
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 4)
+                {
+                    MyGraphicsLineItem *item = new MyGraphicsLineItem();
+                    item->setPath(t.path);
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->name=t.name;
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 5)
+                {
+                    MyGraphicsPolygonItem *item = new MyGraphicsPolygonItem();
+                    item->setPath(t.path);
+                    item->setRect(t.rec);
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->name=t.name;
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 6)
+                {
+                    MyGraphicsTextItem *item = new MyGraphicsTextItem();
+                    item->name = t.name;
+                    item->setRect(t.rec);
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->path = t.path;
+                    item->setStr(t.text,t.font);
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
+                else if(t.type == 7)
+                {
+                    MyGraphicsCurveLineItem * item = new MyGraphicsCurveLineItem();
+                    item->name = t.name;
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->setPath(t.path);
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
 
-//                if(t.type == 1)
-//                {
-//                    MyGraphicsRecItem *item = new MyGraphicsRecItem();
-//                    item->setPos(t.pos);
-//                    item->setRect(t.rec);
-//                    item->name = t.name;
-//                    item->data(0) = t.id;
-//                    scene->addItem(item);
-//                    item->setVisible(true);
-//                    scene->update();
-//                    view->row++;
-//                }
+                else if(t.type == 8)
+                {
+                    QPixmap pix;
+                    pix.loadFromData(QByteArray::fromBase64(t.pix.toLocal8Bit()));
 
+                    MyGraphicsPixMapItem *item = new MyGraphicsPixMapItem();
+                    item->name = t.name;
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->setRectF(t.rec.toRect());
+                    item->setPixmap(pix);
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
 
-
-                qDebug() <<t.name<<t.layer<<t.type<<t.id<<t.rec<<t.path<<t.bian_num<<t.text<<t.font<<t.pixAdr<<t.pos<<endl;
+            }
+            view->item_id++;
+            int l = items.length();
+            QGraphicsItem *temp;
+            for(int i=0;i<l-1;i++)
+            {
+                for(int j=0;j<l-i-1;j++)
+                {
+                    if(items[j]->data(0).toInt()>items[j+1]->data(0).toInt())
+                    {
+                        temp = items[j];
+                        items[j] = items[j+1];
+                        items[j+1] = temp;
+                    }
+                }
+            }
+            for(int i=0;i<l;i++)
+            {
+                emit view->addItem(i,items[i]);
             }
 
         }
         file.close ();
     }
+
 }
 
 
@@ -622,10 +651,23 @@ void mainWindow::creatnewfile(QString filename)
                 visibleItems.append(items[i]);
             }
         }
-        for(int i=visibleItems.length()-1;i>=0;i--)
+        int l = visibleItems.length();
+        QGraphicsItem *temp;
+        for(int i=0;i<l-1;i++)
         {
-
-            emit view->addItem(visibleItems.length()-1-i,visibleItems[i]);
+            for(int j=0;j<l-i-1;j++)
+            {
+                if(visibleItems[j]->data(0).toInt()>visibleItems[j+1]->data(0).toInt())
+                {
+                    temp = visibleItems[j];
+                    visibleItems[j] = visibleItems[j+1];
+                    visibleItems[j+1] = temp;
+                }
+            }
+        }
+        for(int i=0;i<l;i++)
+        {
+            emit view->addItem(i,visibleItems[i]);
         }
         if(isfirst[id])
         {
@@ -760,10 +802,23 @@ void mainWindow::creatnewfile()
                 visibleItems.append(items[i]);
             }
         }
-        for(int i=visibleItems.length()-1;i>=0;i--)
+        int l = visibleItems.length();
+        QGraphicsItem *temp;
+        for(int i=0;i<l-1;i++)
         {
-
-            emit view->addItem(visibleItems.length()-1-i,visibleItems[i]);
+            for(int j=0;j<l-i-1;j++)
+            {
+                if(visibleItems[j]->data(0).toInt()>visibleItems[j+1]->data(0).toInt())
+                {
+                    temp = visibleItems[j];
+                    visibleItems[j] = visibleItems[j+1];
+                    visibleItems[j+1] = temp;
+                }
+            }
+        }
+        for(int i=0;i<l;i++)
+        {
+            emit view->addItem(i,visibleItems[i]);
         }
         if(isfirst[id])
         {
@@ -1072,6 +1127,7 @@ void mainWindow::initConnect()
             item1 = ui.itemtable->item(i, 3);
             QString tid = item1->text();
             int k = 0;
+
             for (int id : ids)
             {  
                 if (QString::number(id) == tid)
@@ -1099,7 +1155,7 @@ void mainWindow::initConnect()
             ui.itemtable->blockSignals(false);
             ui.itemtable->setItemSelected(ui.itemtable->item(i, 2), false);
 
-        }      
+        }
         });
 
 
@@ -1891,7 +1947,7 @@ void mainWindow::initConnect()
                 }
             }
         }
-        int x = zuoxiax, y = youshangy , width = youshangx-zuoxiax,height = youshangy-zuoxiay;
+        int x = zuoxiax, y = zuoxiay , width = youshangx-zuoxiax,height = youshangy-zuoxiay;
         //qDebug() << zuoxiax << zuoxiay << youshangx << youshangy << endl;
         if (k == 1)
         {
@@ -1944,8 +2000,6 @@ void mainWindow::initConnect()
                 }
             }
         }
-
-
     });
     connect(view->horizontalScrollBar(), &QScrollBar::valueChanged, [=]
         {
@@ -2016,12 +2070,43 @@ bool mainWindow::printItem()
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
         int id = node->data(0).value<int>();
-        if (node->type() == 1 && id>0)
+        if(id>0)
         {
-            MyGraphicsRecItem* rect = qgraphicsitem_cast<MyGraphicsRecItem*>(*it);
-            LightDraw(rect->ViewPath(), node, 1);
+            if (node->type() == 1)
+            {
+                MyGraphicsRecItem* rect = qgraphicsitem_cast<MyGraphicsRecItem*>(*it);
+                LightDraw(rect->ViewPath(), rect->printLayer);
+            }
+            else if(node->type() == 2 )
+            {
+                MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
+            }
+            else if(node->type() == 3)
+            {
+                MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
+            }
+            else if(node->type() == 4)
+            {
+                MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
+            }
+            else if(node->type() == 5)
+            {
+                MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
+            }
+            else if(node->type() == 6)
+            {
+                MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
+            }
+            else if(node->type() == 7)
+            {
+
+            }
         }
-       
         
     }
     CULaserOut(ST_MO, 0, 3);
@@ -2034,30 +2119,25 @@ bool mainWindow::printItem()
     return true;
 }
 
-bool mainWindow::LightDraw(QPainterPath path,QGraphicsItem *item,int type)
-{
-    switch (type)
-    {
-    case 1:
-        MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
-        
-        unsigned int speed = print_layer[rect->printLayer].speed/100*65536;//转化
+bool mainWindow::LightDraw(QPainterPath path,int printLayer)
+{      
+        unsigned int speed = print_layer[printLayer].speed/100*65536;//转化
         CUSchSetSpeed(speed, 3);
 
 
-        unsigned int frequnce = print_layer[rect->printLayer].frequence * 1000;
+        unsigned int frequnce = print_layer[printLayer].frequence * 1000;
         CUSetPWM(PWM2, frequnce, 3, false);
         CUSetNullDelayUs(20000, 3);
-        unsigned int power = print_layer[rect->printLayer].power * 2.56; //0-255之间代表0-100
+        unsigned int power = print_layer[printLayer].power * 2.56; //0-255之间代表0-100
         CULaserOut(ST_DATA, power, 3);
         CUSetNullDelayUs(100, 3);
         CULaserOut(ST_LATCH, 1, 3);
         CUSetNullDelayUs(5000, 3);
         CULaserOut(ST_LATCH, 0, 3);
-        unsigned int openDealy = print_layer[rect->printLayer].openDelay;
-        unsigned int closeDealy = print_layer[rect->printLayer].closeDelay;
-        unsigned int endDealy = print_layer[rect->printLayer].endDelay;
-        unsigned int turnDealy = print_layer[rect->printLayer].turnDelay;
+        unsigned int openDealy = print_layer[printLayer].openDelay;
+        unsigned int closeDealy = print_layer[printLayer].closeDelay;
+        unsigned int endDealy = print_layer[printLayer].endDelay;
+        unsigned int turnDealy = print_layer[printLayer].turnDelay;
         CUSetOpenDelayUs(openDealy,3);//2023-1-12
         CUSetCloseDelayUs(closeDealy, 3);//2023-1-13
         CUSetTuneDelayUs(turnDealy, 3);//2023-1-13
@@ -2081,8 +2161,6 @@ bool mainWindow::LightDraw(QPainterPath path,QGraphicsItem *item,int type)
                 CUSchOutLinear(printpo.x(), printpo.y(), 3);
             }
         }
-        break;
-    }
     return true;
 
 }

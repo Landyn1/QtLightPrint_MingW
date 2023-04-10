@@ -22,7 +22,7 @@ public:
     void initConnect();
     PrintParams print_layer[255];
     bool setLayer(int i, PrintParams p);
-    bool LightDraw(QPainterPath path, QGraphicsItem* item, int type);
+    bool LightDraw(QPainterPath path, int printLayer);
     bool printItem();
     QPoint view2print(QPointF position);
     int kkkk = 2;

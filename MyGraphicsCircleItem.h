@@ -21,7 +21,7 @@ public:
     int printLayer = 0;
 
     QString name="";
-
+    QPainterPath ViewPath();
     bool selectEvent(QPointF p);
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

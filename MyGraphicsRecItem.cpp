@@ -37,9 +37,7 @@ QPainterPath MyGraphicsRecItem::ViewPath()
 
     QPainterPath path;
     QRectF temp(mapToScene(rect()).value(0).x(), mapToScene(rect()).value(0).y(), rect().width(), rect().height());
-    /*QFont font;
-    font.setFamily("微软雅黑");
-    path.addText(100, 100, font, "你好");*/
+
     path.addRect(temp);
     return path;
 }

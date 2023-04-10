@@ -4,16 +4,20 @@
 #include <QObject>
 #include <QWidget>
 #include<qgraphicsitem.h>
-
+#include<math.h>
 class MyGraphicsTextItem : public QGraphicsRectItem
 {
 public:
     MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "HP");
     ~MyGraphicsTextItem();
-
+    QPainterPath ViewPath();
     QRectF boundingRect() const
     {
         return rect();
+    }
+    double f(double t,double p0,double p1,double p2,double p3)
+    {
+        return pow((1-t),3)*p0+3*t*pow((1-t),2)*p1 + 3*t*t*(1-t)*p2 + pow(t,3)*p3;
     }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     enum { Type = 6 };

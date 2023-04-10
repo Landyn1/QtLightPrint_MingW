@@ -58,4 +58,4 @@ SOURCES += ./ItemAdjust.cpp \
     mylabel.cpp
 FORMS += ./mainWindow.ui
 RESOURCES += mainWindow.qrc
-LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\libs\ -lCUDrvE
+LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\libs -lCUDrvE

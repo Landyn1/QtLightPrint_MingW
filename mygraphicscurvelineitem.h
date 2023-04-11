@@ -26,7 +26,7 @@ public:
         update();
     }
     int printLayer = 0;
-
+    QPainterPath ViewPath();
     QString name="";
 
     QPointF ctl_pre;

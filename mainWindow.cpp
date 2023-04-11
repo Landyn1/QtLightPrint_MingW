@@ -2104,7 +2104,8 @@ bool mainWindow::printItem()
             }
             else if(node->type() == 7)
             {
-
+                MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
             }
         }
         

@@ -9,6 +9,61 @@ MyGraphicsCurveLineItem::~MyGraphicsCurveLineItem()
 {
 
 }
+
+QPainterPath MyGraphicsCurveLineItem::ViewPath()
+{
+    QPainterPath p;
+    QPainterPath path = this->path();
+    int k=0;
+    QPointF p0,c1,c2,p3;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        QPointF po2 = mapToScene(po);
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+            p0 = po2;
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
+            p0 = po2;
+        }
+        else if(element.isCurveTo())
+        {
+
+            c1 = po2;
+            k++;
+            //path2.cubicTo(po2);
+        }
+        else
+        {
+            if(k%3 == 1)
+            {
+                c2 = po2;
+                k++;
+            }
+            else if(k%3 == 2)
+            {
+                p3 = po2;
+                for(int i=1;i<=100;i++)
+                {
+                    double temp = 0.01*i;
+                    double tx = f(temp,p0.x(),c1.x(),c2.x(),p3.x());
+                    double ty = f(temp,p0.y(),c1.y(),c2.y(),p3.y());
+                    p.lineTo(tx,ty);
+                }
+                k++;
+                p0=po2;
+            }
+
+        }
+    }
+    return p;
+
+}
 void MyGraphicsCurveLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度

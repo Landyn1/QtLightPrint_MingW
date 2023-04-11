@@ -34,7 +34,6 @@ QPainterPath MyGraphicsTextItem::ViewPath()
     QPainterPath path = this->path;
     int k=0;
     QPointF p0,c1,c2,p3;
-    setPos(0,0);
     for (int i = 0; i < path.elementCount(); i++)
     {
         QPainterPath::Element element = path.elementAt(i);
@@ -100,6 +99,7 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
         pen.setColor(Qt::blue);
     }
     painter->setPen(pen);
+    painter->setBrush(Qt::blue);
     painter->scale(1,-1);
 
     painter->drawPath(path);

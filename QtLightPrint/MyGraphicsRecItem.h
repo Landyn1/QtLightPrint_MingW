@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <QGraphicsRectItem>
+#include<math.h>
+#include<qdebug.h>
 class QRectF;
 class MyGraphicsRecItem  : public QGraphicsRectItem
 {
@@ -28,9 +30,14 @@ public:
 	//QPainterPath shape() const override;
 	QPainterPath ViewPath();
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-
+    bool selectEvent(QPointF p);
 	QString name = "";
 	int printLayer = 0;
 private:
 	void initVaiables();
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    bool isOnLine(QLine l , QPoint p);
 };

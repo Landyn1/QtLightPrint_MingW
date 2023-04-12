@@ -24,7 +24,7 @@ public:
     //    //QRectF //temp_rect(-5000,-5000,10000,10000);
     //    return rect;
     //}
-    QRectF MygraphicsLinePre::boundingRect() const
+    QRectF boundingRect() const
     {
         QRectF temp_rect(-5000,-5000,10000,10000);
         

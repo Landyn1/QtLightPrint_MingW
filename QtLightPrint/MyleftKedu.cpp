@@ -16,7 +16,7 @@ MyleftKedu::~MyleftKedu()
 
 void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-    QRect rect(0, -5000, 20, 10000);
+    QRect rect(0, -10000, 20, 20000);
     auto height = rect.height();
     auto width = rect.width();
 
@@ -24,10 +24,9 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
     painter->fillRect(rect, backgroundColor);
 
     double dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
-    painter->scale(1, -1);
-    painter->translate(0, 0);
+
     //绘制刻度
-    painter->save();
+    //painter->save();
 
     QPen pen;
     pen.setColor(textAndLineColor);
@@ -38,11 +37,19 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
     auto longLineWidth = width * 0.6;
     auto middleLineWidth = width * 0.45;
     auto harfWidth = width / 2;
-    auto  tt = (dpiY * 10) / 254;
-    tt = tt * scale;
+    double  tt = (dpiY * 10) / 254;
+    if(scale >= 1999)
+        tt = tt * scale * 2;
+    else
+        tt = tt * scale;
+    double x1 ;
 
-    double x1 = offset * scale;
-    double height1 = viewHeight;
+    double height1;
+
+    x1 = offset*scale;
+    height1 = viewHeight;
+    painter->scale(1, -1);
+    painter->translate(0, 0);
     int temp1 = 0;
     double x2 = 0;
     //painter->scale(1 / scale, 1 / scale);
@@ -62,7 +69,6 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
             x2 = i;
         }
     }
-    qDebug() << x2 << endl;
     int temp = temp1;
     if (temp1 > 0)
     {
@@ -75,7 +81,7 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
 
     if (scale >= 1.9 || scale < 1)
     {
-        for (double i = x2; i >= x2 - height1; i -= tt / scale)
+        for (double i = x2; i >= x2 - height1; i -= tt/scale )
         {
             if (temp % 10 != 0 && temp % 5 == 0)//画长线
             {
@@ -93,7 +99,12 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
                 }
                 else
                 {
-                    painter->drawText(QRectF(-i - 50, -10, 100, harfWidth), Qt::AlignCenter | Qt::TextWordWrap, QString::number(-((i) / tt)));
+                    double num = double(i)/tt;
+                    if(scale == 2000)
+                    {
+                        num = num*2;
+                    }
+                        painter->drawText(QRectF(-i - 50, -10, 100, harfWidth), Qt::AlignCenter | Qt::TextWordWrap, QString::number(num));
                 }
                 painter->rotate(270);
             }
@@ -107,7 +118,7 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
     else
     {
         temp = 0;
-        for (double i = 0; i < 5100 * scale; i += tt )
+        for (double i = 0; i < 10100 * scale; i += tt )
         {
             if (temp % 10 != 0 && temp % 5 == 0)//画长线
             {
@@ -128,7 +139,7 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
             temp++;
         }
         temp = 0;
-        for (double i = 0; i > -5100 * scale; i -= tt)
+        for (double i = 0; i > -10100 * scale; i -= tt)
         {
             if (temp % 10 != 0 && temp % 5 == 0)//画长线
             {
@@ -167,8 +178,12 @@ void MyleftKedu::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
 
     
 
-   painter->eraseRect(QRectF(0, -offset*scale, 20, 19.9));
-   painter->drawLine(QPointF(20 , -5000*scale), QPointF(20 , 5000*scale));
+   //painter->eraseRect(QRectF(0, -offset*scale, 20, 19.9));
+  
+   painter->drawLine(QPointF(20 , -10000*scale), QPointF(20 , 10000*scale));
+   //painter->setPen(Qt::transparent);
+   //painter->setBrush(slidingLineColor);
+   //painter->drawRect(0, -slidingLinePos, 20, 3);
 }
 
 

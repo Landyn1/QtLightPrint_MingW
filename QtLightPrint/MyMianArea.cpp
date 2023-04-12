@@ -31,10 +31,10 @@ void MyMianArea::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     auto width = t * 100;
     auto height = tt * 100;
     painter->drawRect(-width/2,-height/2,width,height);
-    pen.setWidthF(8/scale);
+    pen.setWidthF(6/scale);
     painter->setPen(pen);
-    painter->drawLine(QPointF(-width / 2 + 5/scale, -height / 2-5/scale), QPointF(width / 2, -height / 2-5/scale));
-    painter->drawLine(QPointF(width / 2 + 5/scale, height / 2-5/scale), QPointF(width / 2+5/scale, -height / 2-5/scale));
+    painter->drawLine(QPointF(-width / 2 + 3/scale, -height / 2-3/scale), QPointF(width / 2, -height / 2-3/scale));
+    painter->drawLine(QPointF(width / 2 + 3/scale, height / 2-3/scale), QPointF(width / 2+3/scale, -height / 2-3/scale));
 
     QPointF tempp = mapFromScene(0, offset);
     double y = tempp.y();

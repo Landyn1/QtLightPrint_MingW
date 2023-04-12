@@ -21,7 +21,7 @@ public:
 		return Type;
 	}
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
-	QRectF MyMianArea::boundingRect() const
+    QRectF boundingRect() const
 	{
 		double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
 

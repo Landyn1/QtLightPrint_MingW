@@ -9,6 +9,14 @@
 #include"MygraphicsLinePre.h"
 #include"MyMianArea.h"
 #include"MyleftKedu.h"
+#include"ItemAdjust.h"
+#include<qrect.h>
+#include<QKeyEvent>
+#include"mygraphicslineitem.h"
+#include"mygraphicspolygonitem.h"
+#include"mygraphicstextitem.h"
+#include"mygraphicscurvelineitem.h"
+#include"mygraphicspixmapitem.h"
 class QMenu;
 class QMouseEvent;
 class QResizeEvent;
@@ -18,6 +26,7 @@ class QStatusBar;
 class QLabel;
 class QGraphicsPathItem;
 class QGraphicsLineItem;
+
 class MyGraphicsView  : public QGraphicsView
 {
 	Q_OBJECT
@@ -32,17 +41,49 @@ public:
     
 
     ~MyGraphicsView();
-    void wheelEvent(QWheelEvent* event);
+    void wheelEvent(QWheelEvent* event) Q_DECL_OVERRIDE;
     void preProcessItem();
     void setStatusBarPtr(QStatusBar* statusBarPtr);
     void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
-
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void save_lefttop();
+    //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     MyKedu* topkedu = new MyKedu();
     MygraphicsLinePre* myGrid = new MygraphicsLinePre();
     MyMianArea* mainarea = new MyMianArea(NULL);
     MyleftKedu* leftkedu = new MyleftKedu();
+    ItemAdjust* itemad = new ItemAdjust();
+    QRectF p ;
+    bool moveble;
+    bool lefttop_move;
+    bool midtop_move;
+    bool righttop_move;
+    bool leftbuttom_move;
+    bool midbuttom_move;
+    bool rightbuttom_move;
+    bool leftmid_move;
+    bool rightmid_move;
+    void midtop_set(QPointF p1,QPointF p2);
+    void lefttop_set(QPointF p1,QPointF p2);
+    void righttop_set(QPointF p1,QPointF p2);
+    void leftbuttom_set(QPointF p1,QPointF p2);
+    void midbuttom_set(QPointF p1,QPointF p2);
+    void rightbuttom_set(QPointF p1,QPointF p2);
+    void leftmid_set(QPointF p1,QPointF p2);
+    void rightmid_set(QPointF p1,QPointF p2);
+    void setItemAd(QList<QGraphicsItem*> items);
+
+    QList<int> selectedId;
+    bool isPaintLine = false;
+    bool isPaintCurve = false;
+    int item_id = 1;
+    int row = 0;
+    void setSelecT();
+    QPointF lastPos;
 private:
    // QMenu* _generalMenu;              // 主要的右键菜单
 
@@ -69,7 +110,13 @@ private:
     //CustomGraphicsPolylineItem* _tempPathItemPtr;
    // bool                            _editLine = false;
     //    QGraphicsLineItem               *_tempLineItemPtr;          // 临时用来存储线的对象的路径指针
-
+    MyGraphicsLineItem                  *_tempLineItemPtr = new MyGraphicsLineItem();
+    QPainterPath                        *_tempLinePath = new QPainterPath();
+    MyGraphicsCurveLineItem             *_tempCurveItemPtr = new MyGraphicsCurveLineItem();
+    QPainterPath                        *_tempCurvePath = new QPainterPath();
+    MyGraphicsPolygonItem               *_tempPolygonItemPtr = new MyGraphicsPolygonItem();
+    //MyGraphicsTextItem                  *_tempTextItemPtr = new MyGraphicsTextItem();
+    MyGraphicsPixMapItem                *_tempPixMapItemPtr = new MyGraphicsPixMapItem();
     QStatusBar* _statusBarPtr;             // 指向主窗口状态栏的对象
     QLabel* _posLabel;                 // 状态栏位置指示对象
     QLabel* _objLabel;                 // 状态栏对象指示
@@ -81,11 +128,13 @@ private:
     int slidingLinePos{ 0 };
     int offset{ 0 };
     QFont font{ "微软雅黑",8 };
-    int row = 0;
-    int item_id = 1;
+
+
     
 signals:
     void mouseMovePos(QPoint p);
     void ScaleChanged(double p);
     void addItem(int row,QGraphicsItem * item);
+
+    void mouseleave(int k);
 };

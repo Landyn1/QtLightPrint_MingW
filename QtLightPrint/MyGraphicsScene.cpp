@@ -7,4 +7,7 @@ MyGraphicsScene::MyGraphicsScene(QObject *parent)
 }
 
 MyGraphicsScene::~MyGraphicsScene()
-{}
+{
+
+
+}

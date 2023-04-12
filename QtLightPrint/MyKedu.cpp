@@ -20,7 +20,7 @@ MyKedu::~MyKedu()
 
 void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    QRect rect(-5000,0,10000,20);
+    QRect rect(-10000,0,20000,20);
     auto height = rect.height() ;
     auto width = rect.width() ;
     
@@ -31,8 +31,10 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
 
     double dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
     auto  t = (dpiX * 10) / 254;
-    t = t * scale;
-
+    if(scale >= 1999)
+        t = t * scale*2;
+    else
+        t = t * scale;
     double x1 = offset*scale;
     double width1 = viewWidth ;
 
@@ -40,13 +42,12 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
 
     painter->scale(1, -1);
     painter->translate(0, 0);
-    painter->save();
+   // painter->save();
     QPen pen;
     pen.setColor(textAndLineColor);
     pen.setWidth(1);
     painter->setPen(pen);
     painter->setFont(font);
-    auto  tt = (dpiY * 10) / 254;
     auto shortLine_y = height * 0.75;
     auto longLine_y = height * 0.5;
     auto middleLine_y = height * 0.625;
@@ -101,7 +102,16 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
                     painter->drawText(QRectF(i - 50, 0, 100, halfHeight), Qt::AlignCenter | Qt::TextWordWrap, QString::number((0)));
                 }
                 else
-                    painter->drawText(QRectF(i - 50, 0, 100, halfHeight), Qt::AlignCenter | Qt::TextWordWrap, QString::number((i / t)));
+                {
+                    double num = double(i)/t;
+                    if(scale == 2000)
+                    {
+                        num = num*2;
+                    }
+                    painter->drawText(QRectF(i - 50, 0, 100, halfHeight), Qt::AlignCenter | Qt::TextWordWrap, QString::number(num));
+                }
+
+
             }
 
             else
@@ -118,7 +128,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
     else
     {
         temp = 0;
-        for (double i = 0; i < 5100; i += t)
+        for (double i = 0; i < 10100; i += t)
         {
             if (temp % 5 == 0 && temp % 10 != 0)
             {
@@ -139,7 +149,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
             ++temp;
         }
         temp = 0;
-        for (double i = 0; i > -5100; i -= t)
+        for (double i = 0; i > -10100; i -= t)
         {
             if (temp % 5 == 0 && temp % 10 != 0)
             {
@@ -161,6 +171,11 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
 
     
     
-    painter->eraseRect(QRectF(offset*scale, 0, 20, 19.9));
+    painter->eraseRect(QRectF(offset*scale, 0, 20, 20));
+    
     painter->drawLine(QPointF(x2, 20), QPointF(x2+width1 , 20));
+
+    //painter->setPen(Qt::transparent);
+    //painter->setBrush(slidingLineColor);
+    //painter->drawRect(slidingLinePos, 0, 3, 20);
 }

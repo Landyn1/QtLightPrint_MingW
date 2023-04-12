@@ -14,9 +14,9 @@ public:
 	MyKedu(QGraphicsRectItem *parent = NULL);
 	~MyKedu();
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
-	QRectF MyKedu::boundingRect() const
+    QRectF boundingRect() const
 	{
-		QRectF temp_rect(-5000*scale, 0, 10000*scale, 20*scale);
+        QRectF temp_rect(-10000*scale, 0, 20000*scale, 20*scale);
 		return temp_rect;
 	}
     void setscales(double scale_m)
@@ -36,6 +36,12 @@ public:
         viewWidth = value;
         update();
     }
+    void setslidingLinePos(int x)
+    {
+        slidingLinePos = x;
+        update();
+    }
+
 private:
     QColor backgroundColor{ Qt::white };//背景色
     QColor textAndLineColor{ Qt::black };//文本和刻度颜色
@@ -43,7 +49,7 @@ private:
     Qt::Orientations orientation;
     int slidingLinePos{ 0 };
     double offset{ 0 };
-    QFont font{ "微软雅黑",8 };
+    QFont font{ "微软雅黑",7 };
     float horizontalDPI;
     float verticalDPI;
     double scale = 1;

@@ -18,4 +18,13 @@ public:
         return Type;
     }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+    int printLayer = 0;
+
+    QString name="";
+    QPainterPath ViewPath();
+    bool selectEvent(QPointF p);
+private:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };

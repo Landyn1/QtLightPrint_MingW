@@ -9,4 +9,5 @@ class MyGraphicsScene  : public QGraphicsScene
 public:
 	MyGraphicsScene(QObject *parent = NULL);
 	~MyGraphicsScene();
+    int k = 0;
 };

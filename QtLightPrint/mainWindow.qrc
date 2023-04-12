@@ -8,5 +8,6 @@
         <file>Res/Select-origin.png</file>
         <file>Res/Circle.png</file>
         <file>Res/Ellipse.png</file>
+        <file>Res/close.png</file>
     </qresource>
 </RCC>

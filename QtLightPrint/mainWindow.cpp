@@ -19,7 +19,6 @@
 #include <QDomDocument>
 #include<qbuffer.h>
 #include"bottomdockwidget.h"
-
 using namespace std;
 int action_state;
 int k;
@@ -63,7 +62,6 @@ mainWindow::mainWindow(QWidget *parent)
     splitDockWidget(ui.dock_file, ui.dock_topKedu, Qt::Vertical);
    // splitDockWidget(ui.dock_topKedu, ui.dock3, Qt::Horizontal);
     splitDockWidget(ui.dock_topKedu, ui.dock4, Qt::Vertical);
-    
     
 
     //去除头
@@ -307,7 +305,8 @@ mainWindow::mainWindow(QWidget *parent)
     ui.widget_19->setStyleSheet(QString::fromUtf8("#widget_19{border:1px solid rgb(200,200,200)}"));
     ui.colorbuttom->setStyleSheet(QString::fromUtf8("#colorbuttom{border:1px solid rgb(200,200,200)}"));
     ui.pushButton_3->setAutoFillBackground(true);
-    //initConnect();
+
+
 }
 
 void mainWindow::savefile()
@@ -1175,7 +1174,10 @@ void mainWindow::initConnect()
         });
 
 
+    connect(view,&MyGraphicsView::selectchange,this,[=]{
 
+        emit ui.itemtable->itemSelectionChanged();
+    });
     
 
     connect(scene, &QGraphicsScene::selectionChanged, [=]() {
@@ -1964,14 +1966,21 @@ void mainWindow::initConnect()
                 }
             }
         }
-        int x = zuoxiax, y = zuoxiay , width = youshangx-zuoxiax,height = youshangy-zuoxiay;
-        //qDebug() << zuoxiax << zuoxiay << youshangx << youshangy << endl;
+        double x = zuoxiax, y = zuoxiay , width = youshangx-zuoxiax,height = youshangy-zuoxiay;
+        double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+        double t = (dpiX*10)/254;
         if (k == 1)
         {
-            ui.xposition->setText(QString::number(x));
-            ui.yposition->setText(QString::number(y));
-            ui.xsize->setText(QString::number(width));
-            ui.ysize->setText(QString::number(height));
+            pre_Pos = QPointF(x+(width/2),y+(height/2));
+            pre_w = width;pre_h = height;
+            x = x/t;
+            y = y/t;
+            width = width/t;
+            height = height/t;
+            ui.xposition->setText(QString::number(x+(width/2),'f',3));
+            ui.yposition->setText(QString::number(y+(height/2),'f',3));
+            ui.xsize->setText(QString::number(width,'f',3));
+            ui.ysize->setText(QString::number(height,'f',3));
         }
         else
         {
@@ -1979,6 +1988,8 @@ void mainWindow::initConnect()
             ui.yposition->setText("");
             ui.xsize->setText("");
             ui.ysize->setText("");
+            pre_Pos = QPointF(0,0);
+            pre_w = 0;pre_h = 0;
         }
 
         QList<int> notSelectRows;
@@ -2034,6 +2045,171 @@ void mainWindow::initConnect()
             view->topkedu->setViewWidth(view->size().width());
             scene->update();
         });
+
+    connect(ui.pushButton_2,&QPushButton::clicked,this,[=](){
+        QList<QGraphicsItem *> selectitems = scene->selectedItems();
+        double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+        double t = (dpiX*10)/254;; //1mm = tpx;
+        double x = ui.xposition->text().toDouble();
+        double y = ui.yposition->text().toDouble();
+        QPointF offset = QPointF(x*t,y*t)-pre_Pos;
+
+        double w = ui.xsize->text().toDouble();
+        double h = ui.ysize->text().toDouble();
+        double offset_w = w*t - pre_w;
+        double offset_h = h*t -pre_h;
+        double bilix = offset_w/pre_w;
+        double biliy = offset_h/pre_h;
+        QPointF roof = pre_Pos;
+        for(int i=0;i<selectitems.length();i++)
+        {
+            int type = selectitems[i]->type();
+            if(type == 1)
+            {
+                MyGraphicsRecItem *item = qgraphicsitem_cast<MyGraphicsRecItem *>(selectitems[i]);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setRect(-ww/2,-hh/2,ww,hh);
+            }
+            else if(type == 2)
+            {
+                MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(selectitems[i]);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setRect(-ww/2,-hh/2,ww,hh);
+            }
+            else if(type == 3)
+            {
+                MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem *>(selectitems[i]);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setRect(-ww/2,-hh/2,ww,hh);
+            }
+            else if(type == 4)
+            {
+                MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(selectitems[i]);
+
+                QPainterPath path1 = item->path();
+                QPainterPath path2 ;
+                for (int i = 0; i < path1.elementCount(); i++)
+                {
+                    QPainterPath::Element element = path1.elementAt(i);
+                    QPointF po = element;
+                    po = item->mapToScene(po);
+                    QPointF po2(((po-roof)*(bilix)+po).x(),((po-roof)*(biliy)+po).y());
+                    po2 = item->mapFromScene(po2);
+                    if (element.isMoveTo())
+                    {
+                        path2.moveTo(po2);
+                    }
+                    else if (element.isLineTo())
+                    {
+                        path2.lineTo(po2);
+                    }
+                }
+                item->setPath(path2);
+            }
+            else if(type == 5)
+            {
+                MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(selectitems[i]);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setRect(-ww/2,-hh/2,ww,hh);
+                item->setDefault_Path();
+            }
+            else if(type == 6)
+            {
+                MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(selectitems[i]);
+                QPainterPath path1 = item->path;
+                QPainterPath path2 ;
+                int k=0;
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                item->setRect(-ww/2,-hh/2,ww,hh);
+                item->makePath_fill_Rect();
+            }
+            else if(type == 7)
+            {
+                MyGraphicsCurveLineItem* item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(selectitems[i]);
+                QPainterPath path1 = item->path();
+                QPainterPath path2 ;
+                int k=0;
+                QPointF c1,c2;
+                for (int i = 0; i < path1.elementCount(); i++)
+                {
+
+                    QPainterPath::Element element = path1.elementAt(i);
+                    QPointF po = element;
+                    po = item->mapToScene(po);
+                    QPointF po2(((po-roof)*(bilix)+po).x(),((po-roof)*(biliy)+po).y());
+                    po2 = item->mapFromScene(po2);
+                    //po2 = po2-offs;
+                    if (element.isMoveTo())
+                    {
+                        path2.moveTo(po2);
+                    }
+                    else if (element.isLineTo())
+                    {
+                        path2.lineTo(po2);
+                    }
+                    else if(element.isCurveTo())
+                    {
+
+                        c1 = po2;
+                        k++;
+                        //path2.cubicTo(po2);
+                    }
+                    else
+                    {
+                        if(k%3 == 1)
+                        {
+
+                            c2 = po2;
+                            k++;
+                        }
+                        else if(k%3 == 2)
+                        {
+                            path2.cubicTo(c1,c2,po2);
+                            k++;
+                        }
+
+                    }
+                }
+                item->setPath(path2);
+            }
+            else if(type == 8)
+            {
+                MyGraphicsPixMapItem *item = qgraphicsitem_cast<MyGraphicsPixMapItem *>(selectitems[i]);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setRectF(QRect(0,-hh,ww,hh));
+            }
+        }
+        for(int i=0;i<selectitems.length();i++)
+        {
+            selectitems[i]->setPos(selectitems[i]->pos()+offset);
+        }
+        emit scene->selectionChanged();
+        setpreRect();
+    });
 }
 
 void mainWindow::setItemMoveble(bool moveble)
@@ -2045,6 +2221,305 @@ void mainWindow::setItemMoveble(bool moveble)
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
         node->setFlags(NULL);
 
+    }
+}
+void mainWindow::setpreRect()
+{
+    QList<QTableWidgetItem*> selectItems = ui.itemtable->selectedItems();
+    QSet<int> rows;
+    for (QTableWidgetItem* item : selectItems)
+    {
+        rows.insert(item->row());
+    }
+    QSet<int>::iterator iter;
+    int zuoxiax = 5100, zuoxiay = 5100, youshangx = -5100, youshangy = -5100;
+    int k = 0;
+    for (iter = rows.begin(); iter != rows.end(); iter++)
+    {
+        int row = *iter;
+        QTableWidgetItem* item1 = new QTableWidgetItem;
+        item1 = ui.itemtable->item(row, 3);
+        QString id = item1->text();
+        QList<QGraphicsItem*> items = scene->items();
+        for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
+        {
+            QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+            int id1 = node->data(0).value<int>();
+            if (node->isVisible() && id == QString::number(id1))
+            {
+                k = 1;
+                if (node->type() == 1)
+                {
+                    MyGraphicsRecItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+                    if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                    {
+                        zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                    }
+                    if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                    {
+                        zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                    }
+                    if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                    {
+                        youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                    }
+                    if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                    {
+                        youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                    }
+                    scene->update();
+
+                }
+
+                else if(node->type() == 2)
+                {
+                    MyGraphicsEllipseItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+                    if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                    {
+                        zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                    }
+                    if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                    {
+                        zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                    }
+                    if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                    {
+                        youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                    }
+                    if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                    {
+                        youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                    }
+                    scene->update();
+                }
+
+                else if(node->type() == 3)
+                {
+                    MyGraphicsCircleItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+                    if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                    {
+                        zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                    }
+                    if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                    {
+                        zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                    }
+                    if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                    {
+                        youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                    }
+                    if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                    {
+                        youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                    }
+                    scene->update();
+                }
+
+                else if(node->type() == 4)
+                {
+                    MyGraphicsLineItem* line;
+                    line = qgraphicsitem_cast<MyGraphicsLineItem*>(node);
+                    if (action_state == 0)
+                    {
+                        line->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        line->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    line->setSelected(true);
+                    if (zuoxiax > line->getRect().x())
+                    {
+                        zuoxiax = line->getRect().x();
+                    }
+                    if (zuoxiay > line->getRect().y())
+                    {
+                        zuoxiay = line->getRect().y();
+                    }
+                    if (youshangx < line->getRect().x()+line->getRect().width())
+                    {
+                        youshangx = line->getRect().x()+line->getRect().width();
+                    }
+                    if (youshangy < line->getRect().y()+line->getRect().height())
+                    {
+                        youshangy = line->getRect().y()+line->getRect().height();
+                    }
+                    scene->update();
+                }
+                else if(node->type() == 5)
+                {
+                    MyGraphicsPolygonItem* line;
+                    line = qgraphicsitem_cast<MyGraphicsPolygonItem*>(node);
+                    if (action_state == 0)
+                    {
+                        line->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        line->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    line->setSelected(true);
+                    if (zuoxiax > line->getRect().x())
+                    {
+                        zuoxiax = line->getRect().x();
+                    }
+                    if (zuoxiay > line->getRect().y())
+                    {
+                        zuoxiay = line->getRect().y();
+                    }
+                    if (youshangx < line->getRect().x()+line->getRect().width())
+                    {
+                        youshangx = line->getRect().x()+line->getRect().width();
+                    }
+                    if (youshangy < line->getRect().y()+line->getRect().height())
+                    {
+                        youshangy = line->getRect().y()+line->getRect().height();
+                    }
+                    scene->update();
+                }
+
+                //TODO:
+                else if(node->type() == 6)
+                {
+                    MyGraphicsTextItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsTextItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+                    if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                    {
+                        zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                    }
+                    if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                    {
+                        zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                    }
+                    if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                    {
+                        youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                    }
+                    if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                    {
+                        youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                    }
+                    scene->update();
+
+                }
+                else if(node->type() == 7)
+                {
+                    MyGraphicsCurveLineItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+
+
+                    if (zuoxiax > rect->getRect()[0])
+                    {
+                        zuoxiax = rect->getRect()[0];
+                    }
+                    if (zuoxiay > rect->getRect()[1])
+                    {
+                        zuoxiay = rect->getRect()[1];
+                    }
+                    if (youshangx < rect->getRect()[2])
+                    {
+                        youshangx = rect->getRect()[2];
+                    }
+                    if (youshangy < rect->getRect()[3])
+                    {
+                        youshangy = rect->getRect()[3];
+                    }
+                    scene->update();
+                }
+                else if(node->type() == 8)
+                {
+                        MyGraphicsPixMapItem* rect;
+                        rect = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
+                        if (action_state == 0)
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                        }
+                        else
+                        {
+                            rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                        }
+                        rect->setSelected(true);
+                        if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
+                        {
+                            zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
+                        }
+                        if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
+                        {
+                            zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
+                        }
+                        if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
+                        {
+                            youshangx = rect->mapToScene(rect->rect()).value(2).x();
+                        }
+                        if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
+                        {
+                            youshangy = rect->mapToScene(rect->rect()).value(2).y();
+                        }
+                        scene->update();
+                 }
+            }
+        }
+    }
+    double x = zuoxiax, y = zuoxiay , width = youshangx-zuoxiax,height = youshangy-zuoxiay;
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double t = (dpiX*10)/254;
+    if (k == 1)
+    {
+        pre_Pos = QPointF(x+(width/2),y+(height/2));
+        pre_w = width;pre_h = height;
+    }
+    else
+    {
+        pre_Pos = QPointF(0,0);
+        pre_w = 0;pre_h = 0;
     }
 }
 
@@ -2212,7 +2687,7 @@ bool mainWindow::LightDraw(QPainterPath path,int printLayer)
             QPoint printpo = view2print(po);
             if (element.isMoveTo())
             {
-                CUSchJMPLinear(printpo.x(), printpo.y(), 3);
+                CUSchJmpLinear(printpo.x(), printpo.y(), 3);
             }
             else if (element.isLineTo())
             {

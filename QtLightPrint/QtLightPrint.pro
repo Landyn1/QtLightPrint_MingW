@@ -91,7 +91,6 @@ SOURCES += ./ItemAdjust.cpp \
 FORMS += ./mainWindow.ui
 RESOURCES += mainWindow.qrc \
     mainWindow.qrc
-LIBS += -LD:\QtCode\QtLightPrint_mingw\QtLightPrint\libs -lCUDrvE
 
 DISTFILES += \
     .editorconfig \
@@ -100,3 +99,6 @@ DISTFILES += \
     QtLightPrint.pri \
     QtLightPrint.pro.user \
     cpp.hint
+
+
+LIBS += -L$$PWD/libs/ -lCUDrvE

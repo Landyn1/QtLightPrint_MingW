@@ -66,9 +66,34 @@ QPainterPath MyGraphicsTextItem::ViewPath()
             else if(k%3 == 2)
             {
                 p3 = po2;
-                for(int i=1;i<=100;i++)
+                QList<QPointF> list;
+                for(int i=0;i<=5;i++)
                 {
-                    double temp = 0.01*i;
+                    double temp = 0.2*i;
+                    double tx = f(temp,p0.x(),c1.x(),c2.x(),p3.x());
+                    double ty = f(temp,p0.y(),c1.y(),c2.y(),p3.y());
+                    list.append(QPointF(tx,ty));
+                }
+                double s = 0;
+                for(int i=0;i<5;i++)
+                {
+                    double x1,x2,y1,y2;
+                    x1 = list[i].x();
+                    y1 = list[i].y();
+                    x2 = list[i+1].x();
+                    y2 = list[i+1].y();
+                    double m = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+                    m = sqrt(m);
+                    s += m;
+                }
+                double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+                double  t = (dpiX * 10) / 254;   //1mm = t px
+                double s_mm = s/t;
+                int num = s_mm / 0.1 ; //每隔0.1毫米一个单位;
+
+                for(int i=1;i<=num;i++)
+                {
+                    double temp = (double(1)/double(num))*i;
                     double tx = f(temp,p0.x(),c1.x(),c2.x(),p3.x());
                     double ty = f(temp,p0.y(),c1.y(),c2.y(),p3.y());
                     p.lineTo(tx,ty);
@@ -86,6 +111,27 @@ void MyGraphicsTextItem::setDefault_Path()
 {
     path.addText(rect().x(),-rect().y(), font, str);
 }
+
+void MyGraphicsTextItem::makePath_fill_Rect()
+{
+    QPainterPath path = this->path;
+    QRectF rect = path.boundingRect();
+
+    QRectF tarRect = this->rect();
+    qDebug()<<tarRect<<endl;
+    qreal scaleX = tarRect.width() / rect.width();
+    qreal scaleY = tarRect.height() / rect.height();
+
+
+
+    QTransform trans;
+    trans.scale(scaleX, scaleY);
+    QPainterPath tmp_path = trans.map(path);
+
+    QPointF delta = tarRect.center() - tmp_path.boundingRect().center();
+    tmp_path.translate(delta.x(), delta.y());
+    this->setPath(tmp_path);
+}
 void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
@@ -99,12 +145,15 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
         pen.setColor(Qt::blue);
     }
     painter->setPen(pen);
-    painter->setBrush(Qt::blue);
+    //painter->setBrush(Qt::blue);
     painter->scale(1,-1);
 
     painter->drawPath(path);
 
-    //painter->drawRect(rect());
+    painter->drawRect(rect());
+    pen.setColor(Qt::blue);
+     painter->setPen(pen);
+    painter->drawRect(path.boundingRect());
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

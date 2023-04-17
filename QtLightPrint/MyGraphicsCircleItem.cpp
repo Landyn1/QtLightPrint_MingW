@@ -27,7 +27,7 @@ QPainterPath MyGraphicsCircleItem::ViewPath()
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
 
     double ms1 = (dpiX * 10) / 254; //1mm是几个像素
-    int num = s/ms1*10;//mm*10 一微米一个线段;
+    int num = s/ms1*10;//mm*10 0.1mm一个线段;
     int t = 360*100/num;
 
     double tt = double(t)/100;

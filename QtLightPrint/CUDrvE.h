@@ -388,7 +388,7 @@ CUDRVE_EXPORT int WINDLL CUSchSetSpeed(uint SchSpeed,ushort mode);
     调用示例：
 CH：LASERCONTROL中没有什么内容。只是调用，要看上层。
 */
-CUDRVE_EXPORT int WINDLL CUSchJMPLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
+CUDRVE_EXPORT int WINDLL CUSchJmpLinear(ushort DA16_X_DATA, ushort DA16_Y_DATA, ushort mode);
 /*1
 函数功能:	振镜直线跳转（不出光）
 输入参数:	ushort DA16_X_DATA			x轴坐标

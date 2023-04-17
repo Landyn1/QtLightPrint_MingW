@@ -48,9 +48,34 @@ QPainterPath MyGraphicsCurveLineItem::ViewPath()
             else if(k%3 == 2)
             {
                 p3 = po2;
-                for(int i=1;i<=100;i++)
+                QList<QPointF> list;
+                for(int i=0;i<=5;i++)
                 {
-                    double temp = 0.01*i;
+                    double temp = 0.2*i;
+                    double tx = f(temp,p0.x(),c1.x(),c2.x(),p3.x());
+                    double ty = f(temp,p0.y(),c1.y(),c2.y(),p3.y());
+                    list.append(QPointF(tx,ty));
+                }
+                double s = 0;
+                for(int i=0;i<5;i++)
+                {
+                    double x1,x2,y1,y2;
+                    x1 = list[i].x();
+                    y1 = list[i].y();
+                    x2 = list[i+1].x();
+                    y2 = list[i+1].y();
+                    double m = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+                    m = sqrt(m);
+                    s += m;
+                }
+                double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+                double  t = (dpiX * 10) / 254;   //1mm = t px
+                double s_mm = s/t;
+                int num = s_mm / 0.1 ; //每隔0.1毫米一个单位;
+
+                for(int i=1;i<=num;i++)
+                {
+                    double temp = (double(1)/double(num))*i;
                     double tx = f(temp,p0.x(),c1.x(),c2.x(),p3.x());
                     double ty = f(temp,p0.y(),c1.y(),c2.y(),p3.y());
                     p.lineTo(tx,ty);

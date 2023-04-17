@@ -19,6 +19,10 @@ public:
     {
         return pow((1-t),3)*p0+3*t*pow((1-t),2)*p1 + 3*t*t*(1-t)*p2 + pow(t,3)*p3;
     }
+    double getDeta(double a,double b,double c)
+    {
+        return b*b-4*a*c;
+    }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     enum { Type = 6 };
 
@@ -37,6 +41,7 @@ public:
     void setRectF();
     QPainterPath path;
     void setDefault_Path();
+    void makePath_fill_Rect();
     void setPath(QPainterPath path)
     {
         this->path.clear();

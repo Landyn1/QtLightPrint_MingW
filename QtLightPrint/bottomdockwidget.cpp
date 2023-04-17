@@ -55,9 +55,10 @@ void BottomDockWidget::initUI()
     gridLayout->addWidget(btnConfig, 1, 8);
     gridLayout->addWidget(checkBoxRedOutline,0,9);
     gridLayout->addWidget(checkBoxContinuousRedMode,1,9);
-    gridLayout->setSizeConstraint(QLayout::SetFixedSize);
+
     widget->setLayout(gridLayout);
     this->setWidget(widget);
+    this->setFixedHeight(80);
 }
 
 void BottomDockWidget::initSignalAndSlots()

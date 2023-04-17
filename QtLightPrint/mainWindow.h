@@ -35,6 +35,11 @@ public:
     QList<MyGraphicsView *> views;
     QList<bool> isfirst;
     void creatnewfile(QString filename);
+    QPointF pre_Pos;
+    double pre_w;
+    double pre_h;
+    void setpreRect();
+    int clicknum = 0;
 public slots:
     void creatnewfile();
     void savefile();

@@ -135,6 +135,6 @@ signals:
     void mouseMovePos(QPoint p);
     void ScaleChanged(double p);
     void addItem(int row,QGraphicsItem * item);
-
+    void selectchange();
     void mouseleave(int k);
 };

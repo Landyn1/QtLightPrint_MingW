@@ -182,6 +182,7 @@ void MyGraphicsView::save_lefttop()
             scene()->removeItem(node);
         }
     }
+    emit selectchange();
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
@@ -450,8 +451,11 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         MyGraphicsTextItem *item = new MyGraphicsTextItem();
         item->setPos(p);
         item->setRectF();
+
         item->setRect(-(item->rectf.width()/2),-(item->rectf.height()-item->rectf.height()/3*1.2)/2,item->rectf.width(),item->rectf.height()-item->rectf.height()/3*1.2);
         item->setDefault_Path();
+        item->setRect(-item->path.boundingRect().width()/2,-item->path.boundingRect().height()/2,item->path.boundingRect().width(),item->path.boundingRect().height());
+        item->makePath_fill_Rect();
         item->setVisible(true);
         item->setData(0, item_id);
         QString str = QString::number(row+1);
@@ -3244,7 +3248,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
             node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
         }
-
+        emit selectchange();
     }
     if(action_state == 0 && (event->buttons()& Qt::LeftButton)&&lefttop_move)
     {

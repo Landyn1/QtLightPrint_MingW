@@ -40,6 +40,7 @@ public:
     double pre_h;
     void setpreRect();
     int clicknum = 0;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 public slots:
     void creatnewfile();
     void savefile();

@@ -20,8 +20,9 @@ void MyGraphicsTextItem::setStr(QString str,QFont font)
 
     this->str = str;
     this->font = font;
-    //setDefault_Path();
-    //update();
+    setDefault_Path();
+    makePath_fill_Rect();
+    update();
 }
 void MyGraphicsTextItem::setRectF()
 {
@@ -109,6 +110,7 @@ QPainterPath MyGraphicsTextItem::ViewPath()
 
 void MyGraphicsTextItem::setDefault_Path()
 {
+    path.clear();
     path.addText(rect().x(),-rect().y(), font, str);
 }
 
@@ -118,7 +120,6 @@ void MyGraphicsTextItem::makePath_fill_Rect()
     QRectF rect = path.boundingRect();
 
     QRectF tarRect = this->rect();
-    qDebug()<<tarRect<<endl;
     qreal scaleX = tarRect.width() / rect.width();
     qreal scaleY = tarRect.height() / rect.height();
 
@@ -150,10 +151,6 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     painter->drawPath(path);
 
-    painter->drawRect(rect());
-    pen.setColor(Qt::blue);
-     painter->setPen(pen);
-    painter->drawRect(path.boundingRect());
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

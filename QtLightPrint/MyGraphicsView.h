@@ -17,6 +17,7 @@
 #include"mygraphicstextitem.h"
 #include"mygraphicscurvelineitem.h"
 #include"mygraphicspixmapitem.h"
+
 class QMenu;
 class QMouseEvent;
 class QResizeEvent;
@@ -137,4 +138,5 @@ signals:
     void addItem(int row,QGraphicsItem * item);
     void selectchange();
     void mouseleave(int k);
+    void removeItem(int id);
 };

@@ -1,6 +1,6 @@
 ﻿#include "MyGraphicsEllipseItem.h"
 #include<qdebug.h>
-#include<qgraphicsscene.h>'
+#include<qgraphicsscene.h>
 #include<qgraphicsview.h>
 #include<math.h>
 #include<QApplication>
@@ -13,7 +13,6 @@ MyGraphicsEllipseItem::~MyGraphicsEllipseItem()
 {}
 QRectF MyGraphicsEllipseItem::boundingRect() const
 {
-    auto r = qMax(this->rect().width(), this->rect().height());
     
     QRectF temp_rect = this->rect();
 

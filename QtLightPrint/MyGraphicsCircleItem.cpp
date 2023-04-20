@@ -2,6 +2,7 @@
 #include<qdebug.h>
 #include<qgraphicsscene.h>
 #include<MyGraphicsView.h>
+
 MyGraphicsCircleItem::MyGraphicsCircleItem(QGraphicsEllipseItem*parent)
 	: QGraphicsEllipseItem(parent)
 {}

@@ -19,6 +19,8 @@
 #include <QDomDocument>
 #include<qbuffer.h>
 #include"bottomdockwidget.h"
+#include"ZXingWriter.h"
+#include"mygraphicscodeitem.h"
 using namespace std;
 int action_state;
 int k;
@@ -115,7 +117,8 @@ mainWindow::mainWindow(QWidget *parent)
     ui.dock1->setWidget(wi1);
 
     wi2->size = QSize(200, 400);
-    layout2->addWidget(ui.widget_4);
+    layout2->addWidget(ui.scrollArea_2);
+
     wi2->setLayout(layout2);
     ui.dock2->setWidget(wi2);
 
@@ -132,6 +135,10 @@ mainWindow::mainWindow(QWidget *parent)
     });
 
     connect(bottom_dock->btnMark, &QPushButton::clicked, this, &mainWindow::printItem);
+
+//    ui.scrollArea_2->setWidget(ui.widget_4);
+//    ui.dock2->setWidget(ui.scrollArea_2);
+
 
     //添加默认文件 及名字。
     QWidget *widgetfile = new QWidget();
@@ -218,6 +225,9 @@ mainWindow::mainWindow(QWidget *parent)
 
     });
 
+
+    ui.widget_25->setVisible(false);
+    ui.widget_26->setVisible(false);
     connect(close_file,&QPushButton::clicked,this,[=](){
 
         //lay->removeWidget(label_file);
@@ -419,6 +429,15 @@ void mainWindow::savefile()
                     iff->pix = ba.toBase64();
 
                 }
+                else if(node->type() == 9)
+                {
+                    MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
+                    iff->name = item->name;
+                    iff->id = item->data(0).toInt();
+                    iff->path = item->path();
+                    iff->pos = item->pos();
+                    iff->type =item->type();
+                }
                 out<<*iff;
 
             }
@@ -579,7 +598,21 @@ void mainWindow::openfile()
                     if(view->item_id<t.id)
                         view->item_id = t.id;
                 }
-
+                else if(t.type == 9)
+                {
+                    MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
+                    item->setPath(t.path);
+                    item->setVisible(true);
+                    item->setData(0, t.id);
+                    item->setPos( t.pos);
+                    item->name=t.name;
+                    scene->addItem(item);
+                    items.append(item);
+                    //emit view->addItem(view->row,item);
+                    view->row++;
+                    if(view->item_id<t.id)
+                        view->item_id = t.id;
+                }
             }
             view->item_id++;
             int l = items.length();
@@ -1125,6 +1158,26 @@ void mainWindow::initConnect()
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
+
+    connect(ui.bianji_10, &QPushButton::clicked, this, [&]() {
+        if(kkkk == 2)
+        {
+            action_state = 9;
+            setItemMoveble(false);
+        }
+        else if( kkkk == 1)
+        {
+            ui.draw_quline->click();
+            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+                                     QMessageBox::Yes, QMessageBox::Yes);
+        }
+        else
+        {
+            ui.draw_line->click();
+            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+                                     QMessageBox::Yes , QMessageBox::Yes);
+        }
+        });
     connect(scene,&QGraphicsScene::selectionChanged, [=]() {
         QList<QGraphicsItem*> items = scene->selectedItems();
         QList<int> ids;
@@ -1180,6 +1233,37 @@ void mainWindow::initConnect()
     });
     
 
+    //动态显示左侧东西
+    connect(scene, &QGraphicsScene::selectionChanged, [=]() {
+
+        QList<QGraphicsItem*> items = scene->selectedItems();
+        if(items.length() == 1)
+        {
+            if(items[0]->type() == 6)
+            {
+                MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem *>(items[0]);
+                ui.textEdit->setText( item->str);
+                ui.widget_25->setVisible(true);
+            }
+            if(items[0]->type() == 5)
+            {
+                MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(items[0]);
+                ui.bian_num->setText(QString::number(item->num));
+                ui.widget_26->setVisible(true);
+            }
+        }
+
+        else
+        {
+            ui.widget_25->setVisible(false);
+            ui.widget_26->setVisible(false);
+        }
+
+    });
+
+
+
+    //设置修改框
     connect(scene, &QGraphicsScene::selectionChanged, [=]() {
         
 
@@ -1302,7 +1386,19 @@ void mainWindow::initConnect()
                     y = rect->mapRectToScene(rect->rect()).y();
                 }
             }
+            else if(node->type() == 9)
+            {
+                MyGraphicsCodeItem *rect = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
+                if (x > rect->mapRectToScene(rect->getRect()).x())
+                {
+                    x = rect->mapRectToScene(rect->getRect()).x();
 
+                }
+                if (y > rect->mapRectToScene(rect->getRect()).y())
+                {
+                    y = rect->mapRectToScene(rect->getRect()).y();
+                }
+            }
         }
         //再确定宽高
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
@@ -1406,6 +1502,19 @@ void mainWindow::initConnect()
                 if (h < item->mapToScene(item->rect()).value(2).y() - y)
                 {
                     h = item->mapToScene(item->rect()).value(2).y() - y;
+                }
+            }
+            else if(node->type() == 9)
+            {
+                MyGraphicsCodeItem * rect = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                if (w < rect->mapToScene(rect->getRect()).value(1).x() - x)
+                {
+                    w = rect->mapToScene(rect->getRect()).value(1).x() - x;
+
+                }
+                if (h < rect->mapToScene(rect->getRect()).value(2).y() - y)
+                {
+                    h = rect->mapToScene(rect->getRect()).value(2).y() - y;
                 }
             }
         }
@@ -1571,6 +1680,18 @@ void mainWindow::initConnect()
              QString s = QString::number(id);
              item3 = new QTableWidgetItem(s);
         }
+        else if(type == 9)
+        {
+            MyGraphicsCodeItem* node;
+             node = qgraphicsitem_cast<MyGraphicsCodeItem*>(item);
+             item0 = new QTableWidgetItem(node->name);
+
+             item1 = new QTableWidgetItem("二维码");
+             item2 = new QTableWidgetItem("");
+             id = node->data(0).value<int>();
+             QString s = QString::number(id);
+             item3 = new QTableWidgetItem(s);
+        }
         ui.itemtable->setRowCount(row + 1);
 
         ui.itemtable->setItem(row, 0, item0);
@@ -1671,6 +1792,14 @@ void mainWindow::initConnect()
                         item2->setText(text);
                         ui.itemtable->setItem(row, 0, item2);
                     }
+                    else if(node->type() == 9)
+                    {
+                        MyGraphicsCodeItem *rect;
+                        rect = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                        rect->name = text;
+                        item2->setText(text);
+                        ui.itemtable->setItem(row, 0, item2);
+                    }
                     break;
                 }
 
@@ -1679,7 +1808,23 @@ void mainWindow::initConnect()
 
         });
 
+    //同步删除表格里的东西
+    connect(view,&MyGraphicsView::removeItem,ui.itemtable,[=](int id){
 
+        for (int i = 0;i<ui.itemtable->rowCount();i++)
+        {
+            QTableWidgetItem* item1 = new QTableWidgetItem;
+            item1 = ui.itemtable->item(i, 3);
+            QString tid = item1->text();
+            int table_id = tid.toInt();
+            if(table_id  == id)
+            {
+                ui.itemtable->removeRow(i);
+                view->row--;
+            }
+
+        }
+    });
 
     //显示坐标
     connect(ui.itemtable, &QTableWidget::itemSelectionChanged, this, [&]() {
@@ -1963,6 +2108,37 @@ void mainWindow::initConnect()
                             }
                             scene->update();
                      }
+                     else if(node->type() == 9)
+                     {
+                            MyGraphicsCodeItem* rect;
+                            rect = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                            if (action_state == 0)
+                            {
+                                rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                            }
+                            else
+                            {
+                                rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                            }
+                            rect->setSelected(true);
+                            if (zuoxiax > rect->mapToScene(rect->getRect()).value(0).x())
+                            {
+                                zuoxiax = rect->mapToScene(rect->getRect()).value(0).x();
+                            }
+                            if (zuoxiay > rect->mapToScene(rect->getRect()).value(0).y())
+                            {
+                                zuoxiay = rect->mapToScene(rect->getRect()).value(0).y();
+                            }
+                            if (youshangx < rect->mapToScene(rect->getRect()).value(2).x())
+                            {
+                                youshangx = rect->mapToScene(rect->getRect()).value(2).x();
+                            }
+                            if (youshangy < rect->mapToScene(rect->getRect()).value(2).y())
+                            {
+                                youshangy = rect->mapToScene(rect->getRect()).value(2).y();
+                            }
+                            scene->update();
+                     }
                 }
             }
         }
@@ -2121,6 +2297,7 @@ void mainWindow::initConnect()
             else if(type == 5)
             {
                 MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(selectitems[i]);
+                item->num=ui.bian_num->text().toInt();
                 double ww = item->rect().width();
                 double hh = item->rect().height();
                 item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
@@ -2132,6 +2309,8 @@ void mainWindow::initConnect()
             else if(type == 6)
             {
                 MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(selectitems[i]);
+                QString fontname = ui.comboBox->currentText();
+                item->setStr(ui.textEdit->toPlainText(),QFont(fontname));
                 QPainterPath path1 = item->path;
                 QPainterPath path2 ;
                 int k=0;
@@ -2201,6 +2380,30 @@ void mainWindow::initConnect()
                 ww = (ww)*(bilix)+ww;
                 hh = (hh)*(biliy)+hh;
                 item->setRectF(QRect(0,-hh,ww,hh));
+            }
+            else if(type == 9)
+            {
+                MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(selectitems[i]);
+
+                QPainterPath path1 = item->path();
+                QPainterPath path2 ;
+                for (int i = 0; i < path1.elementCount(); i++)
+                {
+                    QPainterPath::Element element = path1.elementAt(i);
+                    QPointF po = element;
+                    po = item->mapToScene(po);
+                    QPointF po2(((po-roof)*(bilix)+po).x(),((po-roof)*(biliy)+po).y());
+                    po2 = item->mapFromScene(po2);
+                    if (element.isMoveTo())
+                    {
+                        path2.moveTo(po2);
+                    }
+                    else if (element.isLineTo())
+                    {
+                        path2.lineTo(po2);
+                    }
+                }
+                item->setPath(path2);
             }
         }
         for(int i=0;i<selectitems.length();i++)
@@ -2505,6 +2708,39 @@ void mainWindow::setpreRect()
                         }
                         scene->update();
                  }
+                else if(node->type() == 9)
+                {
+                    MyGraphicsCodeItem* rect;
+                    rect = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                    if (action_state == 0)
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                    else
+                    {
+                        rect->setFlags(QGraphicsItem::ItemIsSelectable);
+                    }
+                    rect->setSelected(true);
+
+
+                    if (zuoxiax > rect->mapToScene(rect->getRect()).value(0).x())
+                    {
+                        zuoxiax = rect->mapToScene(rect->getRect()).value(0).x();
+                    }
+                    if (zuoxiay > rect->mapToScene(rect->getRect()).value(0).y())
+                    {
+                        zuoxiay = rect->mapToScene(rect->getRect()).value(0).y();
+                    }
+                    if (youshangx < rect->mapToScene(rect->getRect()).value(2).x())
+                    {
+                        youshangx = rect->mapToScene(rect->getRect()).value(2).x();
+                    }
+                    if (youshangy < rect->mapToScene(rect->getRect()).value(2).y())
+                    {
+                        youshangy = rect->mapToScene(rect->getRect()).value(2).y();
+                    }
+                    scene->update();
+                }
             }
         }
     }
@@ -2526,6 +2762,24 @@ void mainWindow::setpreRect()
 mainWindow::~mainWindow()
 {}
 
+
+
+
+void mainWindow::keyPressEvent(QKeyEvent *ev)
+{
+    if(ev->key() == Qt::Key_Backspace)
+    {
+        QList<QGraphicsItem*> items = scene->selectedItems();
+        for(int i=0;i<items.length();i++)
+        {
+            scene->removeItem(items[i]);
+            emit view->removeItem(items[i]->data(0).toInt());
+        }
+        scene->update();
+       return;
+    }
+    QWidget::keyPressEvent(ev);
+}
 
 
 
@@ -2602,42 +2856,12 @@ bool mainWindow::printItem()
             else if(node->type() == 8)
             {
                 MyGraphicsPixMapItem *item = qgraphicsitem_cast<MyGraphicsPixMapItem*>(*it);
-
-                //QImage image= item->pixmap().toImage();
-
                 LightDraw(item->pixmap(),item->printLayer);
-
-
-
-//                CUDRVE_API int WINDLL CUSetImgPara(ushort width, ushort height, unsigned char pixspacex, unsigned char pixspacey, ushort mode);//2023-2-25
-//                /*
-//                 函数功能: 设置图像参数
-//                 输入参数: ushort width     图像水平方向分辨率（多少象素）
-//                             ushort height    图像竖直方向分辨率（多少象素）
-//                    unsigned char pixspacex    图像输出时，象素点间的水平距离（脉冲数）
-//                    unsigned char pixspacey    图像输出时，象素点间的垂直距离（脉冲数）
-//                    ushort mode        输出模式
-//                 输出参数: 无
-//                 返回值:  无
-//                 说明:
-//                 调用示例: char *gray = new char[row *column ];
-//                             CUSchSetSpeed(65851, mode);
-//                    CUSetImgPara(column, row, 25, 25, mode);
-//                    CUWriteBuf();//要把缓存写入到卡上去。
-//                    CUOutImg((byte *)gray, 10000, 10000);
-//                */
-//                CUDRVE_API int WINDLL CUOutImg(byte *pdata, ushort startx, ushort starty);//2023-3-4
-//                /*
-//                 函数功能: 图像输出
-//                 输入参数: byte *pdata
-//                             ushort startx    图像水平方向初始位置（脉冲数）
-//                             ushort starty    图像竖直方向初始位置（脉冲数）
-//                    测试时可调整以上二参数，使图像位于打标范围的中心。
-//                 输出参数: 无
-//                 返回值:  无
-//                 调用示例: 假设图像分辨率为1024*1024，设置的pixsapce=25，则图像的脉冲尺寸为25600，（65536-25600） /2=20000,
-//                 即左右可留出20000，正好居中，startx,starty可设置为20000
-//                */
+            }
+            else if(node->type() == 9)
+            {
+                MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(*it);
+                LightDraw(item->ViewPath(),item->printLayer);
             }
         }
         

@@ -29,6 +29,7 @@ HEADERS += ./CUDrvE.h \
     ./mainWindow.h \
     CUDrvE.h \
     CUDrvE_global.h \
+    ZXingWriter.h \
     advancedwidget.h \
     bottomdockwidget.h \
     configtabwidget.h \
@@ -42,7 +43,9 @@ HEADERS += ./CUDrvE.h \
     dialogcalculationratio.h \
     dialogpasswordsetting.h \
     itemfileclass.h \
+    mygraphicscodeitem.h \
     mygraphicscurvelineitem.h \
+    mygraphicsheplbrushrectitem.h \
     mygraphicslineitem.h \
     mygraphicspixmapitem.h \
     mygraphicspolygonitem.h \
@@ -78,7 +81,9 @@ SOURCES += ./ItemAdjust.cpp \
     dialogcalculationratio.cpp \
     dialogpasswordsetting.cpp \
     itemfileclass.cpp \
+    mygraphicscodeitem.cpp \
     mygraphicscurvelineitem.cpp \
+    mygraphicsheplbrushrectitem.cpp \
     mygraphicslineitem.cpp \
     mygraphicspixmapitem.cpp \
     mygraphicspolygonitem.cpp \
@@ -101,4 +106,4 @@ DISTFILES += \
     cpp.hint
 
 
-LIBS += -L$$PWD/libs/ -lCUDrvE
+LIBS += -L$$PWD/libs/ -lCUDrvE libZXingWriter

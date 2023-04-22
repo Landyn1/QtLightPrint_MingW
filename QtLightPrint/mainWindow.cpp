@@ -1389,6 +1389,7 @@ void mainWindow::initConnect()
             else if(node->type() == 9)
             {
                 MyGraphicsCodeItem *rect = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
+                qDebug()<<rect->mapRectToScene(rect->getRect());
                 if (x > rect->mapRectToScene(rect->getRect()).x())
                 {
                     x = rect->mapRectToScene(rect->getRect()).x();
@@ -2412,6 +2413,57 @@ void mainWindow::initConnect()
         }
         emit scene->selectionChanged();
         setpreRect();
+    });
+
+    connect(ui.brushbutton,&QPushButton::clicked,this,[=](){
+        QList<QGraphicsItem *> selectitems = scene->selectedItems();
+        bool m,j;
+        int num = ui.midu_text->text().toInt(&m);
+        double jiaodu = ui.jiaodu_text->text().toDouble(&j);
+        if(selectitems.length()==1 && m && j)
+        {
+            view->midu = num;
+            view->jiaodu = jiaodu;
+            int type = selectitems[0]->type();
+            if(type == 1)
+            {
+                MyGraphicsRecItem *item = new MyGraphicsRecItem();
+                item = qgraphicsitem_cast<MyGraphicsRecItem *>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+            else if(type == 2)
+            {
+                MyGraphicsEllipseItem *item = new MyGraphicsEllipseItem();
+                item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+            else if(type == 3)
+            {
+                MyGraphicsCircleItem *item = new MyGraphicsCircleItem();
+                item = qgraphicsitem_cast<MyGraphicsCircleItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+            else if(type == 5)
+            {
+                MyGraphicsPolygonItem *item = new MyGraphicsPolygonItem();
+                item = qgraphicsitem_cast<MyGraphicsPolygonItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+            else if(type == 6)
+            {
+                MyGraphicsTextItem *item = new MyGraphicsTextItem();
+                item = qgraphicsitem_cast<MyGraphicsTextItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+
+            else if(type == 9)
+            {
+                MyGraphicsCodeItem* item = new MyGraphicsCodeItem();
+                item = qgraphicsitem_cast<MyGraphicsCodeItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+        }
+
     });
 }
 

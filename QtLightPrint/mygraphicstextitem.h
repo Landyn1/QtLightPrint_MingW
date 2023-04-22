@@ -8,7 +8,7 @@
 class MyGraphicsTextItem : public QGraphicsRectItem
 {
 public:
-    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "HP");
+    MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "C");
     ~MyGraphicsTextItem();
     QPainterPath ViewPath();
     QRectF boundingRect() const
@@ -25,7 +25,10 @@ public:
     }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     enum { Type = 6 };
-
+    QPainterPath brushpath;
+    double jiaodu = 0;
+    int midu = 0;
+    void set_brush(double jiaodu,int midu);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast

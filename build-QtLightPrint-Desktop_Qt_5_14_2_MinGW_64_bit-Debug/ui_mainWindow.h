@@ -55,7 +55,7 @@ public:
     QWidget *dockWidgetContents_2;
     QScrollArea *scrollArea_2;
     QWidget *scrollAreaWidgetContents;
-    QHBoxLayout *horizontalLayout_17;
+    QHBoxLayout *horizontalLayout_22;
     QWidget *widget_4;
     QWidget *widget_3;
     QHBoxLayout *horizontalLayout_3;
@@ -80,6 +80,16 @@ public:
     QHBoxLayout *horizontalLayout_16;
     QLabel *label_5;
     QLineEdit *bian_num;
+    QWidget *widget_29;
+    QWidget *widget_27;
+    QHBoxLayout *horizontalLayout_17;
+    QLabel *label_6;
+    QLineEdit *jiaodu_text;
+    QWidget *widget_28;
+    QHBoxLayout *horizontalLayout_21;
+    QLabel *label_13;
+    QLineEdit *midu_text;
+    QPushButton *brushbutton;
     QDockWidget *dock3;
     QWidget *dockWidgetContents_3;
     QVBoxLayout *verticalLayout_3;
@@ -258,14 +268,14 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 28, 5018));
-        horizontalLayout_17 = new QHBoxLayout(scrollAreaWidgetContents);
-        horizontalLayout_17->setSpacing(6);
-        horizontalLayout_17->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 28, 1018));
+        horizontalLayout_22 = new QHBoxLayout(scrollAreaWidgetContents);
+        horizontalLayout_22->setSpacing(6);
+        horizontalLayout_22->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_22->setObjectName(QString::fromUtf8("horizontalLayout_22"));
         widget_4 = new QWidget(scrollAreaWidgetContents);
         widget_4->setObjectName(QString::fromUtf8("widget_4"));
-        widget_4->setMinimumSize(QSize(0, 5000));
+        widget_4->setMinimumSize(QSize(0, 1000));
         widget_3 = new QWidget(widget_4);
         widget_3->setObjectName(QString::fromUtf8("widget_3"));
         widget_3->setGeometry(QRect(40, 0, 171, 41));
@@ -335,7 +345,7 @@ public:
         pushButton_2->setGeometry(QRect(120, 150, 71, 41));
         widget_25 = new QWidget(widget_4);
         widget_25->setObjectName(QString::fromUtf8("widget_25"));
-        widget_25->setGeometry(QRect(0, 220, 201, 211));
+        widget_25->setGeometry(QRect(0, 190, 211, 191));
         textEdit = new QTextEdit(widget_25);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         textEdit->setGeometry(QRect(20, 70, 111, 111));
@@ -362,8 +372,48 @@ public:
 
         horizontalLayout_16->addWidget(bian_num);
 
+        widget_29 = new QWidget(widget_4);
+        widget_29->setObjectName(QString::fromUtf8("widget_29"));
+        widget_29->setGeometry(QRect(0, 380, 211, 81));
+        widget_27 = new QWidget(widget_29);
+        widget_27->setObjectName(QString::fromUtf8("widget_27"));
+        widget_27->setGeometry(QRect(10, 10, 91, 39));
+        horizontalLayout_17 = new QHBoxLayout(widget_27);
+        horizontalLayout_17->setSpacing(6);
+        horizontalLayout_17->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
+        label_6 = new QLabel(widget_27);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
 
-        horizontalLayout_17->addWidget(widget_4);
+        horizontalLayout_17->addWidget(label_6);
+
+        jiaodu_text = new QLineEdit(widget_27);
+        jiaodu_text->setObjectName(QString::fromUtf8("jiaodu_text"));
+
+        horizontalLayout_17->addWidget(jiaodu_text);
+
+        widget_28 = new QWidget(widget_29);
+        widget_28->setObjectName(QString::fromUtf8("widget_28"));
+        widget_28->setGeometry(QRect(100, 10, 91, 39));
+        horizontalLayout_21 = new QHBoxLayout(widget_28);
+        horizontalLayout_21->setSpacing(6);
+        horizontalLayout_21->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_21->setObjectName(QString::fromUtf8("horizontalLayout_21"));
+        label_13 = new QLabel(widget_28);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+
+        horizontalLayout_21->addWidget(label_13);
+
+        midu_text = new QLineEdit(widget_28);
+        midu_text->setObjectName(QString::fromUtf8("midu_text"));
+
+        horizontalLayout_21->addWidget(midu_text);
+
+        brushbutton = new QPushButton(widget_29);
+        brushbutton->setObjectName(QString::fromUtf8("brushbutton"));
+        brushbutton->setGeometry(QRect(100, 50, 51, 31));
+
+        horizontalLayout_22->addWidget(widget_4);
 
         scrollArea_2->setWidget(scrollAreaWidgetContents);
         dock2->setWidget(dockWidgetContents_2);
@@ -1115,6 +1165,9 @@ public:
         comboBox->setItemText(2, QCoreApplication::translate("mainWindowClass", "\345\215\216\346\226\207\345\275\251\344\272\221", nullptr));
 
         label_5->setText(QCoreApplication::translate("mainWindowClass", "\350\276\271\346\225\260", nullptr));
+        label_6->setText(QCoreApplication::translate("mainWindowClass", "\350\247\222\345\272\246", nullptr));
+        label_13->setText(QCoreApplication::translate("mainWindowClass", "\345\257\206\345\272\246", nullptr));
+        brushbutton->setText(QCoreApplication::translate("mainWindowClass", "\345\241\253\345\205\205", nullptr));
         dock3->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\346\240\207\345\210\273\345\217\202\346\225\260\346\240\217", nullptr));
         pushButton_6->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
         pushButton_7->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));

@@ -28,6 +28,7 @@
 #include"mygraphicscodeitem.h"
 #include<qcursor.h>
 #include"mygraphicsheplbrushrectitem.h"
+#include"thirdcurve.h"
 MyGraphicsView::MyGraphicsView(QWidget *parent)
 	: QGraphicsView(parent)
 {
@@ -82,6 +83,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs(list[0].y()-list[1].y());
                         item2->setPos(fmin(list[0].x(),list[1].x())+(w/2),fmin(list[0].y(),list[1].y())+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
+                        item2->set_brush(item1->jiaodu,item1->midu);
                         break;
                     }
                     else if(node2->type() == 2)
@@ -97,6 +99,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
+                        item2->set_brush(item1->jiaodu,item1->midu);
                         break;
                     }
                     else if(node2->type() == 3)
@@ -112,6 +115,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
+                        item2->set_brush(item1->jiaodu,item1->midu);
                         break;
 
                     }
@@ -136,7 +140,8 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->setDefault_Path();
+                        item2->setPath(item1->path);
+                        item2->set_brush(item1->jiaodu,item1->midu);
                         break;
                     }
                     else if(node2->type() == 6)
@@ -152,6 +157,7 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->setPath(item1->path);
+                        item2->set_brush(item1->jiaodu,item1->midu);
                         break;
                     }
                     else if(node2->type() == 7)
@@ -288,7 +294,8 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
             _tempPolygonItemPtr->setVisible(false);
             MyGraphicsPolygonItem *item = new MyGraphicsPolygonItem();
             item->setRect(_tempPolygonItemPtr->rect());
-            item->setPath(_tempPolygonItemPtr->path);
+
+            item->setDefault_Path();
             item->setPos(_tempPolygonItemPtr->pos());
             item->setVisible(true);
             QString str = QString::number(row + 1);
@@ -459,9 +466,9 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         QPointF p = mapToScene(_lastMousePos);
         MyGraphicsTextItem *item = new MyGraphicsTextItem();
         item->setPos(p);
-        item->setRectF();
+        //item->setRectF();
 
-        item->setRect(-(item->rectf.width()/2),-(item->rectf.height()-item->rectf.height()/3*1.2)/2,item->rectf.width(),item->rectf.height()-item->rectf.height()/3*1.2);
+        //item->setRect(-(item->rectf.width()/2),-(item->rectf.height()-item->rectf.height()/3*1.2)/2,item->rectf.width(),item->rectf.height()-item->rectf.height()/3*1.2);
         item->setDefault_Path();
         item->setRect(-item->path.boundingRect().width()/2,-item->path.boundingRect().height()/2,item->path.boundingRect().width(),item->path.boundingRect().height());
         item->makePath_fill_Rect();
@@ -533,10 +540,11 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
 
         MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
 
-        item->setPathByStr("text","QRCode");
+        item->setPathByStr("hello","DataMatrix");
         double w = item->path().boundingRect().width();
         double h = item->path().boundingRect().height();
-        item->setPos(p-QPointF(w/2,h/2));
+        item->setPos(p-QPointF(w/2,-h/2));
+        item->set_brush(0,0);
         item->setData(0, item_id);
         QString str = QString::number(row+1);
         item->name="二维码"+str;
@@ -629,12 +637,12 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             {
                 bili = fmin(t1,t2);
             }
-
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -666,6 +674,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -698,6 +707,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -785,6 +795,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -862,6 +873,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1065,11 +1077,12 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF poss (p3.x(),p2.y());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
             double bili = t2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width(),0,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()/2,-item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1087,6 +1100,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1102,6 +1116,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1159,6 +1174,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1221,6 +1237,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1394,12 +1411,12 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             {
                 bili = fmin(t1,t2);
             }
-
-            tmp->setPos(poss);
-            tmp->setRect(0,0,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1428,6 +1445,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1457,6 +1475,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1537,6 +1556,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1612,6 +1632,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1823,12 +1844,12 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             {
                 bili = fmin(t1,t2);
             }
-
-            tmp->setPos(poss);
-            tmp->setRect(0,0,-item->rect().width()*(1+bili),-item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1857,6 +1878,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1886,6 +1908,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1966,6 +1989,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2041,6 +2065,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2241,11 +2266,12 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss (p3.x(),p2.y());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
             double bili = t2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width(),0,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()/2,-item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2264,6 +2290,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -2278,6 +2305,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2336,6 +2364,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2398,6 +2427,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2573,12 +2603,12 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             {
                 bili = fmin(t1,t2);
             }
-
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2609,6 +2639,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setPos((poss-roof)*bili+poss);
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2642,6 +2673,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2729,6 +2761,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2806,6 +2839,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3009,11 +3043,12 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF poss (p3.x(),p2.y());
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
             double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3031,6 +3066,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3045,6 +3081,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3102,6 +3139,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3164,6 +3202,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3325,11 +3364,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF poss (p3.x(),p2.y());
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
             double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili),0,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()/2));
+            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3347,6 +3387,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
+            tmp->set_brush(item->jiaodu,item->midu);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3361,6 +3402,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3418,6 +3460,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3480,6 +3523,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
+            tmp->set_brush(item->jiaodu,item->midu);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);

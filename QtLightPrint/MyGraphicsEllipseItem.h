@@ -14,7 +14,10 @@ public:
 	QRectF boundingRect() const;
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 	enum { Type = 2 };
-
+    QPainterPath brushpath;
+    double jiaodu = 0;
+    int midu = 0;
+    void set_brush(double jiaodu,int midu);
     bool selectEvent(QPointF p);
 	int type() const
 	{

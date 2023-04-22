@@ -23,7 +23,7 @@ public:
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 5 };
-
+    bool set_brush(double jiaodu,int midu);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -36,6 +36,9 @@ public:
     bool selectEvent(QPointF p);
     QPainterPath path;
     void setPath(QPainterPath path);
+    QPainterPath brushpath;
+    double jiaodu = 0;
+    int midu = 0;
     void setDefault_Path();
     bool isOnLine(QLine l , QPoint p);
     QRect getRect();

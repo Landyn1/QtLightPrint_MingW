@@ -8,7 +8,7 @@ public:
     MyGraphicsCodeItem();
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 9 };
-    QPointF duichengdian(QPointF p1 , QPointF p2);
+    QRectF boundingRect() const;
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -20,7 +20,9 @@ public:
     ~MyGraphicsCodeItem();
     void setPathByStr(QString str,QString type);
     bool selectEvent(QPointF p);
+    bool set_brush(double jiaodu,int midu);
     QRectF getRect();
+    QPainterPath noBrushPath;
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

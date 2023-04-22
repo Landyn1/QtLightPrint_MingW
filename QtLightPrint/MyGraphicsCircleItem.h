@@ -11,7 +11,10 @@ public:
 	~MyGraphicsCircleItem();
     QRectF boundingRect() const;
     enum { Type = 3 };
-
+    QPainterPath brushpath;
+    double jiaodu = 0;
+    int midu = 0;
+    void set_brush(double jiaodu,int midu);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast

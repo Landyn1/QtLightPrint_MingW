@@ -20,10 +20,13 @@ public:
 		// 针对该 item 启用 qgraphicsitem_cast
 		return Type;
 	}
-
+    void set_brush(double jiaodu,int midu);
 	~MyGraphicsRecItem();
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
+    QPainterPath brushpath;
+    double jiaodu = 0;
+    int midu = 0;
 	//QRectF boundingRect() const;
 	//QPainterPath shape() const;
 	//QRectF boundingRect() const override;

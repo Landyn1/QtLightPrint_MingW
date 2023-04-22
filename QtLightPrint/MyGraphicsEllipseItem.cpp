@@ -111,7 +111,7 @@ void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     
         
     painter->drawEllipse(QPointF(0, 0), this->rect().width() / 2, this->rect().height() / 2);
-
+    painter->drawPath(brushpath);
 }
 
 bool MyGraphicsEllipseItem::selectEvent(QPointF p)
@@ -141,6 +141,179 @@ bool MyGraphicsEllipseItem::selectEvent(QPointF p)
 
 }
 
+void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
+{
+    brushpath.clear();
+    QPainterPath path;
+    double k = tan(jiaodu*M_PI/180);//斜率
+    int w = rect().width();
+    int h = rect().height();
+    double m = double(h)/double(w);
+    if(midu==0)
+    {
+        update();
+        return;
+    }
+    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    {
+        if(k==0)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double x1 = sqrt((a*a)-(a*a*n*n/b/b));
+                double x2 = -x1;
+                double y1 = n;
+                double y2 = n;
+                path.moveTo(x1,y1);
+                path.lineTo(x2,y2);
+            }
+        }
+        else if(k>0&&k<=m)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double A = b*b+a*a*k*k,B=2*a*a*k*n,C=a*a*((n*n)-(b*b));
+                double deta = (B*B)-(4*A*C);
+                if(deta>0)
+                {
+                    double x1 = (-B+sqrt(deta))/(2*A);
+                    double x2 = (-B-sqrt(deta))/(2*A);
+                    double y1 = k*x1+n;
+                    double y2 = k*x2+n;
+                    path.moveTo(x1,y1);
+                    path.lineTo(x2,y2);
+                }
+
+            }
+
+        }
+        else if( k > m )
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double A = b*b+a*a*k*k,B=2*a*a*k*n,C=a*a*((n*n)-(b*b));
+                double deta = (B*B)-(4*A*C);
+                if(deta>0)
+                {
+                    double x1 = (-B+sqrt(deta))/(2*A);
+                    double x2 = (-B-sqrt(deta))/(2*A);
+                    double y1 = k*x1+n;
+                    double y2 = k*x2+n;
+                    path.moveTo(x1,y1);
+                    path.lineTo(x2,y2);
+                }
+            }
+        }
+        else if( k < -m)
+        {
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double A = b*b+a*a*k*k,B=2*a*a*k*n,C=a*a*((n*n)-(b*b));
+                double deta = (B*B)-(4*A*C);
+                if(deta>0)
+                {
+                    double x1 = (-B+sqrt(deta))/(2*A);
+                    double x2 = (-B-sqrt(deta))/(2*A);
+                    double y1 = k*x1+n;
+                    double y2 = k*x2+n;
+                    path.moveTo(x1,y1);
+                    path.lineTo(x2,y2);
+                }
+            }
+        }
+        else if( k<0 && k>=-m)
+        {
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double A = b*b+a*a*k*k,B=2*a*a*k*n,C=a*a*((n*n)-(b*b));
+                double deta = (B*B)-(4*A*C);
+                if(deta>0)
+                {
+                    double x1 = (-B+sqrt(deta))/(2*A);
+                    double x2 = (-B-sqrt(deta))/(2*A);
+                    double y1 = k*x1+n;
+                    double y2 = k*x2+n;
+                    path.moveTo(x1,y1);
+                    path.lineTo(x2,y2);
+                }
+            }
+        }
+
+    }
+    else
+    {
+
+        if(int(jiaodu)%180 == 0)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+
+                //y=kx+pert*i;
+                //x^2/(w/2)^2+……=1
+                double a=w/2,b=h/2;
+                double n = pert*i;
+                double x1 = sqrt((a*a)-(a*a*n*n/b/b));
+                double x2 = -x1;
+                double y1 = n;
+                double y2 = n;
+                path.moveTo(x1,y1);
+                path.lineTo(x2,y2);
+            }
+        }
+
+        else
+        {
+            double pert = w/double(midu);
+            for(double i=-w/2;i<=w/2;i+=pert)
+            {
+                double a=w/2,b=h/2;
+                double x1=i,x2=i;
+                double y1 = sqrt((1-(x1*x1)/a/a)*b*b);
+                double y2 = -y1;
+
+                path.moveTo(x1,y1);
+                path.lineTo(x2,y2);
+            }
+        }
+    }
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    brushpath = path;
+    update();
+}
 
 void MyGraphicsEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {

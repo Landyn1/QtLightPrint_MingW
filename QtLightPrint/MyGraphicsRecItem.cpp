@@ -57,7 +57,7 @@ void MyGraphicsRecItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
     }
     painter->setPen(pen);
     painter->drawRect(this->rect());
-
+    painter->drawPath(brushpath);
 
 }
 
@@ -110,6 +110,140 @@ bool MyGraphicsRecItem::selectEvent(QPointF p)
     return true;
 
 
+}
+
+void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
+{
+    brushpath.clear();
+    QPainterPath path;
+    double k = tan(jiaodu*M_PI/180);//斜率
+    int w = rect().width();
+    int h = rect().height();
+    double m = double(h)/double(w);
+    if(midu==0)
+    {
+        update();
+        return;
+    }
+    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    {
+        if(k>0&&k<=m)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+
+                QPointF p1(w/2,(w/2*k)+(pert*i));
+                QPointF p2(-w/2,(-w/2*k)+(pert*i));
+                if(pert * i >= (h/2)- (w/2*k))
+                {
+                    p1 = QPointF(((h/2)-(pert*i))/k,h/2);
+                }
+                else if( pert * i <= -(h/2)+(w/2*k))
+                {
+                    p2 = QPointF(((-h/2)-(pert*i))/k,-h/2);
+                }
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+
+        }
+        else if( k > m )
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                QPointF p1(((h/2)-(pert*i))/k,h/2);
+                QPointF p2(((-h/2)-(pert*i))/k,-h/2);
+                if(pert * i < (h/2)- (w/2*k))
+                {
+                    p1 = QPointF(w/2,(w/2*k)+(pert*i));
+                }
+                else if( pert * i > -(h/2)+(w/2*k))
+                {
+                    p2 = QPointF(-w/2,(-w/2*k)+(pert*i));
+                }
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+        }
+        else if( k < -m)
+        {
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                QPointF p1(((h/2)-(pert*i))/k,h/2);
+                QPointF p2(((-h/2)-(pert*i))/k,-h/2);
+                if(pert * i < (h/2)+(w/2*k))
+                {
+                    p1 = QPointF(-w/2,(-w/2*k)+(pert*i));
+                }
+                else if( pert * i > -(h/2)+(-w/2*k))
+                {
+                    p2 = QPointF(w/2,(w/2*k)+(pert*i));
+                }
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+        }
+        else if( k<0 && k>=-m)
+        {
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                QPointF p1(w/2,(w/2*k)+(pert*i));
+                QPointF p2(-w/2,(-w/2*k)+(pert*i));
+                if(pert * i > (h/2)+(w/2*k))
+                {
+                    p2 = QPointF(((h/2)-(pert*i))/k,h/2);
+                }
+                else if( pert * i < -(h/2)-(w/2*k))
+                {
+                    p1 = QPointF(((-h/2)-(pert*i))/k,-h/2);
+                }
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+        }
+
+    }
+    else
+    {
+        if(int(jiaodu)%180 == 0)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                QPointF p1(-w/2,pert*i);
+                QPointF p2(w/2,pert*i);
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+        }
+
+        else
+        {
+            double pert = w/double(midu);
+            for(int i=-midu/2;i<midu/2;i++)
+            {
+                QPointF p1(pert*i,h/2);
+                QPointF p2(pert*i,-h/2);
+                path.moveTo(p1);
+                path.lineTo(p2);
+            }
+        }
+
+    }
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    brushpath = path;
+    update();
 }
 
 void MyGraphicsRecItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

@@ -8,6 +8,7 @@
 #include <QStyle>
 #include <QStyleOptionGraphicsItem>
 #include<QKeyEvent>
+#include<thirdcurve.h>
 MyGraphicsTextItem::MyGraphicsTextItem(QGraphicsTextItem *p,QString str):QGraphicsRectItem()
 {
 
@@ -22,6 +23,7 @@ void MyGraphicsTextItem::setStr(QString str,QFont font)
     this->font = font;
     setDefault_Path();
     makePath_fill_Rect();
+    set_brush(jiaodu,midu);
     update();
 }
 void MyGraphicsTextItem::setRectF()
@@ -29,6 +31,461 @@ void MyGraphicsTextItem::setRectF()
     QFontMetrics fm(this->font);
     rectf = fm.boundingRect(str);
 }
+void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
+{
+    brushpath.clear();
+    QPainterPath path2;
+    double k = tan(jiaodu*M_PI/180);//斜率
+    int w = path.boundingRect().width()+10;
+    int h = path.boundingRect().height()+10;
+    QList<QPointF> jiaodians;
+    path2 = this->path;
+    QList<QLineF> lins;
+    QList<ThirdCurve> curves;
+    QPointF lp1,lp2,c1,c2;
+    int kl = 0;
+    int kc = 0;
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            lp1 = po;
+            kl = 0;
+        }
+        else if (element.isLineTo())
+        {
+            if(kl == 0)
+            {
+                lp2 = po;
+                lins.append(QLineF(lp1,lp2));
+                kl++;
+            }
+            else
+            {
+                lp1 = lp2;
+                lp2 = po;
+                lins.append(QLineF(lp1,lp2));
+            }
+        }
+        else if(element.isCurveTo())
+        {
+            if(kl != 0)
+                lp1 = lp2;
+            c1 = po;
+            kc++;
+        }
+        else
+        {
+            if(kc%3==1)
+            {
+                c2 = po;
+                kc++;
+            }
+            else if(kc%3 == 2)
+            {
+                lp2 = po;
+                //curve lp1,c1,c2,lp2
+                ThirdCurve curve(lp1,c1,c2,lp2);
+                curves.append(curve);
+                kc ++;
+                lp1 = lp2;
+            }
+        }
+    }
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double mint = (dpiX*10)/254;; //1mm = tpx;
+    mint = mint*0.02; //0.02mm = tpx;
+    double m = double(h)/double(w);
+    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    {
+        if(k>0&&k<=m)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<=midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(w/2,(w/2*k)+(pert*ii));
+                QPointF p2(-w/2,(-w/2*k)+(pert*ii));
+                if(pert * ii >= (h/2)- (w/2*k))
+                {
+                    p1 = QPointF(((h/2)-(pert*ii))/k,h/2);
+                }
+                else if( pert * ii <= -(h/2)+(w/2*k))
+                {
+                    p2 = QPointF(((-h/2)-(pert*ii))/k,-h/2);
+                }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].x()>jiaodians[j+1].x())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+
+        }
+        else if( k>m )
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(((h/2)-(pert*ii))/k,h/2);
+                QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
+                if(pert * ii < (h/2)- (w/2*k))
+                {
+                    p1 = QPointF(w/2,(w/2*k)+(pert*ii));
+                }
+                else if( pert * ii > -(h/2)+(w/2*k))
+                {
+                    p2 = QPointF(-w/2,(-w/2*k)+(pert*ii));
+                }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].x()>jiaodians[j+1].x())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+
+        }
+        else if( k<-m)
+        {
+
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(((h/2)-(pert*ii))/k,h/2);
+                QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
+                if(pert * ii < (h/2)+(w/2*k))
+                {
+                    p1 = QPointF(-w/2,(-w/2*k)+(pert*ii));
+                }
+                else if( pert * ii > -(h/2)+(-w/2*k))
+                {
+                    p2 = QPointF(w/2,(w/2*k)+(pert*ii));
+                }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].x()>jiaodians[j+1].x())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+        }
+        else if( k>=-m && k<0)
+        {
+
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(w/2,(w/2*k)+(pert*ii));
+                QPointF p2(-w/2,(-w/2*k)+(pert*ii));
+                if(pert * ii > (h/2)+(w/2*k))
+                {
+                    p2 = QPointF(((h/2)-(pert*ii))/k,h/2);
+                }
+                else if( pert * ii < -(h/2)-(w/2*k))
+                {
+                    p1 = QPointF(((-h/2)-(pert*ii))/k,-h/2);
+                }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].x()>jiaodians[j+1].x())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+        }
+
+    }
+    else
+    {
+
+        if(int(jiaodu)%180 == 0)
+        {
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(-w/2,pert*ii);
+                QPointF p2(w/2,pert*ii);
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].x()>jiaodians[j+1].x())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+        }
+
+        else
+        {
+            double pert = w/double(midu);
+            pert = fmax(pert,mint);
+            midu = 2*w/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
+            {
+                jiaodians.clear();
+                QPointF p1(pert*ii,h/2);
+                QPointF p2(pert*ii,-h/2);
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
+                QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
+                for(int i=0;i<lins.length();i++)
+                {
+                    QPointF intersectionPoint;
+                    auto type = l.intersects(lins[i],&intersectionPoint);
+                    if(type == QLineF::BoundedIntersection)
+                    {
+                        jiaodians.append(intersectionPoint);
+                    }
+                }
+
+                for(int i = 1;i<jiaodians.length();i++)
+                {
+                    for(int j=0;j<jiaodians.length()-i;j++)
+                    {
+                        if(jiaodians[j].y()>jiaodians[j+1].y())
+                        {
+                            QPointF tm = jiaodians[j];
+                            jiaodians[j] = jiaodians[j+1];
+                            jiaodians[j+1] = tm;
+                        }
+                    }
+                }
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
+                {
+                    if(jiaodians.length()%2 == 0)
+                    {
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
+                    }
+                }
+            }
+        }
+
+    }
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    brushpath = path2;
+    update();
+}
+
 QPainterPath MyGraphicsTextItem::ViewPath()
 {
     QPainterPath p;
@@ -111,7 +568,7 @@ QPainterPath MyGraphicsTextItem::ViewPath()
 void MyGraphicsTextItem::setDefault_Path()
 {
     path.clear();
-    path.addText(rect().x(),-rect().y(), font, str);
+    path.addText(0,0, font, str);
 }
 
 void MyGraphicsTextItem::makePath_fill_Rect()
@@ -148,9 +605,9 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     painter->setPen(pen);
     //painter->setBrush(Qt::blue);
     painter->scale(1,-1);
-
+   // painter->drawRect(rect());
     painter->drawPath(path);
-
+    painter->drawPath(brushpath);
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

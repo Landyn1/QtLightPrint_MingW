@@ -51,6 +51,7 @@ HEADERS += ./CUDrvE.h \
     mygraphicspolygonitem.h \
     mygraphicstextitem.h \
     mylabel.h \
+    thirdcurve.h \
     widgetco2.h \
     widgetfiber.h \
     widgetuv.h \
@@ -89,6 +90,7 @@ SOURCES += ./ItemAdjust.cpp \
     mygraphicspolygonitem.cpp \
     mygraphicstextitem.cpp \
     mylabel.cpp \
+    thirdcurve.cpp \
     widgetco2.cpp \
     widgetfiber.cpp \
     widgetuv.cpp \

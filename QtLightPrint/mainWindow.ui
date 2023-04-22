@@ -153,16 +153,16 @@
         <x>0</x>
         <y>0</y>
         <width>28</width>
-        <height>5018</height>
+        <height>1018</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_17">
+      <layout class="QHBoxLayout" name="horizontalLayout_22">
        <item>
         <widget class="QWidget" name="widget_4" native="true">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>5000</height>
+           <height>1000</height>
           </size>
          </property>
          <widget class="QWidget" name="widget_3" native="true">
@@ -271,9 +271,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>220</y>
-            <width>201</width>
-            <height>211</height>
+            <y>190</y>
+            <width>211</width>
+            <height>191</height>
            </rect>
           </property>
           <widget class="QTextEdit" name="textEdit">
@@ -333,6 +333,73 @@
             <widget class="QLineEdit" name="bian_num"/>
            </item>
           </layout>
+         </widget>
+         <widget class="QWidget" name="widget_29" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>380</y>
+            <width>211</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <widget class="QWidget" name="widget_27" native="true">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>91</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>角度</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="jiaodu_text"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="widget_28" native="true">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>10</y>
+             <width>91</width>
+             <height>39</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>密度</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="midu_text"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QPushButton" name="brushbutton">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>50</y>
+             <width>51</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>填充</string>
+           </property>
+          </widget>
          </widget>
         </widget>
        </item>

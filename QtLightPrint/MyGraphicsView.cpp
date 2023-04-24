@@ -540,7 +540,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
 
         MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
 
-        item->setPathByStr("hello","DataMatrix");
+        item->setPathByStr("hellosakjdhkjasd","QRCode");
         double w = item->path().boundingRect().width();
         double h = item->path().boundingRect().height();
         item->setPos(p-QPointF(w/2,-h/2));

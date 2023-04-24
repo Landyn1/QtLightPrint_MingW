@@ -212,23 +212,12 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                    if(jiaodu != 0)
+                    if(jiaodians.length()%2 == 0)
                     {
-                        if(path2.contains((jiaodians[i]+QPointF(0.1,0.1))) && path2.contains((jiaodians[i+1]-QPointF(0.1,0.1))) )
-                        {
                             path2.moveTo(jiaodians[i]);
                             path2.lineTo(jiaodians[i+1]);
-                        }
-                    }
-                    else
-                    {
-                        if(path2.contains((jiaodians[i]+QPointF(0.1,0))) && path2.contains((jiaodians[i+1]-QPointF(0.1,0))) )
-                        {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                        }
                     }
                 }
             }
@@ -287,12 +276,12 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                    if(path2.contains((jiaodians[i]+QPointF(0.1,0.1))) && path2.contains((jiaodians[i+1]-QPointF(0.1,0.1))) )
+                    if(jiaodians.length()%2 == 0)
                     {
-                        path2.moveTo(jiaodians[i]);
-                        path2.lineTo(jiaodians[i+1]);
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
                     }
                 }
             }
@@ -349,12 +338,12 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                    if(path2.contains((jiaodians[i]+QPointF(0.1,-0.1))) && path2.contains((jiaodians[i+1]-QPointF(0.1,-0.1))) )
+                    if(jiaodians.length()%2 == 0)
                     {
-                        path2.moveTo(jiaodians[i]);
-                        path2.lineTo(jiaodians[i+1]);
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
                     }
                 }
             }
@@ -410,12 +399,12 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                    if(path2.contains((jiaodians[i]+QPointF(0.1,-0.1))) && path2.contains((jiaodians[i+1]-QPointF(0.1,-0.1))) )
+                    if(jiaodians.length()%2 == 0)
                     {
-                        path2.moveTo(jiaodians[i]);
-                        path2.lineTo(jiaodians[i+1]);
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
                     }
                 }
             }
@@ -456,14 +445,13 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                        if(path2.contains((jiaodians[i]+QPointF(0.1,0))) && path2.contains((jiaodians[i+1]-QPointF(0.1,0))) )
-                        {
+                    if(jiaodians.length()%2 == 0)
+                    {
                             path2.moveTo(jiaodians[i]);
                             path2.lineTo(jiaodians[i+1]);
-                        }
-
+                    }
                 }
             }
         }
@@ -510,12 +498,12 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
                         }
                     }
                 }
-                for(int i = 0;i<jiaodians.length()-1;i++)
+                for(int i = 0;i<jiaodians.length()-1;i= i+2)
                 {
-                    if(path2.contains((jiaodians[i]+QPointF(0,0.1))) && path2.contains((jiaodians[i+1]-QPointF(0,0.1))) )
+                    if(jiaodians.length()%2 == 0)
                     {
-                        path2.moveTo(jiaodians[i]);
-                        path2.lineTo(jiaodians[i+1]);
+                            path2.moveTo(jiaodians[i]);
+                            path2.lineTo(jiaodians[i+1]);
                     }
                 }
             }

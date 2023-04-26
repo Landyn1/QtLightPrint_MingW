@@ -34,6 +34,10 @@ void MyGraphicsTextItem::setRectF()
 void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
 {
     brushpath.clear();
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    if(midu == 0)
+        return;
     QPainterPath path2;
     double k = tan(jiaodu*M_PI/180);//斜率
     int w = path.boundingRect().width()+10;
@@ -480,8 +484,6 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
         }
 
     }
-    this->jiaodu = jiaodu;
-    this->midu = midu;
     brushpath = path2;
     update();
 }
@@ -490,6 +492,8 @@ QPainterPath MyGraphicsTextItem::ViewPath()
 {
     QPainterPath p;
     QPainterPath path = this->path;
+
+    QPainterPath path2 = brushpath;
     int k=0;
     QPointF p0,c1,c2,p3;
     for (int i = 0; i < path.elementCount(); i++)
@@ -560,6 +564,20 @@ QPainterPath MyGraphicsTextItem::ViewPath()
                 p0=po2;
             }
 
+        }
+    }
+
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
         }
     }
     return p;

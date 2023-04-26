@@ -112,6 +112,10 @@ void MyGraphicsPolygonItem::setDefault_Path()
 bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
 {
     brushpath.clear();
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    if(midu == 0)
+        return true;
     QPainterPath path2;
     double k = tan(jiaodu*M_PI/180);//斜率
     double w = rect().width();
@@ -448,8 +452,6 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
 
     }
     brushpath = path2;
-    this->jiaodu = jiaodu;
-    this->midu = midu;
     update();
 }
 

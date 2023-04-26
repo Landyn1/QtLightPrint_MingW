@@ -19,6 +19,10 @@ QRectF MyGraphicsCircleItem::boundingRect() const
 void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
 {
     brushpath.clear();
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    if(midu == 0)
+        return;
     QPainterPath path;
     double k = tan(jiaodu*M_PI/180);//斜率
     int w = rect().width();
@@ -166,15 +170,14 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
             }
         }
     }
-    this->jiaodu = jiaodu;
-    this->midu = midu;
+
     brushpath = path;
     update();
 }
 QPainterPath MyGraphicsCircleItem::ViewPath()
 {
     QPainterPath path;
-
+    QPainterPath path2 = brushpath;
     path.moveTo(mapToScene(0,rect().height()/2));
     double r = rect().height()/2;
     int s = 6*r;
@@ -226,7 +229,20 @@ QPainterPath MyGraphicsCircleItem::ViewPath()
         tt = tt + ttt;
     }
     path.lineTo(mapToScene(0,rect().height()/2));
-    path = path+brushpath;
+
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            path.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            path.lineTo(mapToScene(po));
+        }
+    }
     return path;
 
 }

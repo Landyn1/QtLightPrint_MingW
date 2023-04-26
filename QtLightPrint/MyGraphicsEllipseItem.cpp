@@ -27,7 +27,7 @@ QPainterPath MyGraphicsEllipseItem::ViewPath()
     double h = this->rect().height();
     p.moveTo(mapToScene(0,h/2));
     int s = 6*w+4*(w-h);
-
+    QPainterPath path2 = brushpath;
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
 
     double ms1 = (dpiX * 10) / 254; //1mm是几个像素
@@ -91,6 +91,20 @@ QPainterPath MyGraphicsEllipseItem::ViewPath()
         tt = tt + ttt;
     }
     p.lineTo(mapToScene(0,h/2));
+
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
+        }
+    }
     return p;
 }
 void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -144,6 +158,10 @@ bool MyGraphicsEllipseItem::selectEvent(QPointF p)
 void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
 {
     brushpath.clear();
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    if(midu == 0)
+        return;
     QPainterPath path;
     double k = tan(jiaodu*M_PI/180);//斜率
     int w = rect().width();
@@ -309,8 +327,7 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
             }
         }
     }
-    this->jiaodu = jiaodu;
-    this->midu = midu;
+
     brushpath = path;
     update();
 }

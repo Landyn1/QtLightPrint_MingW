@@ -21,6 +21,8 @@
 #include"bottomdockwidget.h"
 #include"ZXingWriter.h"
 #include"mygraphicscodeitem.h"
+#include"qtranslator.h"
+#include<qfontdatabase.h>
 using namespace std;
 int action_state;
 int k;
@@ -28,6 +30,13 @@ mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    QTranslator m;
+    m.load(":/language/lang_English.qm");
+    qApp->installTranslator(&m);
+    ui.retranslateUi(this);
+
+
+
     QWidget* p = takeCentralWidget();
     if (p)
         delete p;
@@ -95,13 +104,13 @@ mainWindow::mainWindow(QWidget *parent)
     delete lTitleBar;
     //ui.dock4->setWindowTitle("wenjian1");
     //设置图片
-    ui.bianji->setIcon(QIcon(":/draw/Res/Select.png"));
-    ui.draw_line->setIcon(QIcon(":/draw/Res/Line.png"));
-    //ui.draw_quline->setIcon(QIcon(":/draw/Res/Line.png"));
-    ui.draw_yuan->setIcon(QIcon(":/draw/Res/Circle.png"));
-    ui.draw_wenzi->setIcon(QIcon(":/draw/Res/Font.png"));
-    ui.draw_sanjiao->setIcon(QIcon(":/draw/Res/Rectangle.png"));
-    ui.draw_polygon->setIcon(QIcon(":/draw/Res/RegularPolygon.png"));
+    ui.bianji->setIcon(QIcon(":/res/Select.png"));
+    ui.draw_line->setIcon(QIcon(":/res/Line.png"));
+    //ui.draw_quline->setIcon(QIcon(":/res/Line.png"));
+    ui.draw_yuan->setIcon(QIcon(":/res/Circle.png"));
+    ui.draw_wenzi->setIcon(QIcon(":/res/Font.png"));
+    ui.draw_sanjiao->setIcon(QIcon(":/res/Rectangle.png"));
+    ui.draw_polygon->setIcon(QIcon(":/res/RegularPolygon.png"));
 
     //设置铺满dock
     MyWidget* wi1 = new MyWidget;
@@ -139,6 +148,15 @@ mainWindow::mainWindow(QWidget *parent)
 //    ui.scrollArea_2->setWidget(ui.widget_4);
 //    ui.dock2->setWidget(ui.scrollArea_2);
 
+    //检测可用字体
+    ui.comboBox->clear();
+    QStringList fontnames;
+    QFontDatabase database;
+    foreach (const QString &family, database.families())
+    {
+         fontnames.append(family);
+    }
+    ui.comboBox->addItems(fontnames);
 
     //添加默认文件 及名字。
     QWidget *widgetfile = new QWidget();
@@ -225,7 +243,7 @@ mainWindow::mainWindow(QWidget *parent)
 
     });
 
-
+    ui.widget_30->setVisible(false);
     ui.widget_25->setVisible(false);
     ui.widget_26->setVisible(false);
     connect(close_file,&QPushButton::clicked,this,[=](){
@@ -325,7 +343,7 @@ void mainWindow::savefile()
         QString fileName = QFileDialog::getSaveFileName(this,
             tr("保存"),
             "",
-            tr("TEXT Files (*.dat)"));
+            tr("TEXT Files (*.oooo)"));
         if(fileName.isNull())
         {
             return;
@@ -348,6 +366,8 @@ void mainWindow::savefile()
                 {
                     MyGraphicsRecItem *item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
                     iff->name = item->name;
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
                     iff->id = item->data(0).toInt();
                     iff->rec = item->rect();
                     iff->pos = item->pos();
@@ -357,6 +377,8 @@ void mainWindow::savefile()
                 {
                     MyGraphicsEllipseItem *item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
                     iff->name = item->name;
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
                     iff->id = item->data(0).toInt();
                     iff->rec = item->rect();
                     iff->pos = item->pos();
@@ -366,6 +388,8 @@ void mainWindow::savefile()
                 {
                     MyGraphicsCircleItem *item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
                     iff->name = item->name;
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
                     iff->id = item->data(0).toInt();
                     iff->rec = item->rect();
                     iff->pos = item->pos();
@@ -387,6 +411,8 @@ void mainWindow::savefile()
                     iff->id = item->data(0).toInt();
                     iff->rec = item->rect();
                     iff->pos = item->pos();
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
                     iff->path = item->path;
                     iff->bian_num = item->num;
                     iff->type =item->type();
@@ -399,6 +425,8 @@ void mainWindow::savefile()
                     iff->rec = item->rect();
                     iff->pos = item->pos();
                     iff->path = item->path;
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
                     iff->font = item->font;
                     iff->text = item->str;
                     iff->type =item->type();
@@ -434,7 +462,13 @@ void mainWindow::savefile()
                     MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
                     iff->name = item->name;
                     iff->id = item->data(0).toInt();
-                    iff->path = item->path();
+                    iff->path = item->path;
+                    iff->text = item->text;
+                    iff->codetype = item->codetype;
+                    iff->jiaodu = item->jiaodu;
+                    iff->midu = item->midu;
+                    qDebug()<<"save"<<item->text<<item->codetype<<endl;
+                    //qDebug()<<iff->path<<endl;
                     iff->pos = item->pos();
                     iff->type =item->type();
                 }
@@ -449,13 +483,36 @@ void mainWindow::openfile()
 {
     QFileDialog dialog(this);
     QStringList fileNames;
-    dialog.setNameFilter("text (*.dat)");
+    QStringList types;
+    types.append("TEXT (*.oooo))");
+    types.append("PLT (*.plt))");
+    types.append("ALL (*.*))");
+    dialog.setNameFilters(types);
     if (dialog.exec()) {
         fileNames = dialog.selectedFiles();
         QString fileName = fileNames[0];
+
         QFile file(fileName);
         QStringList name = fileName.split('/');
+        QStringList types = fileName.split('.');
+        QString type = types[types.length()-1];
+        qDebug()<<type<<endl;
         creatnewfile(name[name.length()-1]);
+        if(type == "plt")
+        {
+            MyGraphicsLineItem *item = new MyGraphicsLineItem();
+            item->readPLT(fileName);
+            item->name = "群组1";
+            item->setPos(0,0);
+            item->setVisible(true);
+            scene->addItem(item);
+            view->row++;
+            item->setData(0,1);
+            view->item_id++;
+            emit view->addItem(0,item);
+            return;
+        }
+
         if (!file.open (QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::warning(this, "Error", "Selected file is not  correct.");
         }
@@ -474,6 +531,9 @@ void mainWindow::openfile()
                     item->setRect(t.rec);
                     item->name = t.name;
                     item->setData(0,t.id);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -490,6 +550,9 @@ void mainWindow::openfile()
                     item->setRect(t.rec);
                     item->name = t.name;
                     item->setData(0,t.id);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -506,6 +569,9 @@ void mainWindow::openfile()
                     item->setRect(t.rec);
                     item->name = t.name;
                     item->setData(0,t.id);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -538,6 +604,9 @@ void mainWindow::openfile()
                     item->setVisible(true);
                     item->setData(0, t.id);
                     item->setPos( t.pos);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     item->name=t.name;
                     scene->addItem(item);
                     items.append(item);
@@ -556,6 +625,9 @@ void mainWindow::openfile()
                     item->setPos( t.pos);
                     item->path = t.path;
                     item->setStr(t.text,t.font);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     scene->addItem(item);
                     items.append(item);
                     //emit view->addItem(view->row,item);
@@ -600,8 +672,16 @@ void mainWindow::openfile()
                 }
                 else if(t.type == 9)
                 {
+
                     MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
-                    item->setPath(t.path);
+                    qDebug()<<t.text<<t.codetype<<endl;
+                    //item->setPathByStr(t.text,t.codetype);
+                    item->text = t.text;
+                    item->codetype = t.codetype;
+                    item->path = (t.path);
+                    item->jiaodu = t.jiaodu;
+                    item->midu = t.midu;
+                    item->set_brush(item->jiaodu,item->midu);
                     item->setVisible(true);
                     item->setData(0, t.id);
                     item->setPos( t.pos);
@@ -1232,7 +1312,7 @@ void mainWindow::initConnect()
         emit ui.itemtable->itemSelectionChanged();
     });
     
-
+    ui.widget_29->move(0,200);
     //动态显示左侧东西
     connect(scene, &QGraphicsScene::selectionChanged, [=]() {
 
@@ -1244,6 +1324,7 @@ void mainWindow::initConnect()
                 MyGraphicsTextItem *item = qgraphicsitem_cast<MyGraphicsTextItem *>(items[0]);
                 ui.textEdit->setText( item->str);
                 ui.widget_25->setVisible(true);
+                ui.widget_29->move(0,370);
             }
             if(items[0]->type() == 5)
             {
@@ -1251,10 +1332,18 @@ void mainWindow::initConnect()
                 ui.bian_num->setText(QString::number(item->num));
                 ui.widget_26->setVisible(true);
             }
+            if(items[0]->type() == 9)
+            {
+                MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(items[0]);
+                ui.textEdit_2->setText( item->text);
+                ui.widget_30->setVisible(true);
+                ui.widget_29->move(0,370);
+            }
         }
-
         else
         {
+            ui.widget_30->setVisible(false);
+            ui.widget_29->move(0,200);
             ui.widget_25->setVisible(false);
             ui.widget_26->setVisible(false);
         }
@@ -1388,16 +1477,15 @@ void mainWindow::initConnect()
             }
             else if(node->type() == 9)
             {
-                MyGraphicsCodeItem *rect = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
-                qDebug()<<rect->mapRectToScene(rect->getRect());
-                if (x > rect->mapRectToScene(rect->getRect()).x())
+                MyGraphicsCodeItem * item = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
+                if (x > item->mapRectToScene(item->rect()).x())
                 {
-                    x = rect->mapRectToScene(rect->getRect()).x();
+                    x = item->mapRectToScene(item->rect()).x();
 
                 }
-                if (y > rect->mapRectToScene(rect->getRect()).y())
+                if (y > item->mapRectToScene(item->rect()).y())
                 {
-                    y = rect->mapRectToScene(rect->getRect()).y();
+                    y = item->mapRectToScene(item->rect()).y();
                 }
             }
         }
@@ -1507,15 +1595,15 @@ void mainWindow::initConnect()
             }
             else if(node->type() == 9)
             {
-                MyGraphicsCodeItem * rect = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
-                if (w < rect->mapToScene(rect->getRect()).value(1).x() - x)
+                MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
+                if (w < item->mapToScene(item->rect()).value(1).x() - x)
                 {
-                    w = rect->mapToScene(rect->getRect()).value(1).x() - x;
+                    w = item->mapToScene(item->rect()).value(1).x() - x;
 
                 }
-                if (h < rect->mapToScene(rect->getRect()).value(2).y() - y)
+                if (h < item->mapToScene(item->rect()).value(2).y() - y)
                 {
-                    h = rect->mapToScene(rect->getRect()).value(2).y() - y;
+                    h = item->mapToScene(item->rect()).value(2).y() - y;
                 }
             }
         }
@@ -1571,6 +1659,7 @@ void mainWindow::initConnect()
             view->myGrid->setscales(scale);
             view->mainarea->setscales(scale);
             view->leftkedu->setscales(scale);
+            view->itemad->scale = scale;
             scene->update();
         });
 
@@ -2122,21 +2211,21 @@ void mainWindow::initConnect()
                                 rect->setFlags(QGraphicsItem::ItemIsSelectable);
                             }
                             rect->setSelected(true);
-                            if (zuoxiax > rect->mapToScene(rect->getRect()).value(0).x())
+                            if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
                             {
-                                zuoxiax = rect->mapToScene(rect->getRect()).value(0).x();
+                                zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
                             }
-                            if (zuoxiay > rect->mapToScene(rect->getRect()).value(0).y())
+                            if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
                             {
-                                zuoxiay = rect->mapToScene(rect->getRect()).value(0).y();
+                                zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
                             }
-                            if (youshangx < rect->mapToScene(rect->getRect()).value(2).x())
+                            if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
                             {
-                                youshangx = rect->mapToScene(rect->getRect()).value(2).x();
+                                youshangx = rect->mapToScene(rect->rect()).value(2).x();
                             }
-                            if (youshangy < rect->mapToScene(rect->getRect()).value(2).y())
+                            if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
                             {
-                                youshangy = rect->mapToScene(rect->getRect()).value(2).y();
+                                youshangy = rect->mapToScene(rect->rect()).value(2).y();
                             }
                             scene->update();
                      }
@@ -2312,16 +2401,16 @@ void mainWindow::initConnect()
                 MyGraphicsTextItem* item = qgraphicsitem_cast<MyGraphicsTextItem *>(selectitems[i]);
                 QString fontname = ui.comboBox->currentText();
                 item->setStr(ui.textEdit->toPlainText(),QFont(fontname));
-                QPainterPath path1 = item->path;
-                QPainterPath path2 ;
                 int k=0;
                 double ww = item->rect().width();
                 double hh = item->rect().height();
                 ww = (ww)*(bilix)+ww;
                 hh = (hh)*(biliy)+hh;
                 item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+
                 item->setRect(-ww/2,-hh/2,ww,hh);
                 item->makePath_fill_Rect();
+                item->set_brush(item->jiaodu,item->midu);
             }
             else if(type == 7)
             {
@@ -2385,26 +2474,18 @@ void mainWindow::initConnect()
             else if(type == 9)
             {
                 MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(selectitems[i]);
-
-                QPainterPath path1 = item->path();
-                QPainterPath path2 ;
-                for (int i = 0; i < path1.elementCount(); i++)
-                {
-                    QPainterPath::Element element = path1.elementAt(i);
-                    QPointF po = element;
-                    po = item->mapToScene(po);
-                    QPointF po2(((po-roof)*(bilix)+po).x(),((po-roof)*(biliy)+po).y());
-                    po2 = item->mapFromScene(po2);
-                    if (element.isMoveTo())
-                    {
-                        path2.moveTo(po2);
-                    }
-                    else if (element.isLineTo())
-                    {
-                        path2.lineTo(po2);
-                    }
-                }
-                item->setPath(path2);
+                QString codetype = ui.Codetype->currentText();
+                if(selectitems.length() == 1)
+                    item->setPathByStr(ui.textEdit_2->toPlainText(),codetype);
+                double ww = item->rect().width();
+                double hh = item->rect().height();
+                ww = (ww)*(bilix)+ww;
+                hh = (hh)*(biliy)+hh;
+                item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
+                item->setRect(-ww/2,-hh/2,ww,hh);
+                item->makePath_fill_Rect();
+                qDebug()<<item->midu<<"askjdaskhjsssssssssssssssssssssssssssssssssss"<<endl;
+                item->set_brush(item->jiaodu,item->midu);
             }
         }
         for(int i=0;i<selectitems.length();i++)
@@ -2413,6 +2494,7 @@ void mainWindow::initConnect()
         }
         emit scene->selectionChanged();
         setpreRect();
+        scene->update();
     });
 
     connect(ui.brushbutton,&QPushButton::clicked,this,[=](){
@@ -2441,6 +2523,12 @@ void mainWindow::initConnect()
             {
                 MyGraphicsCircleItem *item = new MyGraphicsCircleItem();
                 item = qgraphicsitem_cast<MyGraphicsCircleItem*>(selectitems[0]);
+                item->set_brush(jiaodu,num);
+            }
+            else if(type == 4)
+            {
+                MyGraphicsLineItem *item = new MyGraphicsLineItem();
+                item = qgraphicsitem_cast<MyGraphicsLineItem*>(selectitems[0]);
                 item->set_brush(jiaodu,num);
             }
             else if(type == 5)
@@ -2773,25 +2861,24 @@ void mainWindow::setpreRect()
                         rect->setFlags(QGraphicsItem::ItemIsSelectable);
                     }
                     rect->setSelected(true);
-
-
-                    if (zuoxiax > rect->mapToScene(rect->getRect()).value(0).x())
+                    if (zuoxiax > rect->mapToScene(rect->rect()).value(0).x())
                     {
-                        zuoxiax = rect->mapToScene(rect->getRect()).value(0).x();
+                        zuoxiax = rect->mapToScene(rect->rect()).value(0).x();
                     }
-                    if (zuoxiay > rect->mapToScene(rect->getRect()).value(0).y())
+                    if (zuoxiay > rect->mapToScene(rect->rect()).value(0).y())
                     {
-                        zuoxiay = rect->mapToScene(rect->getRect()).value(0).y();
+                        zuoxiay = rect->mapToScene(rect->rect()).value(0).y();
                     }
-                    if (youshangx < rect->mapToScene(rect->getRect()).value(2).x())
+                    if (youshangx < rect->mapToScene(rect->rect()).value(2).x())
                     {
-                        youshangx = rect->mapToScene(rect->getRect()).value(2).x();
+                        youshangx = rect->mapToScene(rect->rect()).value(2).x();
                     }
-                    if (youshangy < rect->mapToScene(rect->getRect()).value(2).y())
+                    if (youshangy < rect->mapToScene(rect->rect()).value(2).y())
                     {
-                        youshangy = rect->mapToScene(rect->getRect()).value(2).y();
+                        youshangy = rect->mapToScene(rect->rect()).value(2).y();
                     }
                     scene->update();
+
                 }
             }
         }
@@ -3040,7 +3127,7 @@ QPoint mainWindow::view2print(QPointF position)
     int y = p.y() * 1000 + 0.5;
     double xx = double(x) / 1000;
     double yy = double(y) / 1000;
-    QPointF pf((xx+50.000)*655.36, (yy+50.000)*655.36);
+    QPointF pf((xx+50.000)*655.36*4/5, (yy+50.000)*655.36*4/5);
     QPoint pp = pf.toPoint();
     return pp;
 }

@@ -2,7 +2,7 @@
 #include"mainWindow.h"
 #include"ZXingWriter.h"
 #include"thirdcurve.h"
-MyGraphicsCodeItem::MyGraphicsCodeItem():QGraphicsPathItem()
+MyGraphicsCodeItem::MyGraphicsCodeItem():QGraphicsRectItem()
 {
 
 }
@@ -11,22 +11,12 @@ MyGraphicsCodeItem::~MyGraphicsCodeItem(){
 
 }
 
-QRectF MyGraphicsCodeItem::getRect()
-{
-    double x,y,w,h;
-    x = this->path().boundingRect().x();
-    y = this->path().boundingRect().y();
-    w = this->path().boundingRect().width();
-    h = this->path().boundingRect().height();
-    return QRectF(x,y-h,w,h);
-}
-
 
 bool MyGraphicsCodeItem::selectEvent(QPointF p)
 {
     if(isSelected())
         return true;
-    if(this->path().boundingRect().contains(p))
+    if(rect().contains(p))
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
         this->setSelected(true);
@@ -37,26 +27,52 @@ bool MyGraphicsCodeItem::selectEvent(QPointF p)
     return false;
 }
 
+void MyGraphicsCodeItem::makePath_fill_Rect()
+{
+    QPainterPath path = this->path;
+    QRectF rect = path.boundingRect();
+
+    QRectF tarRect = this->rect();
+    qreal scaleX = tarRect.width() / rect.width();
+    qreal scaleY = tarRect.height() / rect.height();
+
+
+
+    QTransform trans;
+    trans.scale(scaleX, scaleY);
+    QPainterPath tmp_path = trans.map(path);
+
+    QPointF delta = tarRect.center() - tmp_path.boundingRect().center();
+    tmp_path.translate(delta.x(), delta.y());
+    this->path.clear();
+    this->path = (tmp_path);
+}
+
 void MyGraphicsCodeItem::setPathByStr(QString str,QString codeType)
 {
+
+    this->text = str;
+    this->codetype = codeType;
     vector<dPoint> vdPoint;
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
     double  t = (dpiX * 10) / 254; //1mm=tpx
     vdPoint = Border(20*t, 20*t, str.toStdString(), codeType.toStdString());
+    double w = 20*t,h = 20*t;
     QPainterPath path;
+    this->path.clear();
     for (vector<dPoint>::iterator it = vdPoint.begin(); it != vdPoint.end(); it++)
     {
         if(!(*it).flag)
         {
-            path.moveTo(QPointF((*it).x,(*it).y));
+            path.moveTo(QPointF((*it).x-(w/2),(*it).y-(h/2)));
         }
         else
         {
-            path.lineTo(QPointF((*it).x,(*it).y));
+            path.lineTo(QPointF((*it).x-(w/2),(*it).y-(h/2)));
         }
     }
-    this->setPath(path);
-    noBrushPath = path;
+    set_brush(this->jiaodu,this->midu);
+    this->path = path;
 }
 
 void MyGraphicsCodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -74,17 +90,31 @@ void MyGraphicsCodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     //painter->setBrush(Qt::blue);
     painter->setPen(pen);
     painter->scale(1,-1);
-
-    painter->drawPath(this->path());
+    painter->drawPath(brushPath);
+    painter->drawPath(this->path);
 
 }
 QPainterPath MyGraphicsCodeItem::ViewPath()
 {
     QPainterPath p;
-    QPainterPath path = this->path();
+    QPainterPath path = this->path;
     for (int i = 0; i < path.elementCount(); i++)
     {
         QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
+        }
+    }
+    QPainterPath path2 = brushPath;
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
         QPointF po = element;
         if (element.isMoveTo())
         {
@@ -101,21 +131,31 @@ QPainterPath MyGraphicsCodeItem::ViewPath()
 
 QRectF MyGraphicsCodeItem::boundingRect() const
 {
-    double x,y,w,h;
-    x = this->path().boundingRect().x();
-    y = this->path().boundingRect().y();
-    w = this->path().boundingRect().width();
-    h = this->path().boundingRect().height();
-    return QRectF(x,y-h,w,h);
+//    double x,y,w,h;
+//    x = this->path().boundingRect().x();
+//    y = this->path().boundingRect().y();
+//    w = this->path().boundingRect().width();
+//    h = this->path().boundingRect().height();
+//    return QRectF(x,y-h,w,h);
+
+      return rect();
 }
-bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
+bool MyGraphicsCodeItem::set_brush(double jiaodu, int midu)
 {
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    brushPath.clear();
+    if(midu == 0)
+    {
+        update();
+        return true;
+    }
     QPainterPath path2;
     double k = tan(jiaodu*M_PI/180);//斜率
-    double w = this->path().boundingRect().width();
-    double h = this->path().boundingRect().height();
+    int w = path.boundingRect().width()+10;
+    int h = path.boundingRect().height()+10;
     QList<QPointF> jiaodians;
-    path2 = noBrushPath;
+    path2 = this->path;
     QList<QLineF> lins;
     QList<ThirdCurve> curves;
     QPointF lp1,lp2,c1,c2;
@@ -162,35 +202,53 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
             else if(kc%3 == 2)
             {
                 lp2 = po;
+                //curve lp1,c1,c2,lp2
                 ThirdCurve curve(lp1,c1,c2,lp2);
                 curves.append(curve);
                 kc ++;
+                lp1 = lp2;
             }
         }
     }
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double mint = (dpiX*10)/254;; //1mm = tpx;
+    mint = mint*0.02; //0.02mm = tpx;
     double m = double(h)/double(w);
-    k = -k;
     if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
     {
         if(k>0&&k<=m)
         {
-            double t = h + k*w; //y=kx+t
-            double pert = t/(midu);
-            for(double ii=-k*w-1;ii<h+1;ii += pert)
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<=midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(w,(w*k)+(ii));
-                QPointF p2(0,(ii));
-                if( ii > (h)- (w*k))
+                QPointF p1(w/2,(w/2*k)+(pert*ii));
+                QPointF p2(-w/2,(-w/2*k)+(pert*ii));
+                if(pert * ii >= (h/2)- (w/2*k))
                 {
-                    p1 = QPointF(((h)-(ii))/k,h);
+                    p1 = QPointF(((h/2)-(pert*ii))/k,h/2);
                 }
-                else if( ii < 0)
+                else if( pert * ii <= -(h/2)+(w/2*k))
                 {
-                    p2 = QPointF((-(ii))/k,0);
+                    p2 = QPointF(((-h/2)-(pert*ii))/k,-h/2);
                 }
-
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
                 for(int i=0;i<lins.length();i++)
                 {
                     QPointF intersectionPoint;
@@ -225,24 +283,25 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
         }
         else if( k>m )
         {
-            double t = h + w*k; //y=kx+t
-            double pert = t/double(midu);
-            for(double ii=-k*w-1;ii<h+1;ii= ii + pert)
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(((h)-(ii))/k,h);
-                QPointF p2((-(ii))/k,0);
-
-                if(ii <= (h)- (w*k))
+                QPointF p1(((h/2)-(pert*ii))/k,h/2);
+                QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
+                if(pert * ii < (h/2)- (w/2*k))
                 {
-
-                    p1 = QPointF(w,(w*k)+(ii));
-                    //qDebug()<<mapToScene(p1)<<mapToScene(p2)<<pert*i<<endl;
+                    p1 = QPointF(w/2,(w/2*k)+(pert*ii));
                 }
-                else if( ii > 0)
+                else if( pert * ii > -(h/2)+(w/2*k))
                 {
-                    p2 = QPointF(0,(ii));
+                    p2 = QPointF(-w/2,(-w/2*k)+(pert*ii));
                 }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
                 for(int i=0;i<curves.length();i++)
                 {
@@ -290,21 +349,25 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
         else if( k<-m)
         {
 
-            double t = -(w*k) + (h); //y=kx+t
-            double pert = t/double(midu);
-            for(int ii=0;ii<=midu;ii++)
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(((h)-(pert*ii))/k,h);
-                QPointF p2((-(pert*ii))/k,0);
-                if(pert * ii < h)
+                QPointF p1(((h/2)-(pert*ii))/k,h/2);
+                QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
+                if(pert * ii < (h/2)+(w/2*k))
                 {
-                    p1 = QPointF(0,(pert*ii));
+                    p1 = QPointF(-w/2,(-w/2*k)+(pert*ii));
                 }
-                else if( pert * ii > (-w*k))
+                else if( pert * ii > -(h/2)+(-w/2*k))
                 {
-                    p2 = QPointF(w,(w*k)+(pert*ii));
+                    p2 = QPointF(w/2,(w/2*k)+(pert*ii));
                 }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
                 for(int i=0;i<curves.length();i++)
                 {
@@ -351,21 +414,25 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
         else if( k>=-m && k<0)
         {
 
-            double t = -(w*k) + (h); //y=kx+t
-            double pert = t/double(midu);
-            for(int ii=0;ii<=midu;ii++)
+            double t = -(w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(w,(w*k)+(pert*ii));
-                QPointF p2(0,(pert*ii));
-                if(pert * ii > h)
+                QPointF p1(w/2,(w/2*k)+(pert*ii));
+                QPointF p2(-w/2,(-w/2*k)+(pert*ii));
+                if(pert * ii > (h/2)+(w/2*k))
                 {
-                    p2 = QPointF(((h)-(pert*ii))/k,h);
+                    p2 = QPointF(((h/2)-(pert*ii))/k,h/2);
                 }
-                else if( pert * ii < (-w*k))
+                else if( pert * ii < -(h/2)-(w/2*k))
                 {
-                    p1 = QPointF((-(pert*ii))/k,0);
+                    p1 = QPointF(((-h/2)-(pert*ii))/k,-h/2);
                 }
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
                 for(int i=0;i<curves.length();i++)
                 {
@@ -416,14 +483,29 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
 
         if(int(jiaodu)%180 == 0)
         {
-            double t = h + k*w; //y=kx+t
-            double pert = t/(midu);
-            for(double ii=-k*w-1;ii<h+1;ii += pert)
+            double t = (w/2*k) + (h/2); //y=kx+t
+            double pert = t/(midu/2);
+            pert = fmax(pert,mint);
+            midu = 2*t/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(w,(ii));
-                QPointF p2(0,(ii));
+                QPointF p1(-w/2,pert*ii);
+                QPointF p2(w/2,pert*ii);
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
+                for(int i=0;i<curves.length();i++)
+                {
+                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
+                    for(int j = 0;j<cjiaodians.length();j++)
+                    {
+                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
+                        {
+                             jiaodians.append(cjiaodians[j]);
+                        }
+                    }
+                }
                 for(int i=0;i<lins.length();i++)
                 {
                     QPointF intersectionPoint;
@@ -459,11 +541,15 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
         else
         {
             double pert = w/double(midu);
-            for(int ii=0;ii<=midu;ii++)
+            pert = fmax(pert,mint);
+            midu = 2*w/pert+2;
+            for(int ii=-midu/2;ii<midu/2;ii++)
             {
                 jiaodians.clear();
-                QPointF p1(pert*ii,h);
-                QPointF p2(pert*ii,0);
+                QPointF p1(pert*ii,h/2);
+                QPointF p2(pert*ii,-h/2);
+                p1.setY(-p1.y());
+                p2.setY(-p2.y());
                 QLineF l(p1,p2);
                 for(int i=0;i<curves.length();i++)
                 {
@@ -510,7 +596,8 @@ bool MyGraphicsCodeItem::set_brush(double jiaodu,int midu)
         }
 
     }
-    this->setPath(path2);
+
+    brushPath = path2;
     update();
 }
 void MyGraphicsCodeItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)

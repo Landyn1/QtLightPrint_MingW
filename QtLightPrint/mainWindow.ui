@@ -118,7 +118,7 @@
   <widget class="QDockWidget" name="dock2">
    <property name="minimumSize">
     <size>
-     <width>260</width>
+     <width>270</width>
      <height>44</height>
     </size>
    </property>
@@ -140,7 +140,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>30</width>
+       <width>20</width>
        <height>360</height>
       </rect>
      </property>
@@ -246,7 +246,7 @@
            <rect>
             <x>10</x>
             <y>150</y>
-            <width>71</width>
+            <width>80</width>
             <height>41</height>
            </rect>
           </property>
@@ -259,7 +259,7 @@
            <rect>
             <x>120</x>
             <y>150</y>
-            <width>71</width>
+            <width>80</width>
             <height>41</height>
            </rect>
           </property>
@@ -338,7 +338,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>380</y>
+            <y>390</y>
             <width>211</width>
             <height>81</height>
            </rect>
@@ -346,15 +346,21 @@
           <widget class="QWidget" name="widget_27" native="true">
            <property name="geometry">
             <rect>
-             <x>10</x>
+             <x>0</x>
              <y>10</y>
-             <width>91</width>
-             <height>39</height>
+             <width>101</width>
+             <height>41</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_17">
             <item>
              <widget class="QLabel" name="label_6">
+              <property name="minimumSize">
+               <size>
+                <width>45</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>角度</string>
               </property>
@@ -368,29 +374,42 @@
           <widget class="QWidget" name="widget_28" native="true">
            <property name="geometry">
             <rect>
-             <x>100</x>
+             <x>90</x>
              <y>10</y>
-             <width>91</width>
-             <height>39</height>
+             <width>121</width>
+             <height>41</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
              <widget class="QLabel" name="label_13">
+              <property name="minimumSize">
+               <size>
+                <width>55</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>密度</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="midu_text"/>
+             <widget class="QLineEdit" name="midu_text">
+              <property name="maximumSize">
+               <size>
+                <width>38</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
           <widget class="QPushButton" name="brushbutton">
            <property name="geometry">
             <rect>
-             <x>100</x>
+             <x>140</x>
              <y>50</y>
              <width>51</width>
              <height>31</height>
@@ -399,6 +418,46 @@
            <property name="text">
             <string>填充</string>
            </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="widget_30" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>190</y>
+            <width>211</width>
+            <height>191</height>
+           </rect>
+          </property>
+          <widget class="QTextEdit" name="textEdit_2">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>70</y>
+             <width>111</width>
+             <height>111</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="Codetype">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>20</y>
+             <width>111</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <item>
+            <property name="text">
+             <string>QRCode</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DataMatrix</string>
+            </property>
+           </item>
           </widget>
          </widget>
         </widget>

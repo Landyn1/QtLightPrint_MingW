@@ -1,14 +1,4 @@
 <RCC>
-    <qresource prefix="/draw">
-        <file>Res/Font.png</file>
-        <file>Res/Line.png</file>
-        <file>Res/Rectangle.png</file>
-        <file>Res/RegularPolygon.png</file>
-        <file>Res/Select.png</file>
-        <file>Res/Ellipse.png</file>
-        <file>Res/close.png</file>
-        <file>Res/Circle.png</file>
-    </qresource>
     <qresource prefix="/">
         <file>res/Config_1.png</file>
         <file>res/Config_2.png</file>
@@ -16,5 +6,17 @@
         <file>res/high.png</file>
         <file>res/low.png</file>
         <file>res/CalculateRecommendValuesPic.png</file>
+        <file>res/Circle.png</file>
+        <file>res/close.png</file>
+        <file>res/Ellipse.png</file>
+        <file>res/Font.png</file>
+        <file>res/Line.png</file>
+        <file>res/Rectangle.png</file>
+        <file>res/RegularPolygon.png</file>
+        <file>res/Select.png</file>
+    </qresource>
+    <qresource prefix="/language">
+        <file>lang_zh_CN.qm</file>
+        <file>lang_English.qm</file>
     </qresource>
 </RCC>

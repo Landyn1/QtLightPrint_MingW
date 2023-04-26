@@ -20,6 +20,9 @@ public:
     QFont font = QFont();
     QString pix = QString();
     QString pixAdr;
+    QString codetype = QString();
+    double jiaodu = 0;
+    int midu = 0;
     friend QDataStream& operator >>(QDataStream &in,ItemFileClass &t);
     friend QDataStream& operator <<(QDataStream &out,ItemFileClass &t);
     friend QDebug operator <<(QDebug& q,ItemFileClass&t);

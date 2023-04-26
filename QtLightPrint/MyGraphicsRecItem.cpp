@@ -36,8 +36,21 @@ QPainterPath MyGraphicsRecItem::ViewPath()
 {
 
     QPainterPath path;
+    QPainterPath path2 = brushpath;
     QRectF temp(mapToScene(rect()).value(0).x(), mapToScene(rect()).value(0).y(), rect().width(), rect().height());
-
+    for (int i = 0; i < path2.elementCount(); i++)
+    {
+        QPainterPath::Element element = path2.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            path.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            path.lineTo(mapToScene(po));
+        }
+    }
     path.addRect(temp);
     return path;
 }
@@ -115,6 +128,10 @@ bool MyGraphicsRecItem::selectEvent(QPointF p)
 void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
 {
     brushpath.clear();
+    this->jiaodu = jiaodu;
+    this->midu = midu;
+    if(midu == 0)
+        return;
     QPainterPath path;
     double k = tan(jiaodu*M_PI/180);//斜率
     int w = rect().width();
@@ -240,8 +257,7 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         }
 
     }
-    this->jiaodu = jiaodu;
-    this->midu = midu;
+
     brushpath = path;
     update();
 }

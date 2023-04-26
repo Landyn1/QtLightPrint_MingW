@@ -90,6 +90,9 @@ public:
     QLabel *label_13;
     QLineEdit *midu_text;
     QPushButton *brushbutton;
+    QWidget *widget_30;
+    QTextEdit *textEdit_2;
+    QComboBox *Codetype;
     QDockWidget *dock3;
     QWidget *dockWidgetContents_3;
     QVBoxLayout *verticalLayout_3;
@@ -257,14 +260,14 @@ public:
         mainWindowClass->addDockWidget(Qt::LeftDockWidgetArea, dock1);
         dock2 = new QDockWidget(mainWindowClass);
         dock2->setObjectName(QString::fromUtf8("dock2"));
-        dock2->setMinimumSize(QSize(260, 44));
+        dock2->setMinimumSize(QSize(270, 44));
         dock2->setBaseSize(QSize(400, 42));
         dock2->setFeatures(QDockWidget::NoDockWidgetFeatures);
         dockWidgetContents_2 = new QWidget();
         dockWidgetContents_2->setObjectName(QString::fromUtf8("dockWidgetContents_2"));
         scrollArea_2 = new QScrollArea(dockWidgetContents_2);
         scrollArea_2->setObjectName(QString::fromUtf8("scrollArea_2"));
-        scrollArea_2->setGeometry(QRect(0, 0, 30, 360));
+        scrollArea_2->setGeometry(QRect(0, 0, 20, 360));
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
@@ -339,10 +342,10 @@ public:
 
         pushButton = new QPushButton(widget_4);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(10, 150, 71, 41));
+        pushButton->setGeometry(QRect(10, 150, 80, 41));
         pushButton_2 = new QPushButton(widget_4);
         pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setGeometry(QRect(120, 150, 71, 41));
+        pushButton_2->setGeometry(QRect(120, 150, 80, 41));
         widget_25 = new QWidget(widget_4);
         widget_25->setObjectName(QString::fromUtf8("widget_25"));
         widget_25->setGeometry(QRect(0, 190, 211, 191));
@@ -374,16 +377,17 @@ public:
 
         widget_29 = new QWidget(widget_4);
         widget_29->setObjectName(QString::fromUtf8("widget_29"));
-        widget_29->setGeometry(QRect(0, 380, 211, 81));
+        widget_29->setGeometry(QRect(0, 390, 211, 81));
         widget_27 = new QWidget(widget_29);
         widget_27->setObjectName(QString::fromUtf8("widget_27"));
-        widget_27->setGeometry(QRect(10, 10, 91, 39));
+        widget_27->setGeometry(QRect(0, 10, 101, 41));
         horizontalLayout_17 = new QHBoxLayout(widget_27);
         horizontalLayout_17->setSpacing(6);
         horizontalLayout_17->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
         label_6 = new QLabel(widget_27);
         label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setMinimumSize(QSize(45, 0));
 
         horizontalLayout_17->addWidget(label_6);
 
@@ -394,24 +398,37 @@ public:
 
         widget_28 = new QWidget(widget_29);
         widget_28->setObjectName(QString::fromUtf8("widget_28"));
-        widget_28->setGeometry(QRect(100, 10, 91, 39));
+        widget_28->setGeometry(QRect(90, 10, 121, 41));
         horizontalLayout_21 = new QHBoxLayout(widget_28);
         horizontalLayout_21->setSpacing(6);
         horizontalLayout_21->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_21->setObjectName(QString::fromUtf8("horizontalLayout_21"));
         label_13 = new QLabel(widget_28);
         label_13->setObjectName(QString::fromUtf8("label_13"));
+        label_13->setMinimumSize(QSize(55, 0));
 
         horizontalLayout_21->addWidget(label_13);
 
         midu_text = new QLineEdit(widget_28);
         midu_text->setObjectName(QString::fromUtf8("midu_text"));
+        midu_text->setMaximumSize(QSize(38, 16777215));
 
         horizontalLayout_21->addWidget(midu_text);
 
         brushbutton = new QPushButton(widget_29);
         brushbutton->setObjectName(QString::fromUtf8("brushbutton"));
-        brushbutton->setGeometry(QRect(100, 50, 51, 31));
+        brushbutton->setGeometry(QRect(140, 50, 51, 31));
+        widget_30 = new QWidget(widget_4);
+        widget_30->setObjectName(QString::fromUtf8("widget_30"));
+        widget_30->setGeometry(QRect(0, 190, 211, 191));
+        textEdit_2 = new QTextEdit(widget_30);
+        textEdit_2->setObjectName(QString::fromUtf8("textEdit_2"));
+        textEdit_2->setGeometry(QRect(20, 70, 111, 111));
+        Codetype = new QComboBox(widget_30);
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->setObjectName(QString::fromUtf8("Codetype"));
+        Codetype->setGeometry(QRect(20, 20, 111, 21));
 
         horizontalLayout_22->addWidget(widget_4);
 
@@ -1168,6 +1185,9 @@ public:
         label_6->setText(QCoreApplication::translate("mainWindowClass", "\350\247\222\345\272\246", nullptr));
         label_13->setText(QCoreApplication::translate("mainWindowClass", "\345\257\206\345\272\246", nullptr));
         brushbutton->setText(QCoreApplication::translate("mainWindowClass", "\345\241\253\345\205\205", nullptr));
+        Codetype->setItemText(0, QCoreApplication::translate("mainWindowClass", "QRCode", nullptr));
+        Codetype->setItemText(1, QCoreApplication::translate("mainWindowClass", "DataMatrix", nullptr));
+
         dock3->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\346\240\207\345\210\273\345\217\202\346\225\260\346\240\217", nullptr));
         pushButton_6->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
         pushButton_7->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));

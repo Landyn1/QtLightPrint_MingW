@@ -12,6 +12,7 @@
 
 class DialogCalculateRecommendValues : public QDialog
 {
+    Q_OBJECT
 public:
     DialogCalculateRecommendValues();
 

@@ -12,7 +12,7 @@ DialogCalculateRecommendValues::DialogCalculateRecommendValues()
 
 void DialogCalculateRecommendValues::initUI()
 {
-    this->setWindowTitle("Recommended Values");
+    this->setWindowTitle(tr("Recommended Values"));
     setWindowFlags(Qt::WindowCloseButtonHint);
 
     QPixmap icon1(":/res/Config_1.png");
@@ -20,7 +20,7 @@ void DialogCalculateRecommendValues::initUI()
     QPixmap icon3(":/res/Config_3.png");
     QPixmap icon4(":/res/CalculateRecommendValuesPic.png");
 
-    grpBoxTheoretical = new QGroupBox("Theoretical Value");
+    grpBoxTheoretical = new QGroupBox(tr("Theoretical Value"));
     labelX = new QLabel("X=");
     labelY = new QLabel("Y=");
     lineEditX = new QLineEdit("0");
@@ -28,7 +28,7 @@ void DialogCalculateRecommendValues::initUI()
     lineEditY = new QLineEdit("0");
     lineEditY->setFixedWidth(100);
 
-    grpBoxMeasured = new QGroupBox("Measured Value");
+    grpBoxMeasured = new QGroupBox(tr("Measured Value"));
     labelA = new QLabel("a=");
     labelX1 = new QLabel("X1=");
     labelX2 = new QLabel("X2=");
@@ -51,11 +51,11 @@ void DialogCalculateRecommendValues::initUI()
     lineEditY3 = new QLineEdit("0");
     lineEditY3->setFixedWidth(100);
 
-    btnCalculate = new QPushButton("Calculate Recommended Values");
-    btnSure = new QPushButton("Sure");
+    btnCalculate = new QPushButton(tr("Calculate Recommended Values"));
+    btnSure = new QPushButton(tr("Sure"));
 
     grpBoxX = new QGroupBox("X");
-    labelProportyX = new QLabel("proporty");
+    labelProportyX = new QLabel(tr("proporty"));
     labelXPic1 = new QLabel;
     labelXPic1->setPixmap(icon1);
     labelXPic2 = new QLabel;
@@ -72,7 +72,7 @@ void DialogCalculateRecommendValues::initUI()
     lineEditXPic3->setFixedWidth(100);
 
     grpBoxY = new QGroupBox("X");
-    labelProportyY = new QLabel("proporty");
+    labelProportyY = new QLabel(tr("proporty"));
     labelYPic1 = new QLabel;
     labelYPic1->setPixmap(icon1);
     labelYPic2 = new QLabel;

@@ -9,6 +9,7 @@
 
 class DialogCalculationRatio : public QDialog
 {
+    Q_OBJECT
 public:
     DialogCalculationRatio();
 

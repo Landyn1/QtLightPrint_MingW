@@ -39,8 +39,16 @@
      <string>编辑</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>语言</string>
+    </property>
+    <addaction name="actionchinese"/>
+    <addaction name="actionenglish"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="movable">
@@ -119,7 +127,7 @@
    <property name="minimumSize">
     <size>
      <width>270</width>
-     <height>44</height>
+     <height>129</height>
     </size>
    </property>
    <property name="baseSize">
@@ -138,10 +146,10 @@
     <widget class="QScrollArea" name="scrollArea_2">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>-30</x>
        <y>0</y>
-       <width>20</width>
-       <height>360</height>
+       <width>301</width>
+       <height>521</height>
       </rect>
      </property>
      <property name="widgetResizable">
@@ -152,11 +160,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>28</width>
+        <width>278</width>
         <height>1018</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_22">
+      <layout class="QHBoxLayout" name="horizontalLayout_23">
        <item>
         <widget class="QWidget" name="widget_4" native="true">
          <property name="minimumSize">
@@ -348,7 +356,7 @@
             <rect>
              <x>0</x>
              <y>10</y>
-             <width>101</width>
+             <width>91</width>
              <height>41</height>
             </rect>
            </property>
@@ -367,16 +375,23 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="jiaodu_text"/>
+             <widget class="QLineEdit" name="jiaodu_text">
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
           <widget class="QWidget" name="widget_28" native="true">
            <property name="geometry">
             <rect>
-             <x>90</x>
+             <x>80</x>
              <y>10</y>
-             <width>121</width>
+             <width>131</width>
              <height>41</height>
             </rect>
            </property>
@@ -385,7 +400,7 @@
              <widget class="QLabel" name="label_13">
               <property name="minimumSize">
                <size>
-                <width>55</width>
+                <width>70</width>
                 <height>0</height>
                </size>
               </property>
@@ -398,7 +413,7 @@
              <widget class="QLineEdit" name="midu_text">
               <property name="maximumSize">
                <size>
-                <width>38</width>
+                <width>30</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -496,7 +511,7 @@
           <x>0</x>
           <y>0</y>
           <width>281</width>
-          <height>856</height>
+          <height>906</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -505,15 +520,45 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>150</height>
+             <height>200</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>150</height>
+             <height>200</height>
             </size>
            </property>
+           <column>
+            <property name="text">
+             <string>笔号</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>开关</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>名称</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>加工数目(件)</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>功率(%)</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string/>
+            </property>
+           </column>
           </widget>
          </item>
          <item>
@@ -526,7 +571,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>280</width>
+             <width>320</width>
              <height>40</height>
             </size>
            </property>
@@ -536,26 +581,29 @@
            <widget class="QPushButton" name="pushButton_6">
             <property name="geometry">
              <rect>
-              <x>40</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>45</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(54, 14, 255)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -582,26 +630,29 @@
            <widget class="QPushButton" name="pushButton_7">
             <property name="geometry">
              <rect>
-              <x>80</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>85</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(255, 0, 0)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -628,26 +679,29 @@
            <widget class="QPushButton" name="pushButton_8">
             <property name="geometry">
              <rect>
-              <x>160</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>165</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(255, 0, 255)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -674,26 +728,29 @@
            <widget class="QPushButton" name="pushButton_9">
             <property name="geometry">
              <rect>
-              <x>120</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>125</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(0, 255, 0)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -720,26 +777,29 @@
            <widget class="QPushButton" name="pushButton_10">
             <property name="geometry">
              <rect>
-              <x>200</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>205</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(255, 255, 0)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -766,26 +826,29 @@
            <widget class="QPushButton" name="pushButton_11">
             <property name="geometry">
              <rect>
-              <x>240</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>245</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(255, 170, 0)</string>
+            </property>
             <property name="text">
-             <string>白</string>
+             <string/>
             </property>
             <property name="checkable">
              <bool>false</bool>
@@ -812,29 +875,29 @@
            <widget class="QPushButton" name="pushButton_3">
             <property name="geometry">
              <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>40</width>
-              <height>40</height>
+              <x>5</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
              </rect>
             </property>
             <property name="minimumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>40</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(0, 255, 0);
+             <string notr="true">background-color: rgb(0, 0, 0);
 </string>
             </property>
             <property name="text">
@@ -857,6 +920,25 @@
             </property>
             <property name="default">
              <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="geometry">
+             <rect>
+              <x>285</x>
+              <y>5</y>
+              <width>30</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgb(170, 0, 0)</string>
+            </property>
+            <property name="text">
+             <string/>
             </property>
             <property name="flat">
              <bool>true</bool>
@@ -1512,12 +1594,12 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>tupian</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_13">
+                <widget class="QPushButton" name="adSettingBtn">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -1582,7 +1664,7 @@
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QPushButton" name="pushButton_16">
+                <widget class="QPushButton" name="paramsNameBtn">
                  <property name="maximumSize">
                   <size>
                    <width>80</width>
@@ -1590,12 +1672,12 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>参数名称</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_9">
+                <widget class="QLabel" name="paramsNamelable">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -1617,7 +1699,7 @@
              <widget class="QWidget" name="widget_18" native="true">
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
-                <widget class="QPushButton" name="pushButton_15">
+                <widget class="QPushButton" name="chooseBtn">
                  <property name="maximumSize">
                   <size>
                    <width>250</width>
@@ -1625,7 +1707,7 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>从参数库选取参数</string>
                  </property>
                 </widget>
                </item>
@@ -1644,7 +1726,7 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>设置成默认参数</string>
                  </property>
                 </widget>
                </item>
@@ -2101,6 +2183,16 @@
   <action name="actionopen">
    <property name="text">
     <string>open</string>
+   </property>
+  </action>
+  <action name="actionchinese">
+   <property name="text">
+    <string>chinese</string>
+   </property>
+  </action>
+  <action name="actionenglish">
+   <property name="text">
+    <string>english</string>
    </property>
   </action>
  </widget>

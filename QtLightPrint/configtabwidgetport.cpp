@@ -10,8 +10,8 @@ void ConfigTabWidgetPort::initUI()
     //初始化控件
     QPixmap icon1(":/res/high.png");
     QPixmap icon2(":/res/low.png");
-    grpBoxStop = new QGroupBox("Stop processing input port");
-    labelPromptMessageWhen = new QLabel("Prompt message when");
+    grpBoxStop = new QGroupBox(tr("Stop processing input port"));
+    labelPromptMessageWhen = new QLabel(tr("Prompt message when"));
     checkBox0 = new QCheckBox("0");
     checkBox0->setTristate();    //设置复选框为一个三态复选框
     checkBox0->setCheckState(Qt::PartiallyChecked);  //设置默认状态
@@ -21,31 +21,31 @@ void ConfigTabWidgetPort::initUI()
     checkBox2 = new QCheckBox("2");
     checkBox2->setTristate();
     checkBox2->setCheckState(Qt::PartiallyChecked);
-    labelStopOutputPort = new QLabel("Output port");
+    labelStopOutputPort = new QLabel(tr("Output port"));
     initComboBoxOutput(comboBoxStopOutputPort);
     btnStop1 = new QPushButton;
     btnStop1->setIcon(icon1);
     btnStop1->setFixedSize(icon1.size());
-    labelPulseWidth = new QLabel("Pulse Width");
+    labelPulseWidth = new QLabel(tr("Pulse Width"));
     lineEditPulseWidth = new QLineEdit("1");
     lineEditPulseWidth->setFixedWidth(120);
     labelMs = new QLabel("ms");
 
 
-    grpBoxDoor = new QGroupBox("Door port");
-    labelInputPort = new QLabel("Input port");
+    grpBoxDoor = new QGroupBox(tr("Door port"));
+    labelInputPort = new QLabel(tr("Input port"));
     initComboBoxInput(comboBoxInputPort);
     btnDoor1 = new QPushButton;
     btnDoor1->setIcon(icon1);
     btnDoor1->setFixedSize(icon1.size());
-    checkBoxEnableMarkPauseMode = new QCheckBox("Enable mark pause mode");
+    checkBoxEnableMarkPauseMode = new QCheckBox(tr("Enable mark pause mode"));
     initComboBoxOutput(comboBoxEnableMarkPauseMode);
     btnDoor2 = new QPushButton;
     btnDoor2->setIcon(icon1);
     btnDoor2->setFixedSize(icon1.size());
 
-    grpBoxLaserReady = new QGroupBox("Laser ready port");
-    labelLaserOutputPort = new QLabel("Out port");
+    grpBoxLaserReady = new QGroupBox(tr("Laser ready port"));
+    labelLaserOutputPort = new QLabel(tr("Out port"));
     comboBoxLaserOutputPort = new QComboBox;
     comboBoxLaserOutputPort->addItem("NULL");
     comboBoxLaserOutputPort->addItem("0");
@@ -53,7 +53,7 @@ void ConfigTabWidgetPort::initUI()
     btnLaserReady1 = new QPushButton;
     btnLaserReady1->setIcon(icon1);
     btnLaserReady1->setFixedSize(icon1.size());
-    labelLaserInputPort = new QLabel("Input port");
+    labelLaserInputPort = new QLabel(tr("Input port"));
     comboBoxLaserInputPort = new QComboBox;
     comboBoxLaserInputPort->addItem("NULL");
     comboBoxLaserInputPort->addItem("0");
@@ -63,54 +63,54 @@ void ConfigTabWidgetPort::initUI()
     btnLaserReady2->setIcon(icon1);
     btnLaserReady2->setFixedSize(icon1.size());
 
-    grpBoxLaserPower = new QGroupBox("Laser power outlet");
-    labelPort = new QLabel("port");
+    grpBoxLaserPower = new QGroupBox(tr("Laser power outlet"));
+    labelPort = new QLabel(tr("port"));
     comboBoxPort = new QComboBox;
     initComboBoxOutput(comboBoxPort);
     btnLaserPower = new QPushButton;
     btnLaserPower->setIcon(icon1);
     btnLaserPower->setFixedSize(icon1.size());
 
-    grpBoxRed = new QGroupBox("Red light output");
-    labelOutput = new QLabel("Output");
+    grpBoxRed = new QGroupBox(tr("Red light output"));
+    labelOutput = new QLabel(tr("Output"));
     initComboBoxOutput(comboBoxOutput);
     btnRedOutput = new QPushButton;
     btnRedOutput->setIcon(icon1);
     btnRedOutput->setFixedSize(icon1.size());
-    labelRedInputPort = new QLabel("Input port");
+    labelRedInputPort = new QLabel(tr("Input port"));
     initComboBoxInput(comboBoxRedInputPort);
     btnRedInputPort = new QPushButton;
     btnRedInputPort->setIcon(icon1);
     btnRedInputPort->setFixedSize(icon1.size());
 
-    grpBoxMarkOutput = new QGroupBox("Mark output");
-    labelMarkOutput = new QLabel("Output");
+    grpBoxMarkOutput = new QGroupBox(tr("Mark output"));
+    labelMarkOutput = new QLabel(tr("Output"));
     initComboBoxOutput(comboBoxMarkOutput);
     btnMarkOutput = new QPushButton;
     btnMarkOutput->setIcon(icon1);
     btnMarkOutput->setFixedSize(icon1.size());
 
 
-    grpBoxMarkEnd = new QGroupBox("Mark end output IO");
-    labelMarkEnd = new QLabel("Output");
+    grpBoxMarkEnd = new QGroupBox(tr("Mark end output IO"));
+    labelMarkEnd = new QLabel(tr("Output"));
     initComboBoxOutput(comboBoxMarkEnd);
     btnMarkEnd = new QPushButton;
     btnMarkEnd->setIcon(icon1);
     btnMarkEnd->setFixedSize(icon1.size());
-    labelPulse = new QLabel("Pulse");
+    labelPulse = new QLabel(tr("Pulse"));
     lineEditPulse = new QLineEdit("1");
     lineEditPulse->setFixedWidth(120);
     labelPulsems = new QLabel("ms");
 
-    grpBoxStart = new QGroupBox("Start Mark port");
-    labelStartInputPort = new QLabel("Input port");
+    grpBoxStart = new QGroupBox(tr("Start Mark port"));
+    labelStartInputPort = new QLabel(tr("Input port"));
     initComboBoxInput(comboBoxStartInputPort);
     btnStartInputPort = new QPushButton;
     btnStartInputPort->setIcon(icon2);
     btnStartInputPort->setFixedSize(icon2.size());
-    checkBoxStart = new QCheckBox("Start signal pulse mode");
+    checkBoxStart = new QCheckBox(tr("Start signal pulse mode"));
 
-    labelFilter = new QLabel("Filter time ms");
+    labelFilter = new QLabel(tr("Filter time ms"));
     lineEditFilter = new QLineEdit("50");
     lineEditFilter->setFixedWidth(120);
 

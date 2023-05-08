@@ -11,12 +11,12 @@ ConfigTabWidgetLaserControl::ConfigTabWidgetLaserControl(QWidget *parent) : QWid
 void ConfigTabWidgetLaserControl::initUI()
 {
 
-    grpBoxLaserType = new QGroupBox("Laser type");
+    grpBoxLaserType = new QGroupBox(tr("Laser type"));
 
-    radioBtnCO2 = new QRadioButton("CO2");
-    radioBtnYAG = new QRadioButton("YAG");
-    radioBtnFiber = new QRadioButton("Fiber");
-    radioBtnUV = new QRadioButton("UV");
+    radioBtnCO2 = new QRadioButton(("CO2"));
+    radioBtnYAG = new QRadioButton(("YAG"));
+    radioBtnFiber = new QRadioButton(("Fiber"));
+    radioBtnUV = new QRadioButton(("UV"));
     radioBtnUV->setChecked(true);     //设置UV为默认选中状态
 
     //将Laser type中的4种type作为一组统一管理,这样可以不用挨个设置信号槽的连接
@@ -78,7 +78,6 @@ void ConfigTabWidgetLaserControl::LaserTypeSlot(int id)
             widgetUV->hide();
             layout->addWidget(widgetFiber);
             widgetFiber->show();
-            qDebug() << "Fiber";
         }
         break;
     case 3:
@@ -89,7 +88,6 @@ void ConfigTabWidgetLaserControl::LaserTypeSlot(int id)
             widgetFiber->hide();
             layout->addWidget(widgetUV);
             widgetUV->show();
-            qDebug() << "UV";
         }
         break;
     }

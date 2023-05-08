@@ -8,7 +8,7 @@ ConfigWidget::ConfigWidget(QWidget *parent) : QWidget(parent)
 void ConfigWidget::initUI()
 {
     //设置ConfigWidget窗口标题
-    this->setWindowTitle("Configuration Config[default]");
+    this->setWindowTitle(tr("Configuration Config[default]"));
     //设置窗口固定大小
     this->setFixedSize(QSize(1080,980));
     //设置窗口为模态窗口
@@ -16,8 +16,8 @@ void ConfigWidget::initUI()
 
     tabWidget = new ConfigTabWidget;
     tabWidget->setParent(this);
-    btnOk = new QPushButton("OK");
-    btnCancel = new QPushButton("Cancel");
+    btnOk = new QPushButton(tr("OK"));
+    btnCancel = new QPushButton(tr("Cancel"));
 
     layoutBottom = new QHBoxLayout;
     layoutBottom->addStretch();

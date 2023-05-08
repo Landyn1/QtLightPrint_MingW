@@ -12,40 +12,40 @@ void ConfigTabWidgetRed::initUI()
     //初始化控件
     this->groupBox = new QGroupBox;
 
-    this->labelRedLightStyle = new QLabel("Red light style");
+    this->labelRedLightStyle = new QLabel(tr("Red light style"));
     this->comBox = new QComboBox;
-    this->comBox->addItem("Graphic circumscried rectangle");
-    this->comBox->addItem("Graphic outline");
+    this->comBox->addItem(tr("Graphic circumscried rectangle"));
+    this->comBox->addItem(tr("Graphic outline"));
 
-    this->labelRedLight = new QLabel("Red light");
+    this->labelRedLight = new QLabel(tr("Red light"));
     this->lineEditRedLight = new QLineEdit("3000");
     lineEditRedLight->setFixedWidth(100);
     this->labelMms = new QLabel("mm/s");
 
-    this->labelOffsetX = new QLabel("Offset X");
+    this->labelOffsetX = new QLabel(tr("Offset X"));
     this->lineEditOffsetX = new QLineEdit("0.0000");
     lineEditOffsetX->setFixedWidth(100);
     this->labelMm1 = new QLabel("mm");
 
-    this->labelOffsetY = new QLabel("Offset Y");
+    this->labelOffsetY = new QLabel(tr("Offset Y"));
     this->lineEditOffsetY = new QLineEdit("0.0000");
     lineEditOffsetY->setFixedWidth(100);
     this->labelMm2 = new QLabel("mm");
 
-    this->labelSizeRatioX = new QLabel("Size ratio X");
+    this->labelSizeRatioX = new QLabel(tr("Size ratio X"));
     this->lineEditSizeRatioX = new QLineEdit("1.0000");
     lineEditSizeRatioX->setFixedWidth(100);
 
-    this->labelSizeRatioY = new QLabel("Size ratio X");
+    this->labelSizeRatioY = new QLabel(tr("Size ratio Y"));
     this->lineEditSizeRatioY = new QLineEdit("1.0000");
     lineEditSizeRatioY->setFixedWidth(100);
 
     this->labelTime = new QLabel("00:00:00.000");
 
-    this->checkBoxLaser = new QCheckBox("Laser contains redlight Mode");
-    this->checkBoxEnable = new QCheckBox("Enable red light output all the time");
+    this->checkBoxLaser = new QCheckBox(tr("Laser contains redlight Mode"));
+    this->checkBoxEnable = new QCheckBox(tr("Enable red light output all the time"));
 
-    this->btnRedPreview = new QPushButton("Red Preview");
+    this->btnRedPreview = new QPushButton(tr("Red Preview"));
     btnRedPreview->setFixedSize(QSize(190,90));
 
     //布局

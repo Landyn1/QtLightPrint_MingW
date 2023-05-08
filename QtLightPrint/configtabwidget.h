@@ -11,6 +11,7 @@
 
 class ConfigTabWidget : public QTabWidget
 {
+    Q_OBJECT
 public:
     ConfigTabWidgetArea * widgetArea;
     ConfigTabWidgetLaserControl* widgetLaserControl;

@@ -16,9 +16,9 @@ void ConfigTabWidget::initUI()
     this->widgetRed = new ConfigTabWidgetRed;
 
     //插入每个Tab
-    insertTab(0, widgetArea, "area");
-    insertTab(1, widgetLaserControl, "Laser Control");
-    insertTab(2,widgetPort,"port");
-    insertTab(3,widgetOther,"other");
-    insertTab(4,widgetRed,"Red");
+    insertTab(0, widgetArea,tr("区域"));
+    insertTab(1, widgetLaserControl, tr("Laser Control"));
+    insertTab(2,widgetPort,tr("port"));
+    insertTab(3,widgetOther,tr("other"));
+    insertTab(4,widgetRed,tr("Red"));
 }

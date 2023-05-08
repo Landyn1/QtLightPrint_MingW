@@ -8,42 +8,42 @@ ConfigTabWidgetOther::ConfigTabWidgetOther(QWidget *parent) : QWidget(parent)
 void ConfigTabWidgetOther::initUI()
 {
     //初始化控件
-    labelStartMarkDelay = new QLabel("Start Mark delay");
+    labelStartMarkDelay = new QLabel(tr("Start Mark delay"));
     lineEditStartMarkDelay = new QLineEdit("0");
     lineEditStartMarkDelay->setFixedWidth(80);
     labelStartMarkDelayms = new QLabel("ms");
 
-    labelEndMarkDelay = new QLabel("End Mark delay");
+    labelEndMarkDelay = new QLabel(tr("End Mark delay"));
     lineEditEndMarkDelay = new QLineEdit("0");
     lineEditEndMarkDelay->setFixedWidth(80);
     labelEndMarkDelayms = new QLabel("ms");
 
-    labelMaxSpeed = new QLabel("Max speed");
+    labelMaxSpeed = new QLabel(tr("Max speed"));
     lineEditMaxSpeed = new QLineEdit("10000.000");
     lineEditMaxSpeed->setFixedWidth(80);
     labelMaxSpeedmms = new QLabel("mm/s");
 
-    labelMinSpeed = new QLabel("Min speed");
+    labelMinSpeed = new QLabel(tr("Min speed"));
     lineEditMinSpeed = new QLineEdit("1.000");
     lineEditMinSpeed->setFixedWidth(80);
     labelMinSpeedmms = new QLabel("mm/s");
 
-    checkBoxShowStartMarkDialog = new QCheckBox("Show start Mark dialog");
+    checkBoxShowStartMarkDialog = new QCheckBox(tr("Show start Mark dialog"));
 
-    checkBoxProhibit = new QCheckBox("Prohibit processing after processing to the special");
+    checkBoxProhibit = new QCheckBox(tr("Prohibit processing after processing to the special"));
 
-    labelTotalProcessing = new QLabel("Total processing");
+    labelTotalProcessing = new QLabel(tr("Total processing"));
     labelTotalProcessingNum = new QLabel("0");
     labelms = new QLabel("ms");
 
-    labelTotalNumberOf = new QLabel("Total number of");
+    labelTotalNumberOf = new QLabel(tr("Total number of"));
     labelTotalNumberOfNum = new QLabel("0");
 
-    checkBoxSingleFileMode = new QCheckBox("Single file mode");
+    checkBoxSingleFileMode = new QCheckBox(tr("Single file mode"));
 
-    checkBoxContinuousMakingOfMovingShapes = new QCheckBox("Continuous making of moving shapes");
+    checkBoxContinuousMakingOfMovingShapes = new QCheckBox(tr("Continuous making of moving shapes"));
 
-    checkBoxPowerFailureAutomaticProtectionFile = new QCheckBox("Power failure automatic protection file");
+    checkBoxPowerFailureAutomaticProtectionFile = new QCheckBox(tr("Power failure automatic protection file"));
 
     //设置布局
     layout = new QGridLayout;

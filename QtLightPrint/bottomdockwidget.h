@@ -11,6 +11,7 @@
 
 class BottomDockWidget : public QDockWidget
 {
+    Q_OBJECT
 public:
    QPushButton* btnRed;
    QPushButton* btnMark;

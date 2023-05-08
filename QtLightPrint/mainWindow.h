@@ -12,7 +12,7 @@ class mainWindow : public QMainWindow
 
 public:
     mainWindow(QWidget *parent = nullptr);
-    
+
     ~mainWindow();
     void setItemMoveble(bool moveble);
     MyGraphicsScene* scene;
@@ -40,11 +40,15 @@ public:
     double pre_h;
     void setpreRect();
     int clicknum = 0;
+
+    double spaceadjust = 1;   //用来调整实际打印的距离
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 public slots:
     void creatnewfile();
     void savefile();
     void openfile();
+    void swich2Cn();
+    void swich2En();
 };
 
 class MyWidget : public QWidget

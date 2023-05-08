@@ -9,6 +9,7 @@
 
 class DialogPasswordSetting : public QDialog
 {
+    Q_OBJECT
 public:
     DialogPasswordSetting();
 

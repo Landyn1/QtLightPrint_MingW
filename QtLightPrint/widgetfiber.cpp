@@ -8,30 +8,30 @@ WidgetFiber::WidgetFiber(QWidget *parent) : QWidget(parent)
 void WidgetFiber::initUI()
 {
     grpBoxPWM = new QGroupBox("PWM",this);
-    labelMax = new QLabel("Max PWM signal",this);
+    labelMax = new QLabel(tr("Max PWM signal"),this);
     lineEditMax = new QLineEdit("200.000",this);
     lineEditMax->setFixedWidth(100);
     labelMaxKhz = new QLabel("KHZ");
-    labelMin = new QLabel("Min PWM signal");
+    labelMin = new QLabel(tr("Min PWM signal"));
     lineEditMin = new QLineEdit("20.000");
     lineEditMin->setFixedWidth(100);
     labelMinKhz = new QLabel("KHZ");
-    btnPowerMapping = new QPushButton("Power mapping");
+    btnPowerMapping = new QPushButton(tr("Power mapping"));
 
-    grpBoxFiber = new QGroupBox("Fiber");
-    labelTypes = new QLabel("Types of");
+    grpBoxFiber = new QGroupBox(tr("Fiber"));
+    labelTypes = new QLabel(tr("Types of"));
     comboBoxTypes = new QComboBox;
     QStringList types = {"IPG-YLP","IPG-YLPM","RAYCUS","QUANTEL_M20HF","QUANTEL_M20","MANLIGHT_PL","VGEN_YPFL","JPT","EO"};
     comboBoxTypes->addItems(types);
 
-    checkBoxDoes = new QCheckBox("Does not detect the laser feedback signal");
-    checkBoxLight = new QCheckBox("Light leakage treament");
-    labelTurn = new QLabel("Turn on the MO");
+    checkBoxDoes = new QCheckBox(tr("Does not detect the laser feedback signal"));
+    checkBoxLight = new QCheckBox(tr("Light leakage treament"));
+    labelTurn = new QLabel(tr("Turn on the MO"));
     lineEditTurn = new QLineEdit("8");
     lineEditTurn->setFixedWidth(100);
     labelMs = new QLabel("ms");
 
-    btnTest = new QPushButton("Test laser");
+    btnTest = new QPushButton(tr("Test laser"));
     btnTest->setFixedSize(QSize(150,60));
 
     layoutPWM = new QGridLayout(grpBoxPWM);

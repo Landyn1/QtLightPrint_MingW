@@ -549,7 +549,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
 
         MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
 
-        item->setPathByStr("hellosakjdhkjasd","QRCode");
+        item->setPathByStr("TEXT","QRCode");
         double w = item->path.boundingRect().width();
         double h = item->path.boundingRect().height();
         item->setPos(p);
@@ -585,17 +585,7 @@ void MyGraphicsView::keyPressEvent(QKeyEvent *event)
         scene()->update();
        return;
     }
-    if(event->key() == Qt::Key_A)
-    {
-        qDebug()<<"test"<<endl;
-        MyGraphicsHeplBrushRectItem *help = new MyGraphicsHeplBrushRectItem();
-        help->setPos(0,0);
-        help->jiaodu=30;
-        help->midu=1000;
-        help->setRect(-100,-100,200,200);
-        scene()->addItem(help);
-        scene()->update();
-    }
+
 }
 void MyGraphicsView::keyReleaseEvent(QKeyEvent *event)
 {
@@ -4197,7 +4187,12 @@ void MyGraphicsView::wheelEvent(QWheelEvent* event)
 
     emit ScaleChanged(this->matrix().m11());
     QString scaleLabelText;
-    scaleLabelText.sprintf(u8"缩放倍数：%.2f", this->matrix().m11());
+    if(lan == 0)
+        scaleLabelText.sprintf("缩放倍数：%.2f", this->matrix().m11());
+    else
+    {
+        scaleLabelText.sprintf("scale：%.2f", this->matrix().m11());
+    }
     _scaleLabel->setText(scaleLabelText);
     _statusBarPtr->update();
     leftkedu->update();
@@ -4370,7 +4365,10 @@ void MyGraphicsView::setStatusBarPtr(QStatusBar* statusBarPtr)
     }
     _posLabel = new QLabel("x: 0.00, y : 0.00 px", this);
     _posLabel->setMinimumWidth(375);
-    _scaleLabel = new QLabel(u8"缩放倍数：1.00", this);
+    if(lan == 0)
+        _scaleLabel = new QLabel(u8"缩放倍数：1.00", this);
+    else
+        _scaleLabel = new QLabel(u8"scale：1.00", this);
     _scaleLabel->setMidLineWidth(375);
 
     _statusBarPtr->addWidget(_posLabel);

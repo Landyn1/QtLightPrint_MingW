@@ -15,55 +15,55 @@ AdvancedWidget::AdvancedWidget(QWidget *parent) : QWidget(parent)
 
 void AdvancedWidget::initUI()
 {
-    this->setWindowTitle("Pen number Config");
+    this->setWindowTitle(tr("Pen number Config"));
     this->setFixedSize(QSize(1114,853));
     setAttribute(Qt::WA_ShowModal, true);
 
     //控件初始化
-    grpBoxAdvanced = new QGroupBox("Advanced Configs");
+    grpBoxAdvanced = new QGroupBox(tr("Advanced Configs"));
     grpBoxAdvanced->setAlignment(Qt::AlignHCenter);     //设置标题居中
     grpBox1 = new QGroupBox;
     grpBox2 = new QGroupBox;
-    grpBoxJump = new QGroupBox("Jump delay Range");
+    grpBoxJump = new QGroupBox(tr("Jump delay Range"));
     grpBox3 = new QGroupBox;
     grpBox4 = new QGroupBox;
 
-    labelCurrentPen = new QLabel("Current pen number");
+    labelCurrentPen = new QLabel(tr("Current pen number"));
     labelCurrentPen->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelConfig = new QLabel("Config name");
+    labelConfig = new QLabel(tr("Config name"));
     labelConfig->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     checkBoxOpen = new QCheckBox;
-    labelColor = new QLabel("color");
+    labelColor = new QLabel(tr("color"));
     labelColor->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     //Number of processing (pieces)
-    labelNumber = new QLabel("Number of processing(pieces)");
+    labelNumber = new QLabel(tr("Number of processing(pieces)"));
     labelNumber->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelSpeed = new QLabel("Speed(mm/s)");
+    labelSpeed = new QLabel(tr("Speed(mm/s)"));
     labelSpeed->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelPower = new QLabel("power(%)");
-    labelCurrent = new QLabel("current(A)");
+    labelPower = new QLabel(tr("power(%)"));
+    labelCurrent = new QLabel(tr("current(A)"));
     labelCurrent->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelFrequency = new QLabel("Frequeecy(KHZ)");
+    labelFrequency = new QLabel(tr("Frequeecy(KHZ)"));
     labelFrequency->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelMOPA = new QLabel("MOPA pulse width(ns)");
+    labelMOPA = new QLabel(tr("MOPA pulse width(ns)"));
     labelMOPA->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelQ = new QLabel("Q pulse width(us)");
+    labelQ = new QLabel(tr("Q pulse width(us)"));
     labelQ->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelOpening = new QLabel("Opening delay(us)");
+    labelOpening = new QLabel(tr("Opening delay(us)"));
     labelOpening->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelOff = new QLabel("Off light delay(us)");
+    labelOff = new QLabel(tr("Off light delay(us)"));
     labelOff->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelEnd = new QLabel("End delay(us)");
+    labelEnd = new QLabel(tr("End delay(us)"));
     labelEnd->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelCorner = new QLabel("Corner delay(us)");
+    labelCorner = new QLabel(tr("Corner delay(us)"));
     labelCorner->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelMark = new QLabel("Mark step(mm)");
+    labelMark = new QLabel(tr("Mark step(mm)"));
     labelMark->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    labelInter = new QLabel("Inter-step delay(us)");
+    labelInter = new QLabel(tr("Inter-step delay(us)"));
     labelInter->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-    lineEditCurrentPen = new QLineEdit("0");
-    lineEditConfig = new QLineEdit("Default");
+    lineEditCurrentPen = new QLineEdit(tr("0"));
+    lineEditConfig = new QLineEdit(tr("Default"));
     btnColor = new QPushButton;
     //btnColor->setAutoFillBackground(true);   //设置自动填充部件背景
     frameColor = new QFrame;
@@ -71,88 +71,88 @@ void AdvancedWidget::initUI()
 //    frameColor = new QFrame;
 //    frameColor->setFrameShape(QFrame::Box);
 //    frameColor->setAutoFillBackground(true);
-    lineEditNumber = new QLineEdit("1");
+    lineEditNumber = new QLineEdit(tr("1"));
     lineEditNumber->setFixedWidth(120);
-    lineEditSpeed = new QLineEdit("1000");
+    lineEditSpeed = new QLineEdit(tr("1000"));
     lineEditSpeed->setFixedWidth(120);
-    lineEditPower = new QLineEdit("75");
+    lineEditPower = new QLineEdit(tr("75"));
     lineEditPower->setFixedWidth(120);
-    lineEditCurrent = new QLineEdit("1");
+    lineEditCurrent = new QLineEdit(tr("1"));
     lineEditCurrent->setFixedWidth(120);
-    lineEditFrequency = new QLineEdit("30");
+    lineEditFrequency = new QLineEdit(tr("30"));
     lineEditFrequency->setFixedWidth(120);
-    lineEditMOPA = new QLineEdit("10");
+    lineEditMOPA = new QLineEdit(tr("10"));
     lineEditMOPA->setFixedWidth(120);
-    lineEditQ = new QLineEdit("1");
+    lineEditQ = new QLineEdit(tr("1"));
     lineEditQ->setFixedWidth(120);
-    lineEditOpening = new QLineEdit("0");
+    lineEditOpening = new QLineEdit(tr("0"));
     lineEditOpening->setFixedWidth(120);
-    lineEditOff = new QLineEdit("100");
+    lineEditOff = new QLineEdit(tr("100"));
     lineEditOff->setFixedWidth(120);
-    lineEditEnd = new QLineEdit("50");
+    lineEditEnd = new QLineEdit(tr("50"));
     lineEditEnd->setFixedWidth(120);
-    lineEditCorner = new QLineEdit("80");
+    lineEditCorner = new QLineEdit(tr("80"));
     lineEditCorner->setFixedWidth(120);
-    lineEditMark = new QLineEdit("0.02");
+    lineEditMark = new QLineEdit(tr("0.02"));
     lineEditMark->setFixedWidth(120);
-    lineEditInter = new QLineEdit("100");
+    lineEditInter = new QLineEdit(tr("100"));
     lineEditInter->setFixedWidth(120);
 
-    labelJumpSpeed = new QLabel("Jump speed");
-    labelJumpPosition = new QLabel("Jump position");
-    labelJumpDistance = new QLabel("Jump distance");
-    lineEditJumpSpeed = new QLineEdit("4000");
+    labelJumpSpeed = new QLabel(tr("Jump speed"));
+    labelJumpPosition = new QLabel(tr("Jump position"));
+    labelJumpDistance = new QLabel(tr("Jump distance"));
+    lineEditJumpSpeed = new QLineEdit(tr("4000"));
     lineEditJumpSpeed->setFixedWidth(100);
-    lineEditJumpPosition = new QLineEdit("500");
+    lineEditJumpPosition = new QLineEdit(tr("500"));
     lineEditJumpPosition->setFixedWidth(100);
-    lineEditJumpDistance = new QLineEdit("100");
+    lineEditJumpDistance = new QLineEdit(tr("100"));
     lineEditJumpDistance->setFixedWidth(100);
-    labelJumpMms = new QLabel("mm/s");
-    labelJumpUs = new QLabel("us");
-    labelJumpUsmm = new QLabel("us/mm");
+    labelJumpMms = new QLabel(tr("mm/s"));
+    labelJumpUs = new QLabel(tr("us"));
+    labelJumpUsmm = new QLabel(tr("us/mm"));
 
-    labelMinimum = new QLabel("minimum");
-    labelMaximum1 = new QLabel("maximum");
-    labelMaximum2 = new QLabel("maximum");
-    lineEditMin = new QLineEdit("20");
+    labelMinimum = new QLabel(tr("minimum"));
+    labelMaximum1 = new QLabel(tr("maximum"));
+    labelMaximum2 = new QLabel(tr("maximum(space)"));
+    lineEditMin = new QLineEdit(tr("20"));
     lineEditMin->setFixedWidth(100);
-    lineEditMax1 = new QLineEdit("500");
+    lineEditMax1 = new QLineEdit(tr("500"));
     lineEditMax1->setFixedWidth(100);
-    lineEditMax2 = new QLineEdit("20");
+    lineEditMax2 = new QLineEdit(tr("20"));
     lineEditMax2->setFixedWidth(100);
-    labelMinUs = new QLabel("us");
-    labelMaxUs = new QLabel("us");
-    labelMaxMm = new QLabel("mm");
+    labelMinUs = new QLabel(tr("us"));
+    labelMaxUs = new QLabel(tr("us"));
+    labelMaxMm = new QLabel(tr("mm"));
 
-    checkBoxVector = new QCheckBox("Vector dot patter");
-    labelNumberOf = new QLabel("Number of");
-    lineEditNumberOf = new QLineEdit("1");
+    checkBoxVector = new QCheckBox(tr("Vector dot patter"));
+    labelNumberOf = new QLabel(tr("Number of"));
+    lineEditNumberOf = new QLineEdit(tr("1"));
     lineEditNumberOf->setFixedWidth(100);
 
-    labelOpeningLag = new QLabel("Opening lag");
-    lineEditOpeningLag = new QLineEdit("0");
+    labelOpeningLag = new QLabel(tr("Opening lag"));
+    lineEditOpeningLag = new QLineEdit(tr("0"));
     lineEditOpeningLag->setFixedWidth(100);
-    labelOpeningLagUs = new QLabel("us");
+    labelOpeningLagUs = new QLabel(tr("us"));
 
-    labelDotting = new QLabel("Dotting time");
-    lineEditDotting = new QLineEdit("0.1");
+    labelDotting = new QLabel(tr("Dotting time"));
+    lineEditDotting = new QLineEdit(tr("0.1"));
     lineEditDotting->setFixedWidth(100);
-    labelDottingMs = new QLabel("ms");
+    labelDottingMs = new QLabel(tr("ms"));
 
-    checkBoxJitter = new QCheckBox("Jitter");
-    labelRound = new QLabel("Round");
-    lineEditRound = new QLineEdit("1");
+    checkBoxJitter = new QCheckBox(tr("Jitter"));
+    labelRound = new QLabel(tr("Round"));
+    lineEditRound = new QLineEdit(tr("1"));
     lineEditRound->setFixedWidth(100);
-    labelRoundMm = new QLabel("mm");
-    labelSpacing = new QLabel("spacing");
-    lineEditSpacing = new QLineEdit("0.5");
+    labelRoundMm = new QLabel(tr("mm"));
+    labelSpacing = new QLabel(tr("spacing"));
+    lineEditSpacing = new QLineEdit(tr("0.5"));
     lineEditSpacing->setFixedWidth(100);
-    labelSpacingMm = new QLabel("mm");
+    labelSpacingMm = new QLabel(tr("mm"));
 
-    btnReset= new QPushButton("Reset");
-    btnSet = new QPushButton("Set as default pen number");
-    btnOk = new QPushButton("OK");
-    btnCancel = new QPushButton("Cancel");
+    btnReset= new QPushButton(tr("Reset"));
+    btnSet = new QPushButton(tr("Set as default pen number"));
+    btnOk = new QPushButton(tr("OK"));
+    btnCancel = new QPushButton(tr("Cancel"));
 
     //设置布局
     //左侧区域布局

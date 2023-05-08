@@ -108,6 +108,6 @@ DISTFILES += \
     cpp.hint
 TRANSLATIONS += lang_English.ts\
                 lang_zh_CN.ts\
-                lang_zh_TW.ts
+
 
 LIBS += -L$$PWD/libs/ -lCUDrvE libZXingWriter

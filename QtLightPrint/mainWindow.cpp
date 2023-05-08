@@ -23,6 +23,7 @@
 #include"mygraphicscodeitem.h"
 #include"qtranslator.h"
 #include<qfontdatabase.h>
+#include"advancedwidget.h"
 using namespace std;
 int action_state;
 int k;
@@ -30,18 +31,6 @@ mainWindow::mainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    QTranslator m;
-    m.load(":/language/lang_English.qm");
-    qApp->installTranslator(&m);
-    ui.retranslateUi(this);
-
-
-
-    QWidget* p = takeCentralWidget();
-    if (p)
-        delete p;
-    setDockNestingEnabled(true);
-
     BottomDockWidget* bottom_dock = new BottomDockWidget;
 
     //下4行代码用于隐藏底部dockWidget的标题栏
@@ -49,6 +38,12 @@ mainWindow::mainWindow(QWidget *parent)
     QWidget* BEmptyWidget = new QWidget();
     bottom_dock->setTitleBarWidget(BEmptyWidget);
     delete BTitleBar;
+    QWidget* p = takeCentralWidget();
+    if (p)
+        delete p;
+    setDockNestingEnabled(true);
+
+
 
     bottom_dock->setParent(this);
     bottom_dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
@@ -164,7 +159,7 @@ mainWindow::mainWindow(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout();
     QPushButton *close_file =new QPushButton("×");
     myLabel *label_file= new myLabel(filenum-1);
-    label_file->setText("file"+QString::number(fileid+1));
+    label_file->setText(tr("file")+QString::number(fileid+1));
     lay->addWidget(label_file);
     lay->addWidget(close_file);
     lay->setMargin(0);
@@ -306,9 +301,11 @@ mainWindow::mainWindow(QWidget *parent)
 
     connect ( ui.actionopen, SIGNAL ( triggered() ), this, SLOT ( openfile() ) );
 
-    //ui.colortable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-    ui.colortable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    connect ( ui.actionchinese, SIGNAL ( triggered() ), this, SLOT ( swich2Cn() ) );
+    connect ( ui.actionenglish, SIGNAL ( triggered() ), this, SLOT ( swich2En() ) );
+
+    //ui.colortable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     
     ui.dock_leftKedu->setVisible(false);
     ui.dock_topKedu->setVisible(false);
@@ -333,10 +330,101 @@ mainWindow::mainWindow(QWidget *parent)
     ui.widget_19->setStyleSheet(QString::fromUtf8("#widget_19{border:1px solid rgb(200,200,200)}"));
     ui.colorbuttom->setStyleSheet(QString::fromUtf8("#colorbuttom{border:1px solid rgb(200,200,200)}"));
     ui.pushButton_3->setAutoFillBackground(true);
+    ui.pushButton_4->setAutoFillBackground(true);
+    ui.pushButton_6->setAutoFillBackground(true);
+    ui.pushButton_7->setAutoFillBackground(true);
+    ui.pushButton_8->setAutoFillBackground(true);
+    ui.pushButton_9->setAutoFillBackground(true);
+    ui.pushButton_10->setAutoFillBackground(true);
+    ui.pushButton_11->setAutoFillBackground(true);
 
 
+
+    //设置笔画表
+    ui.colortable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui.colortable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);//楂樺害鍥哄畾
+    //ui.colortable->verticalHeader()->setDefaultSectionSize(20);
+    ui.colortable->setShowGrid(false);
+    ui.colortable->verticalHeader()->setVisible(false);
+    ui.colortable->setEditTriggers(QAbstractItemView::NoEditTriggers);//涓嶅彲缂栬緫
+    ui.colortable->setSelectionBehavior(QAbstractItemView::SelectRows);//璁剧疆閫変腑涓?琛?
+    ui.colortable->setColumnHidden(3, true); // 闅愯棌绗笁鍒?
+    ui.colortable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+    ui.colortable->setRowCount(255);
+    for(int i=0;i<255;i++)
+    {
+        QTableWidgetItem* item0;
+        QTableWidgetItem* item1;
+        QTableWidgetItem* item2;
+        QTableWidgetItem* item3;
+        QTableWidgetItem* item4;
+        QTableWidgetItem* item5;
+        item0 = new QTableWidgetItem(QString::number(i));
+        item1 = new QTableWidgetItem(tr("open"));
+        item2 = new QTableWidgetItem(tr("Default"));
+        item3 = new QTableWidgetItem("1");
+        item4 = new QTableWidgetItem("75");
+        item0->setTextColor(QColor(255,255,255));
+        if(i == 0)
+        {
+            item0 ->setBackground(QColor(0,0,0));
+        }
+        else if( i == 1)
+        {
+            item0 ->setBackground(QColor(0,0,255));
+        }
+        else if( i == 2)
+        {
+            item0 ->setBackground(QColor(255,0,0));
+        }
+        else if( i == 3)
+        {
+            item0 ->setBackground(QColor(0,255,0));
+            item0->setTextColor(QColor(0,0,0));
+        }
+        else if( i == 4)
+        {
+            item0 ->setBackground(QColor(255,0,255));
+        }
+        else if( i == 5)
+        {
+            item0 ->setBackground(QColor(255,255,0));
+            item0->setTextColor(QColor(0,0,0));
+        }
+        else if( i == 6)
+        {
+            item0 ->setBackground(QColor(255,125,64));
+            item0->setTextColor(QColor(0,0,0));
+        }
+        else if( i == 7)
+        {
+            item0 ->setBackground(QColor(128,42,42));
+        }
+        else
+        {
+
+
+            item0->setBackground(QColor(0,0,0));
+        }
+        ui.colortable->setItem(i,0,item0);
+        ui.colortable->setItem(i,1,item1);
+        ui.colortable->setItem(i,2,item2);
+        ui.colortable->setItem(i,3,item3);
+        ui.colortable->setItem(i,4,item4);
+    }
+    ui.colortable->update();
 }
 
+
+void mainWindow::swich2Cn()
+{
+
+}
+void mainWindow::swich2En()
+{
+
+}
 void mainWindow::savefile()
 {
 
@@ -351,7 +439,7 @@ void mainWindow::savefile()
         QFile file(fileName);
         if (!file.open(QFileDevice::WriteOnly | QFileDevice::Truncate))
         {
-            QMessageBox::warning(this, "Error", "打开文件错误!");
+            QMessageBox::warning(this, tr("Error"), "打开文件错误!");
         }
 
         //下附各个图元
@@ -467,8 +555,8 @@ void mainWindow::savefile()
                     iff->codetype = item->codetype;
                     iff->jiaodu = item->jiaodu;
                     iff->midu = item->midu;
-                    qDebug()<<"save"<<item->text<<item->codetype<<endl;
-                    //qDebug()<<iff->path<<endl;
+
+                    iff->rec = item->rect();
                     iff->pos = item->pos();
                     iff->type =item->type();
                 }
@@ -502,7 +590,7 @@ void mainWindow::openfile()
         {
             MyGraphicsLineItem *item = new MyGraphicsLineItem();
             item->readPLT(fileName);
-            item->name = "群组1";
+            item->name = tr("群组1");
             item->setPos(0,0);
             item->setVisible(true);
             scene->addItem(item);
@@ -514,7 +602,7 @@ void mainWindow::openfile()
         }
 
         if (!file.open (QIODevice::ReadOnly | QIODevice::Text)) {
-            QMessageBox::warning(this, "Error", "Selected file is not  correct.");
+            QMessageBox::warning(this, tr("Error"), tr("Selected file is not  correct."));
         }
         else {
 
@@ -674,13 +762,13 @@ void mainWindow::openfile()
                 {
 
                     MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
-                    qDebug()<<t.text<<t.codetype<<endl;
                     //item->setPathByStr(t.text,t.codetype);
                     item->text = t.text;
                     item->codetype = t.codetype;
                     item->path = (t.path);
                     item->jiaodu = t.jiaodu;
                     item->midu = t.midu;
+                    item->setRect(t.rec);
                     item->set_brush(item->jiaodu,item->midu);
                     item->setVisible(true);
                     item->setData(0, t.id);
@@ -880,7 +968,7 @@ void mainWindow::creatnewfile()
     QHBoxLayout *lay = new QHBoxLayout();
     QPushButton *close_file =new QPushButton("×");
     myLabel *label_file= new myLabel(filenum);
-    label_file->setText("file"+QString::number(fileid+1));
+    label_file->setText(tr("file")+QString::number(fileid+1));
     lay->addWidget(label_file);
     lay->addWidget(close_file);
     lay->setMargin(0);
@@ -1025,11 +1113,57 @@ void mainWindow::creatnewfile()
 void mainWindow::initConnect()
 {
 
+
+    //选择按钮的connect
+
+    connect(ui.pushButton_3,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(0);
+    });
+
+    connect(ui.pushButton_4,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(7);
+    });
+    connect(ui.pushButton_6,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(1);
+    });
+    connect(ui.pushButton_7,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(2);
+    });
+    connect(ui.pushButton_8,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(4);
+    });
+    connect(ui.pushButton_9,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(3);
+    });
+    connect(ui.pushButton_10,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(5);
+    });
+    connect(ui.pushButton_11,&QPushButton::clicked,ui.colortable,[&](){
+       ui.colortable->selectRow(6);
+    });
+
+
+    //笔号修改
+
+     connect(ui.colortable, &QTableWidget::itemSelectionChanged, this, [&]() {
+             QList<QTableWidgetItem*> selectItems = ui.colortable->selectedItems();
+             ui.lineEdit->setText( QString::number(selectItems[0]->row()));
+
+     });
+
+
+
+
     connect(view,&MyGraphicsView::mouseleave,this,[&](int k){
        kkkk=k;
 
     });
 
+
+    connect(ui.adSettingBtn,&QPushButton::clicked,this,[&](){
+        AdvancedWidget * advancedWidget = new AdvancedWidget;
+        advancedWidget->show();
+    });
 
     connect(ui.draw_sanjiao, &QPushButton::clicked, this, [&]() {
 
@@ -1041,13 +1175,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
 
@@ -1061,13 +1195,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
@@ -1080,13 +1214,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         });
@@ -1099,13 +1233,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         });
@@ -1119,7 +1253,7 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         else
@@ -1136,13 +1270,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL,tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
@@ -1155,13 +1289,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         });
@@ -1178,7 +1312,7 @@ void mainWindow::initConnect()
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
@@ -1197,7 +1331,7 @@ void mainWindow::initConnect()
                 fileNames = dialog.selectedFiles();
                 QString fileName = fileNames[0];
                 if (QImageReader::imageFormat(fileName) == "") {
-                    QMessageBox::warning(this, "Error", "Selected file is not an image file.");
+                    QMessageBox::warning(this, tr("Error"), tr("Selected file is not an image file."));
                 } else {
                     QPixmap pixmap(fileName);
                     item->filename = fileName;
@@ -1211,7 +1345,7 @@ void mainWindow::initConnect()
 
 
                     QString str = QString::number(view->row + 1);
-                    item->name = u8"图片" + str;
+                    item->name = tr(u8"图片") + str;
                     scene->addItem(item);
                     emit view->addItem(view->row,item);
                     view->item_id++;
@@ -1228,13 +1362,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
@@ -1248,13 +1382,13 @@ void mainWindow::initConnect()
         else if( kkkk == 1)
         {
             ui.draw_quline->click();
-            QMessageBox::information(NULL, "警告", "请先完成曲线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成曲线绘制"),
                                      QMessageBox::Yes, QMessageBox::Yes);
         }
         else
         {
             ui.draw_line->click();
-            QMessageBox::information(NULL, "警告", "请先完成直线绘制",
+            QMessageBox::information(NULL, tr("警告"), tr("请先完成直线绘制"),
                                      QMessageBox::Yes , QMessageBox::Yes);
         }
         });
@@ -1331,6 +1465,7 @@ void mainWindow::initConnect()
                 MyGraphicsPolygonItem *item = qgraphicsitem_cast<MyGraphicsPolygonItem *>(items[0]);
                 ui.bian_num->setText(QString::number(item->num));
                 ui.widget_26->setVisible(true);
+                ui.widget_29->move(0,230);
             }
             if(items[0]->type() == 9)
             {
@@ -1678,8 +1813,7 @@ void mainWindow::initConnect()
             MyGraphicsRecItem* node;
              node = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
              item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem("矩形");
+             item1 = new QTableWidgetItem(tr("矩形"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1691,7 +1825,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsEllipseItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("椭圆");
+             item1 = new QTableWidgetItem(tr("椭圆"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1703,7 +1837,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsCircleItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("圆形");
+             item1 = new QTableWidgetItem(tr("圆形"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1716,7 +1850,7 @@ void mainWindow::initConnect()
             node = qgraphicsitem_cast<MyGraphicsLineItem*>(item);
             item0 = new QTableWidgetItem(node->name);
 
-            item1 = new QTableWidgetItem("直线");
+            item1 = new QTableWidgetItem(tr("直线"));
             item2 = new QTableWidgetItem("");
             id = node->data(0).value<int>();
             QString s = QString::number(id);
@@ -1728,7 +1862,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsPolygonItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("多边形");
+             item1 = new QTableWidgetItem(tr("多边形"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1740,7 +1874,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsTextItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("文本");
+             item1 = new QTableWidgetItem(tr("文本"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1752,7 +1886,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("曲线");
+             item1 = new QTableWidgetItem(tr("曲线"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1764,7 +1898,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsPixMapItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("图片");
+             item1 = new QTableWidgetItem(tr("图片"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1776,7 +1910,7 @@ void mainWindow::initConnect()
              node = qgraphicsitem_cast<MyGraphicsCodeItem*>(item);
              item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem("二维码");
+             item1 = new QTableWidgetItem(tr("二维码"));
              item2 = new QTableWidgetItem("");
              id = node->data(0).value<int>();
              QString s = QString::number(id);
@@ -1802,7 +1936,7 @@ void mainWindow::initConnect()
         item2 = ui.itemtable->item(row, 0);
         QString name = item2->text();
         bool isOK;
-        QString text = QInputDialog::getText(this, "修改名称",
+        QString text = QInputDialog::getText(this, tr("修改名称"),
             NULL,
             QLineEdit::Normal,
             name,
@@ -2484,7 +2618,7 @@ void mainWindow::initConnect()
                 item->setPos(((item->pos().x()-roof.x())*(bilix)+item->pos().x()),((item->pos().y()-roof.y())*(biliy)+item->pos().y()));
                 item->setRect(-ww/2,-hh/2,ww,hh);
                 item->makePath_fill_Rect();
-                qDebug()<<item->midu<<"askjdaskhjsssssssssssssssssssssssssssssssssss"<<endl;
+
                 item->set_brush(item->jiaodu,item->midu);
             }
         }
@@ -2500,47 +2634,68 @@ void mainWindow::initConnect()
     connect(ui.brushbutton,&QPushButton::clicked,this,[=](){
         QList<QGraphicsItem *> selectitems = scene->selectedItems();
         bool m,j;
-        int num = ui.midu_text->text().toInt(&m);
+        double juli = ui.midu_text->text().toDouble(&m);
+        int num ;
         double jiaodu = ui.jiaodu_text->text().toDouble(&j);
         if(selectitems.length()==1 && m && j)
         {
-            view->midu = num;
+            double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+            auto  temp = (dpiX * 10) / 254; //1mm = tpx
+
             view->jiaodu = jiaodu;
             int type = selectitems[0]->type();
             if(type == 1)
             {
                 MyGraphicsRecItem *item = new MyGraphicsRecItem();
                 item = qgraphicsitem_cast<MyGraphicsRecItem *>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
             else if(type == 2)
             {
                 MyGraphicsEllipseItem *item = new MyGraphicsEllipseItem();
                 item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
             else if(type == 3)
             {
                 MyGraphicsCircleItem *item = new MyGraphicsCircleItem();
                 item = qgraphicsitem_cast<MyGraphicsCircleItem*>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
             else if(type == 4)
             {
                 MyGraphicsLineItem *item = new MyGraphicsLineItem();
                 item = qgraphicsitem_cast<MyGraphicsLineItem*>(selectitems[0]);
+                double maxh = fmax(item->getRect().width(),item->getRect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
             else if(type == 5)
             {
                 MyGraphicsPolygonItem *item = new MyGraphicsPolygonItem();
                 item = qgraphicsitem_cast<MyGraphicsPolygonItem*>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
             else if(type == 6)
             {
                 MyGraphicsTextItem *item = new MyGraphicsTextItem();
                 item = qgraphicsitem_cast<MyGraphicsTextItem*>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
 
@@ -2548,6 +2703,9 @@ void mainWindow::initConnect()
             {
                 MyGraphicsCodeItem* item = new MyGraphicsCodeItem();
                 item = qgraphicsitem_cast<MyGraphicsCodeItem*>(selectitems[0]);
+                double maxh = fmax(item->rect().width(),item->rect().height());
+                view->midu = (maxh/temp) / juli;
+                num = view->midu;
                 item->set_brush(jiaodu,num);
             }
         }
@@ -3127,7 +3285,7 @@ QPoint mainWindow::view2print(QPointF position)
     int y = p.y() * 1000 + 0.5;
     double xx = double(x) / 1000;
     double yy = double(y) / 1000;
-    QPointF pf((xx+50.000)*655.36*4/5, (yy+50.000)*655.36*4/5);
+    QPointF pf((xx+50.000)*655.36*spaceadjust, (yy+50.000)*655.36*spaceadjust);
     QPoint pp = pf.toPoint();
     return pp;
 }

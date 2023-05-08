@@ -13,30 +13,30 @@ void BottomDockWidget::initUI()
 {
     //控件初始化
     widget = new QWidget;
-    btnRed = new QPushButton("Red(F1)",this);
+    btnRed = new QPushButton(tr("红光(F1)"),this);
     btnRed->setFixedSize(115, 65);    //设置按钮大小
-    btnRed->setShortcut(QKeySequence("F1"));      //设置快捷键
-    btnMark = new QPushButton("Mark(F2)", this);
+    btnRed->setShortcut(QKeySequence(("F1")));      //设置快捷键
+    btnMark = new QPushButton(tr("Mark(F2)"), this);
     btnMark->setFixedSize(115, 65);
-    btnMark->setShortcut(QKeySequence("F2"));
-    checkBoxContinuousMark = new QCheckBox("Continuous Mark", this);
-    checkBoxSelectMark = new QCheckBox("Select Mark", this);
-    checkBoxAutoRed = new QCheckBox("Auto Red", this);
-    label00 = new QLabel("00:00:00.000",this);
+    btnMark->setShortcut(QKeySequence(("F2")));
+    checkBoxContinuousMark = new QCheckBox(tr("Continuous Mark"), this);
+    checkBoxSelectMark = new QCheckBox(tr("Select Mark"), this);
+    checkBoxAutoRed = new QCheckBox(tr("Auto Red"), this);
+    label00 = new QLabel(("00:00:00.000"),this);
     label00->setFrameStyle(QFrame::Panel|QFrame::Sunken);
-    labelPart = new QLabel("Part", this);
-    labelTotal = new QLabel("Total", this);
-    lineEditPart = new QLineEdit("0",this);
+    labelPart = new QLabel(tr("Part"), this);
+    labelTotal = new QLabel(tr("Total"), this);
+    lineEditPart = new QLineEdit(("0"),this);
     lineEditPart->setFixedWidth(80);
-    lineEditTotal = new QLineEdit("1",this);
+    lineEditTotal = new QLineEdit(("1"),this);
     lineEditTotal->setFixedWidth(80);
-    btnR = new QPushButton("R", this);
+    btnR = new QPushButton(("R"), this);
     btnR->setFixedWidth(30);
-    btnRepeatMark = new QPushButton("RepeatMark", this);
-    btnConfig = new QPushButton("Config(F3)", this);
-    btnConfig->setShortcut(QKeySequence("F3"));
-    checkBoxRedOutline = new QCheckBox("Red Outline", this);
-    checkBoxContinuousRedMode = new QCheckBox("Continuous Red Mode", this);
+    btnRepeatMark = new QPushButton(tr("下载至板卡"), this);
+    btnConfig = new QPushButton(tr("Config(F3)"), this);
+    btnConfig->setShortcut(QKeySequence(("F3")));
+    checkBoxRedOutline = new QCheckBox(tr("Red Outline"), this);
+    checkBoxContinuousRedMode = new QCheckBox(tr("Continuous Red Mode"), this);
 
     //设置布局
     gridLayout = new QGridLayout;
@@ -91,8 +91,8 @@ void BottomDockWidget::ConfigSlot()
 void BottomDockWidget::RepeatMarkSlot()
 {
     qDebug() << "you clicked PushButton RepeatMark";
-    AdvancedWidget * advancedWidget = new AdvancedWidget;
-    advancedWidget->show();
+//    AdvancedWidget * advancedWidget = new AdvancedWidget;
+//    advancedWidget->show();
 }
 
 void BottomDockWidget::BtnRSlot()

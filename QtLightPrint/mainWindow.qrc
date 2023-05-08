@@ -15,8 +15,8 @@
         <file>res/RegularPolygon.png</file>
         <file>res/Select.png</file>
     </qresource>
-    <qresource prefix="/language">
-        <file>lang_zh_CN.qm</file>
+    <qresource prefix="/lan">
         <file>lang_English.qm</file>
+        <file>lang_zh_CN.qm</file>
     </qresource>
 </RCC>

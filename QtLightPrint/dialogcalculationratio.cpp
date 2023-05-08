@@ -11,15 +11,15 @@ DialogCalculationRatio::DialogCalculationRatio()
 
 void DialogCalculationRatio::initUI()
 {
-    setWindowTitle("Calculation ratio");
+    setWindowTitle(tr("Calculation ratio"));
     setWindowFlags(Qt::WindowCloseButtonHint);   //去掉标题栏的"?"，只显示"X"
 
-    labelTarget = new QLabel("Target Mark size");
-    labelActual = new QLabel("Actual Mark size");
+    labelTarget = new QLabel(tr("Target Mark size"));
+    labelActual = new QLabel(tr("Actual Mark size"));
     lineEditTarget = new QLineEdit("80");
     lineEditActual =new QLineEdit("80");
-    btnOk = new QPushButton("OK");
-    btnCancel = new QPushButton("Cancel");
+    btnOk = new QPushButton(tr("OK"));
+    btnCancel = new QPushButton(tr("Cancel"));
 
     layout = new QGridLayout(this);
     layout->addWidget(labelTarget,0,0);

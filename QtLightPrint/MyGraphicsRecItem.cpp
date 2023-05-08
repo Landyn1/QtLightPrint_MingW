@@ -127,11 +127,13 @@ bool MyGraphicsRecItem::selectEvent(QPointF p)
 
 void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
 {
+
+
+
     brushpath.clear();
     this->jiaodu = jiaodu;
     this->midu = midu;
-    if(midu == 0)
-        return;
+
     QPainterPath path;
     double k = tan(jiaodu*M_PI/180);//斜率
     int w = rect().width();
@@ -147,6 +149,7 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
+
             double pert = t/(midu/2);
 
             for(int i=-midu/2;i<midu/2;i++)

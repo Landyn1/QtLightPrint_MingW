@@ -77,7 +77,7 @@ public:
     void leftmid_set(QPointF p1,QPointF p2);
     void rightmid_set(QPointF p1,QPointF p2);
     void setItemAd(QList<QGraphicsItem*> items);
-
+    int lan = 0;
     QList<int> selectedId;
     bool isPaintLine = false;
     bool isPaintCurve = false;

@@ -27,20 +27,20 @@ void ConfigTabWidgetArea::initUI()
     QPixmap icon3(":/res/Config_3.png");
 
     //1.给grpBoxExterior添加控件
-    grpBoxExterior = new QGroupBox("Exterior");
-    labelAreaSize = new QLabel("Area size", grpBoxExterior);
+    grpBoxExterior = new QGroupBox(tr("Exterior"));
+    labelAreaSize = new QLabel(tr("Area size"), grpBoxExterior);
     lineEditAreaSize = new QLineEdit("120.000", grpBoxExterior);
     lineEditAreaSize->setFixedWidth(100);
     lineEditMaxLine = new QLineEdit("2", grpBoxExterior);
     lineEditMaxLine->setFixedWidth(100);
-    labelMaxLine = new QLabel("Max line", grpBoxExterior);
+    labelMaxLine = new QLabel(tr("Max line"), grpBoxExterior);
     labelmm1 = new QLabel("mm", grpBoxExterior);
     labelmm2 = new QLabel("mm", grpBoxExterior);
     labelmm3 = new QLabel("mm", grpBoxExterior);
     labelmm4 = new QLabel("mm", grpBoxExterior);
-    labelOffsetX = new QLabel("Offset X", grpBoxExterior);
-    labelOffsetY = new QLabel("Offset Y", grpBoxExterior);
-    labelAngle = new QLabel("angle", grpBoxExterior);
+    labelOffsetX = new QLabel(tr("Offset X"), grpBoxExterior);
+    labelOffsetY = new QLabel(tr("Offset Y"), grpBoxExterior);
+    labelAngle = new QLabel(tr("angle"), grpBoxExterior);
     lineEditOffsetX = new QLineEdit("2.0000", grpBoxExterior);
     lineEditOffsetX->setFixedWidth(100);
     lineEditOffsetY = new QLineEdit("0.0000", grpBoxExterior);
@@ -69,7 +69,7 @@ void ConfigTabWidgetArea::initUI()
     grpBoxExterior->setLayout(gridLayoutExterior);
 
     //2. 给Use calibration file行三个控件初始化
-    checkBoxUseCalibrationFile = new QCheckBox("Use calibration file");
+    checkBoxUseCalibrationFile = new QCheckBox(tr("Use calibration file"));
     lineEdit = new QLineEdit;
     btnUse = new QPushButton(">>");
     btnUse->setFixedWidth(30);
@@ -82,9 +82,9 @@ void ConfigTabWidgetArea::initUI()
 
     //3. 给grpReverse初始化控件
     grpBoxReverse = new QGroupBox;
-    checkBoxXYInterchange = new QCheckBox("XY interchange");
-    checkBoxXreverse = new QCheckBox("X reverse");
-    checkBoxYreverse = new QCheckBox("Y reverse");
+    checkBoxXYInterchange = new QCheckBox(tr("XY interchange"));
+    checkBoxXreverse = new QCheckBox(tr("X reverse"));
+    checkBoxYreverse = new QCheckBox(tr("Y reverse"));
     //3. 给grpReverse布局
     layoutReverse = new QHBoxLayout;
     layoutReverse->addWidget(checkBoxXYInterchange);
@@ -95,7 +95,7 @@ void ConfigTabWidgetArea::initUI()
 
     //4. 给grpBoxX添加控件
     grpBoxX =  new QGroupBox("X");
-    labelXProperty = new QLabel("property", grpBoxX);
+    labelXProperty = new QLabel(tr("property"), grpBoxX);
     lineEditXProperty = new QLineEdit("100.000000", grpBoxX);
     lineEditXProperty->setFixedWidth(100);
     propertyXBtn = new QPushButton(">>", grpBoxX);
@@ -130,7 +130,7 @@ void ConfigTabWidgetArea::initUI()
 
     //5. 给grpBoxY添加控件
     grpBoxY = new QGroupBox("Y");
-    labelYProperty = new QLabel("property", grpBoxY);
+    labelYProperty = new QLabel(tr("property"), grpBoxY);
     lineEditYProperty = new QLineEdit("100.000000", grpBoxY);
     lineEditYProperty->setFixedWidth(100);
     propertyYBtn = new QPushButton(">>", grpBoxY);
@@ -164,13 +164,13 @@ void ConfigTabWidgetArea::initUI()
     layoutY->setSizeConstraint(QLayout::SetFixedSize);
 
     //6.
-    checkBoxEqualProportionMethod = new QCheckBox("Equal proportion method");
+    checkBoxEqualProportionMethod = new QCheckBox(tr("Equal proportion method"));
     checkBoxEqualProportionMethod->setCheckState(Qt::Checked);
-    labelProportional = new QLabel("Proportional");
+    labelProportional = new QLabel(tr("Proportional"));
     lineEditProportional = new QLineEdit("25");
     lineEditProportional->setFixedWidth(70);
-    btnSetX = new QPushButton("Set X-scale Config");
-    btnSetY = new QPushButton("Set Y-scale Config");
+    btnSetX = new QPushButton(tr("Set X-scale Config"));
+    btnSetY = new QPushButton(tr("Set Y-scale Config"));
     //6.Proportional行水平布局
     layoutProportional = new QHBoxLayout;
     layoutProportional->addWidget(labelProportional);
@@ -179,12 +179,12 @@ void ConfigTabWidgetArea::initUI()
     layoutProportional->addWidget(btnSetY);
 
     //7.
-    checkBoxUseConfigurationFile = new QCheckBox("Use configuration file");
+    checkBoxUseConfigurationFile = new QCheckBox(tr("Use configuration file"));
     lineEditConfigFileLocation = new QLineEdit;
     //lineEditConfigFileLocation->setFixedWidth(350);
     btnConfigFileLocation = new QPushButton(">>");
     btnConfigFileLocation->setFixedWidth(30);
-    btnSaveConfigAs = new QPushButton("Save Config as");
+    btnSaveConfigAs = new QPushButton(tr("Save Config as"));
     layoutUseConfigurationFile = new QGridLayout;
     //layoutUseConfigurationFile->setColumnStretch
     layoutUseConfigurationFile->addWidget(checkBoxUseConfigurationFile,0,0);
@@ -194,14 +194,14 @@ void ConfigTabWidgetArea::initUI()
     layoutUseConfigurationFile->setSizeConstraint(QLayout::SetFixedSize);
 
     //8. 给grpBoxGo添加控件
-    grpBoxGo = new QGroupBox("Go to the Designated Location After Mark");
-    radioBtnDoNotMove = new QRadioButton("Do not move", grpBoxGo);
-    radioBtnGalvanicCenter = new QRadioButton("Galvanic center", grpBoxGo);
-    radioBtnTopLeftCornerOfTheProject = new QRadioButton("Top left corner of the project", grpBoxGo);
-    radioBtnObjectUpperRightCorner = new QRadioButton("Object upper right corner", grpBoxGo);
-    radioBtnObjectBottomRightCorner = new QRadioButton("Object bottom right corner", grpBoxGo);
-    radioBtnLowerLeftCornerOfTheProject = new QRadioButton("Lower left corner of the project", grpBoxGo);
-    radioBtnSpecifiedLocation = new QRadioButton("Specified location", grpBoxGo);
+    grpBoxGo = new QGroupBox(tr("Go to the Designated Location After Mark"));
+    radioBtnDoNotMove = new QRadioButton(tr("Do not move"), grpBoxGo);
+    radioBtnGalvanicCenter = new QRadioButton(tr("Galvanic center"), grpBoxGo);
+    radioBtnTopLeftCornerOfTheProject = new QRadioButton(tr("Top left corner of the project"), grpBoxGo);
+    radioBtnObjectUpperRightCorner = new QRadioButton(tr("Object upper right corner"), grpBoxGo);
+    radioBtnObjectBottomRightCorner = new QRadioButton(tr("Object bottom right corner"), grpBoxGo);
+    radioBtnLowerLeftCornerOfTheProject = new QRadioButton(tr("Lower left corner of the project"), grpBoxGo);
+    radioBtnSpecifiedLocation = new QRadioButton(tr("Specified location"), grpBoxGo);
     labelX = new QLabel("X", grpBoxGo);
     labelY = new QLabel("Y", grpBoxGo);
     lineEditX = new QLineEdit("0.0000", grpBoxGo);
@@ -230,12 +230,12 @@ void ConfigTabWidgetArea::initUI()
     layoutGo->setSizeConstraint(QLayout::SetFixedSize);
 
     //9.
-    btnCalculateRecommendValues = new QPushButton("Calculate recommend values");
+    btnCalculateRecommendValues = new QPushButton(tr("Calculate recommend values"));
     btnCalculateRecommendValues->setFixedSize(QSize(250,80));
 
     //10. 给grpBoxPassWord添加控件
-    grpBoxPassWord = new QGroupBox("password");
-    btnPassword = new QPushButton("Password");
+    grpBoxPassWord = new QGroupBox(tr("password"));
+    btnPassword = new QPushButton(tr("Password"));
     btnPassword->setFixedSize(QSize(130,50));
     //10. 给grpBoxPassWord设置布局
     layoutPassword = new QHBoxLayout;
@@ -273,7 +273,7 @@ void ConfigTabWidgetArea::initUI()
 
 void ConfigTabWidgetArea::btnUseSlot()
 {
-    QString path = QFileDialog::getOpenFileName(this,"Open",".","Cali Files(*.cor)");
+    QString path = QFileDialog::getOpenFileName(this,tr("Open"),".",tr("Cali Files(*.cor)"));
     if(!path.isEmpty())
         qDebug() << path;
 }
@@ -292,14 +292,14 @@ void ConfigTabWidgetArea::proportyYBtnSlot()
 
 void ConfigTabWidgetArea::btnConfigFileLocationSlot()
 {
-    QString path = QFileDialog::getOpenFileName(this,"Open",".","Config Files(*.cfg)");
+    QString path = QFileDialog::getOpenFileName(this,tr("Open"),".",tr("Config Files(*.cfg)"));
     if(!path.isEmpty())
         qDebug() << path;
 }
 
 void ConfigTabWidgetArea::btnSaveConfigAsSlot()
 {
-    QFileDialog::getSaveFileName(this,"Save As",".","All Files(*.*)");
+    QFileDialog::getSaveFileName(this,tr("Save As"),".",tr("All Files(*.*)"));
 }
 
 void ConfigTabWidgetArea::btnCalculateRecommendValuesSlot()

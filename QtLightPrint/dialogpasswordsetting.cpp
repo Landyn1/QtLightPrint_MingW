@@ -13,15 +13,15 @@ DialogPasswordSetting::DialogPasswordSetting()
 
 void DialogPasswordSetting::initUI()
 {
-    setWindowTitle("Password setting");
+    setWindowTitle(tr("Password setting"));
     setWindowFlags(Qt::WindowCloseButtonHint);   //去掉标题栏的"?"，只显示"X"
 
-    labelPassword = new QLabel("Password");
+    labelPassword = new QLabel(tr("Password"));
     lineEditPassword1 = new QLineEdit;
     lineEditPassword2 = new QLineEdit;
-    btnOk = new QPushButton("OK");
-    btnCancel = new QPushButton("Cancel");
-    btnDelete = new QPushButton("Delete");
+    btnOk = new QPushButton(tr("OK"));
+    btnCancel = new QPushButton(tr("Cancel"));
+    btnDelete = new QPushButton(tr("Delete"));
 
     layout = new QGridLayout(this);
     layout->addWidget(labelPassword,0,0);

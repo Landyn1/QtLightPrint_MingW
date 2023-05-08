@@ -42,10 +42,13 @@ public:
     QAction *actionnew;
     QAction *actionsave;
     QAction *actionopen;
+    QAction *actionchinese;
+    QAction *actionenglish;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menu_2;
+    QMenu *menu_3;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
     QDockWidget *dock1;
@@ -55,7 +58,7 @@ public:
     QWidget *dockWidgetContents_2;
     QScrollArea *scrollArea_2;
     QWidget *scrollAreaWidgetContents;
-    QHBoxLayout *horizontalLayout_22;
+    QHBoxLayout *horizontalLayout_23;
     QWidget *widget_4;
     QWidget *widget_3;
     QHBoxLayout *horizontalLayout_3;
@@ -108,6 +111,7 @@ public:
     QPushButton *pushButton_10;
     QPushButton *pushButton_11;
     QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
     QWidget *widget_19;
     QVBoxLayout *verticalLayout_2;
     QWidget *widget_11;
@@ -156,17 +160,17 @@ public:
     QWidget *widget_22;
     QHBoxLayout *horizontalLayout_20;
     QPushButton *pushButton_12;
-    QPushButton *pushButton_13;
+    QPushButton *adSettingBtn;
     QSpacerItem *verticalSpacer;
     QWidget *widget_17;
     QVBoxLayout *verticalLayout_5;
     QWidget *widget_13;
     QHBoxLayout *horizontalLayout_6;
-    QPushButton *pushButton_16;
-    QLabel *label_9;
+    QPushButton *paramsNameBtn;
+    QLabel *paramsNamelable;
     QWidget *widget_18;
     QVBoxLayout *verticalLayout_7;
-    QPushButton *pushButton_15;
+    QPushButton *chooseBtn;
     QWidget *widget_23;
     QVBoxLayout *verticalLayout_6;
     QPushButton *pushButton_14;
@@ -216,6 +220,10 @@ public:
         actionsave->setObjectName(QString::fromUtf8("actionsave"));
         actionopen = new QAction(mainWindowClass);
         actionopen->setObjectName(QString::fromUtf8("actionopen"));
+        actionchinese = new QAction(mainWindowClass);
+        actionchinese->setObjectName(QString::fromUtf8("actionchinese"));
+        actionenglish = new QAction(mainWindowClass);
+        actionenglish->setObjectName(QString::fromUtf8("actionenglish"));
         centralWidget = new QWidget(mainWindowClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         mainWindowClass->setCentralWidget(centralWidget);
@@ -226,6 +234,8 @@ public:
         menu->setObjectName(QString::fromUtf8("menu"));
         menu_2 = new QMenu(menuBar);
         menu_2->setObjectName(QString::fromUtf8("menu_2"));
+        menu_3 = new QMenu(menuBar);
+        menu_3->setObjectName(QString::fromUtf8("menu_3"));
         mainWindowClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(mainWindowClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -260,22 +270,22 @@ public:
         mainWindowClass->addDockWidget(Qt::LeftDockWidgetArea, dock1);
         dock2 = new QDockWidget(mainWindowClass);
         dock2->setObjectName(QString::fromUtf8("dock2"));
-        dock2->setMinimumSize(QSize(270, 44));
+        dock2->setMinimumSize(QSize(270, 129));
         dock2->setBaseSize(QSize(400, 42));
         dock2->setFeatures(QDockWidget::NoDockWidgetFeatures);
         dockWidgetContents_2 = new QWidget();
         dockWidgetContents_2->setObjectName(QString::fromUtf8("dockWidgetContents_2"));
         scrollArea_2 = new QScrollArea(dockWidgetContents_2);
         scrollArea_2->setObjectName(QString::fromUtf8("scrollArea_2"));
-        scrollArea_2->setGeometry(QRect(0, 0, 20, 360));
+        scrollArea_2->setGeometry(QRect(-30, 0, 301, 521));
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 28, 1018));
-        horizontalLayout_22 = new QHBoxLayout(scrollAreaWidgetContents);
-        horizontalLayout_22->setSpacing(6);
-        horizontalLayout_22->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_22->setObjectName(QString::fromUtf8("horizontalLayout_22"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 278, 1018));
+        horizontalLayout_23 = new QHBoxLayout(scrollAreaWidgetContents);
+        horizontalLayout_23->setSpacing(6);
+        horizontalLayout_23->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_23->setObjectName(QString::fromUtf8("horizontalLayout_23"));
         widget_4 = new QWidget(scrollAreaWidgetContents);
         widget_4->setObjectName(QString::fromUtf8("widget_4"));
         widget_4->setMinimumSize(QSize(0, 1000));
@@ -380,7 +390,7 @@ public:
         widget_29->setGeometry(QRect(0, 390, 211, 81));
         widget_27 = new QWidget(widget_29);
         widget_27->setObjectName(QString::fromUtf8("widget_27"));
-        widget_27->setGeometry(QRect(0, 10, 101, 41));
+        widget_27->setGeometry(QRect(0, 10, 91, 41));
         horizontalLayout_17 = new QHBoxLayout(widget_27);
         horizontalLayout_17->setSpacing(6);
         horizontalLayout_17->setContentsMargins(11, 11, 11, 11);
@@ -393,25 +403,26 @@ public:
 
         jiaodu_text = new QLineEdit(widget_27);
         jiaodu_text->setObjectName(QString::fromUtf8("jiaodu_text"));
+        jiaodu_text->setMaximumSize(QSize(30, 16777215));
 
         horizontalLayout_17->addWidget(jiaodu_text);
 
         widget_28 = new QWidget(widget_29);
         widget_28->setObjectName(QString::fromUtf8("widget_28"));
-        widget_28->setGeometry(QRect(90, 10, 121, 41));
+        widget_28->setGeometry(QRect(80, 10, 131, 41));
         horizontalLayout_21 = new QHBoxLayout(widget_28);
         horizontalLayout_21->setSpacing(6);
         horizontalLayout_21->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_21->setObjectName(QString::fromUtf8("horizontalLayout_21"));
         label_13 = new QLabel(widget_28);
         label_13->setObjectName(QString::fromUtf8("label_13"));
-        label_13->setMinimumSize(QSize(55, 0));
+        label_13->setMinimumSize(QSize(70, 0));
 
         horizontalLayout_21->addWidget(label_13);
 
         midu_text = new QLineEdit(widget_28);
         midu_text->setObjectName(QString::fromUtf8("midu_text"));
-        midu_text->setMaximumSize(QSize(38, 16777215));
+        midu_text->setMaximumSize(QSize(30, 16777215));
 
         horizontalLayout_21->addWidget(midu_text);
 
@@ -430,7 +441,7 @@ public:
         Codetype->setObjectName(QString::fromUtf8("Codetype"));
         Codetype->setGeometry(QRect(20, 20, 111, 21));
 
-        horizontalLayout_22->addWidget(widget_4);
+        horizontalLayout_23->addWidget(widget_4);
 
         scrollArea_2->setWidget(scrollAreaWidgetContents);
         dock2->setWidget(dockWidgetContents_2);
@@ -450,28 +461,43 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 281, 856));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 281, 906));
         verticalLayout_4 = new QVBoxLayout(scrollAreaWidgetContents_2);
         verticalLayout_4->setSpacing(6);
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         colortable = new QTableWidget(scrollAreaWidgetContents_2);
+        if (colortable->columnCount() < 6)
+            colortable->setColumnCount(6);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(0, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(1, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(2, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(3, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(4, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        colortable->setHorizontalHeaderItem(5, __qtablewidgetitem9);
         colortable->setObjectName(QString::fromUtf8("colortable"));
-        colortable->setMinimumSize(QSize(0, 150));
-        colortable->setMaximumSize(QSize(16777215, 150));
+        colortable->setMinimumSize(QSize(0, 200));
+        colortable->setMaximumSize(QSize(16777215, 200));
 
         verticalLayout_4->addWidget(colortable);
 
         colorbuttom = new QWidget(scrollAreaWidgetContents_2);
         colorbuttom->setObjectName(QString::fromUtf8("colorbuttom"));
         colorbuttom->setMinimumSize(QSize(0, 40));
-        colorbuttom->setMaximumSize(QSize(280, 40));
+        colorbuttom->setMaximumSize(QSize(320, 40));
         colorbuttom->setLayoutDirection(Qt::LeftToRight);
         pushButton_6 = new QPushButton(colorbuttom);
         pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
-        pushButton_6->setGeometry(QRect(40, 0, 40, 40));
-        pushButton_6->setMinimumSize(QSize(40, 40));
-        pushButton_6->setMaximumSize(QSize(40, 40));
+        pushButton_6->setGeometry(QRect(45, 5, 30, 30));
+        pushButton_6->setMinimumSize(QSize(30, 30));
+        pushButton_6->setMaximumSize(QSize(30, 30));
+        pushButton_6->setStyleSheet(QString::fromUtf8("background-color:rgb(54, 14, 255)"));
         pushButton_6->setCheckable(false);
         pushButton_6->setChecked(false);
         pushButton_6->setAutoRepeat(false);
@@ -480,9 +506,10 @@ public:
         pushButton_6->setFlat(true);
         pushButton_7 = new QPushButton(colorbuttom);
         pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
-        pushButton_7->setGeometry(QRect(80, 0, 40, 40));
-        pushButton_7->setMinimumSize(QSize(40, 40));
-        pushButton_7->setMaximumSize(QSize(40, 40));
+        pushButton_7->setGeometry(QRect(85, 5, 30, 30));
+        pushButton_7->setMinimumSize(QSize(30, 30));
+        pushButton_7->setMaximumSize(QSize(30, 30));
+        pushButton_7->setStyleSheet(QString::fromUtf8("background-color:rgb(255, 0, 0)"));
         pushButton_7->setCheckable(false);
         pushButton_7->setChecked(false);
         pushButton_7->setAutoRepeat(false);
@@ -491,9 +518,10 @@ public:
         pushButton_7->setFlat(true);
         pushButton_8 = new QPushButton(colorbuttom);
         pushButton_8->setObjectName(QString::fromUtf8("pushButton_8"));
-        pushButton_8->setGeometry(QRect(160, 0, 40, 40));
-        pushButton_8->setMinimumSize(QSize(40, 40));
-        pushButton_8->setMaximumSize(QSize(40, 40));
+        pushButton_8->setGeometry(QRect(165, 5, 30, 30));
+        pushButton_8->setMinimumSize(QSize(30, 30));
+        pushButton_8->setMaximumSize(QSize(30, 30));
+        pushButton_8->setStyleSheet(QString::fromUtf8("background-color:rgb(255, 0, 255)"));
         pushButton_8->setCheckable(false);
         pushButton_8->setChecked(false);
         pushButton_8->setAutoRepeat(false);
@@ -502,9 +530,10 @@ public:
         pushButton_8->setFlat(true);
         pushButton_9 = new QPushButton(colorbuttom);
         pushButton_9->setObjectName(QString::fromUtf8("pushButton_9"));
-        pushButton_9->setGeometry(QRect(120, 0, 40, 40));
-        pushButton_9->setMinimumSize(QSize(40, 40));
-        pushButton_9->setMaximumSize(QSize(40, 40));
+        pushButton_9->setGeometry(QRect(125, 5, 30, 30));
+        pushButton_9->setMinimumSize(QSize(30, 30));
+        pushButton_9->setMaximumSize(QSize(30, 30));
+        pushButton_9->setStyleSheet(QString::fromUtf8("background-color:rgb(0, 255, 0)"));
         pushButton_9->setCheckable(false);
         pushButton_9->setChecked(false);
         pushButton_9->setAutoRepeat(false);
@@ -513,9 +542,10 @@ public:
         pushButton_9->setFlat(true);
         pushButton_10 = new QPushButton(colorbuttom);
         pushButton_10->setObjectName(QString::fromUtf8("pushButton_10"));
-        pushButton_10->setGeometry(QRect(200, 0, 40, 40));
-        pushButton_10->setMinimumSize(QSize(40, 40));
-        pushButton_10->setMaximumSize(QSize(40, 40));
+        pushButton_10->setGeometry(QRect(205, 5, 30, 30));
+        pushButton_10->setMinimumSize(QSize(30, 30));
+        pushButton_10->setMaximumSize(QSize(30, 30));
+        pushButton_10->setStyleSheet(QString::fromUtf8("background-color:rgb(255, 255, 0)"));
         pushButton_10->setCheckable(false);
         pushButton_10->setChecked(false);
         pushButton_10->setAutoRepeat(false);
@@ -524,9 +554,10 @@ public:
         pushButton_10->setFlat(true);
         pushButton_11 = new QPushButton(colorbuttom);
         pushButton_11->setObjectName(QString::fromUtf8("pushButton_11"));
-        pushButton_11->setGeometry(QRect(240, 0, 40, 40));
-        pushButton_11->setMinimumSize(QSize(40, 40));
-        pushButton_11->setMaximumSize(QSize(40, 40));
+        pushButton_11->setGeometry(QRect(245, 5, 30, 30));
+        pushButton_11->setMinimumSize(QSize(30, 30));
+        pushButton_11->setMaximumSize(QSize(30, 30));
+        pushButton_11->setStyleSheet(QString::fromUtf8("background-color:rgb(255, 170, 0)"));
         pushButton_11->setCheckable(false);
         pushButton_11->setChecked(false);
         pushButton_11->setAutoRepeat(false);
@@ -535,11 +566,11 @@ public:
         pushButton_11->setFlat(true);
         pushButton_3 = new QPushButton(colorbuttom);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        pushButton_3->setGeometry(QRect(0, 0, 40, 40));
-        pushButton_3->setMinimumSize(QSize(40, 40));
-        pushButton_3->setMaximumSize(QSize(40, 40));
+        pushButton_3->setGeometry(QRect(5, 5, 30, 30));
+        pushButton_3->setMinimumSize(QSize(30, 30));
+        pushButton_3->setMaximumSize(QSize(30, 30));
         pushButton_3->setAutoFillBackground(false);
-        pushButton_3->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 255, 0);\n"
+        pushButton_3->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);\n"
 ""));
         pushButton_3->setCheckable(false);
         pushButton_3->setChecked(false);
@@ -547,6 +578,11 @@ public:
         pushButton_3->setAutoExclusive(false);
         pushButton_3->setAutoDefault(true);
         pushButton_3->setFlat(true);
+        pushButton_4 = new QPushButton(colorbuttom);
+        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        pushButton_4->setGeometry(QRect(285, 5, 30, 30));
+        pushButton_4->setStyleSheet(QString::fromUtf8("background-color:rgb(170, 0, 0)"));
+        pushButton_4->setFlat(true);
 
         verticalLayout_4->addWidget(colorbuttom);
 
@@ -860,12 +896,12 @@ public:
 
         horizontalLayout_20->addWidget(pushButton_12);
 
-        pushButton_13 = new QPushButton(widget_22);
-        pushButton_13->setObjectName(QString::fromUtf8("pushButton_13"));
-        pushButton_13->setMinimumSize(QSize(0, 28));
-        pushButton_13->setMaximumSize(QSize(150, 16777215));
+        adSettingBtn = new QPushButton(widget_22);
+        adSettingBtn->setObjectName(QString::fromUtf8("adSettingBtn"));
+        adSettingBtn->setMinimumSize(QSize(0, 28));
+        adSettingBtn->setMaximumSize(QSize(150, 16777215));
 
-        horizontalLayout_20->addWidget(pushButton_13);
+        horizontalLayout_20->addWidget(adSettingBtn);
 
 
         verticalLayout_2->addWidget(widget_22);
@@ -893,18 +929,18 @@ public:
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        pushButton_16 = new QPushButton(widget_13);
-        pushButton_16->setObjectName(QString::fromUtf8("pushButton_16"));
-        pushButton_16->setMaximumSize(QSize(80, 16777215));
+        paramsNameBtn = new QPushButton(widget_13);
+        paramsNameBtn->setObjectName(QString::fromUtf8("paramsNameBtn"));
+        paramsNameBtn->setMaximumSize(QSize(80, 16777215));
 
-        horizontalLayout_6->addWidget(pushButton_16);
+        horizontalLayout_6->addWidget(paramsNameBtn);
 
-        label_9 = new QLabel(widget_13);
-        label_9->setObjectName(QString::fromUtf8("label_9"));
-        label_9->setMaximumSize(QSize(16777215, 28));
-        label_9->setStyleSheet(QString::fromUtf8("background-color: rgb(200, 200, 200);"));
+        paramsNamelable = new QLabel(widget_13);
+        paramsNamelable->setObjectName(QString::fromUtf8("paramsNamelable"));
+        paramsNamelable->setMaximumSize(QSize(16777215, 28));
+        paramsNamelable->setStyleSheet(QString::fromUtf8("background-color: rgb(200, 200, 200);"));
 
-        horizontalLayout_6->addWidget(label_9);
+        horizontalLayout_6->addWidget(paramsNamelable);
 
 
         verticalLayout_5->addWidget(widget_13);
@@ -915,11 +951,11 @@ public:
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
-        pushButton_15 = new QPushButton(widget_18);
-        pushButton_15->setObjectName(QString::fromUtf8("pushButton_15"));
-        pushButton_15->setMaximumSize(QSize(250, 16777215));
+        chooseBtn = new QPushButton(widget_18);
+        chooseBtn->setObjectName(QString::fromUtf8("chooseBtn"));
+        chooseBtn->setMaximumSize(QSize(250, 16777215));
 
-        verticalLayout_7->addWidget(pushButton_15);
+        verticalLayout_7->addWidget(chooseBtn);
 
 
         verticalLayout_5->addWidget(widget_18);
@@ -1136,9 +1172,12 @@ public:
 
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(menu_2->menuAction());
+        menuBar->addAction(menu_3->menuAction());
         menu->addAction(actionnew);
         menu->addAction(actionsave);
         menu->addAction(actionopen);
+        menu_3->addAction(actionchinese);
+        menu_3->addAction(actionenglish);
 
         retranslateUi(mainWindowClass);
 
@@ -1160,8 +1199,11 @@ public:
         actionnew->setText(QCoreApplication::translate("mainWindowClass", "new", nullptr));
         actionsave->setText(QCoreApplication::translate("mainWindowClass", "save", nullptr));
         actionopen->setText(QCoreApplication::translate("mainWindowClass", "open", nullptr));
+        actionchinese->setText(QCoreApplication::translate("mainWindowClass", "chinese", nullptr));
+        actionenglish->setText(QCoreApplication::translate("mainWindowClass", "english", nullptr));
         menu->setTitle(QCoreApplication::translate("mainWindowClass", "\346\226\207\344\273\266", nullptr));
         menu_2->setTitle(QCoreApplication::translate("mainWindowClass", "\347\274\226\350\276\221", nullptr));
+        menu_3->setTitle(QCoreApplication::translate("mainWindowClass", "\350\257\255\350\250\200", nullptr));
         dock1->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\345\257\271\350\261\241\345\210\227\350\241\250", nullptr));
         QTableWidgetItem *___qtablewidgetitem = itemtable->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QCoreApplication::translate("mainWindowClass", "\345\220\215\347\247\260", nullptr));
@@ -1189,13 +1231,24 @@ public:
         Codetype->setItemText(1, QCoreApplication::translate("mainWindowClass", "DataMatrix", nullptr));
 
         dock3->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\346\240\207\345\210\273\345\217\202\346\225\260\346\240\217", nullptr));
-        pushButton_6->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
-        pushButton_7->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
-        pushButton_8->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
-        pushButton_11->setText(QCoreApplication::translate("mainWindowClass", "\347\231\275", nullptr));
+        QTableWidgetItem *___qtablewidgetitem4 = colortable->horizontalHeaderItem(0);
+        ___qtablewidgetitem4->setText(QCoreApplication::translate("mainWindowClass", "\347\254\224\345\217\267", nullptr));
+        QTableWidgetItem *___qtablewidgetitem5 = colortable->horizontalHeaderItem(1);
+        ___qtablewidgetitem5->setText(QCoreApplication::translate("mainWindowClass", "\345\274\200\345\205\263", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = colortable->horizontalHeaderItem(2);
+        ___qtablewidgetitem6->setText(QCoreApplication::translate("mainWindowClass", "\345\220\215\347\247\260", nullptr));
+        QTableWidgetItem *___qtablewidgetitem7 = colortable->horizontalHeaderItem(3);
+        ___qtablewidgetitem7->setText(QCoreApplication::translate("mainWindowClass", "\345\212\240\345\267\245\346\225\260\347\233\256(\344\273\266)", nullptr));
+        QTableWidgetItem *___qtablewidgetitem8 = colortable->horizontalHeaderItem(4);
+        ___qtablewidgetitem8->setText(QCoreApplication::translate("mainWindowClass", "\345\212\237\347\216\207(%)", nullptr));
+        pushButton_6->setText(QString());
+        pushButton_7->setText(QString());
+        pushButton_8->setText(QString());
+        pushButton_9->setText(QString());
+        pushButton_10->setText(QString());
+        pushButton_11->setText(QString());
         pushButton_3->setText(QString());
+        pushButton_4->setText(QString());
         checkBox->setText(QCoreApplication::translate("mainWindowClass", "\344\275\277\347\224\250\351\273\230\350\256\244\345\217\202\346\225\260", nullptr));
         label_11->setText(QCoreApplication::translate("mainWindowClass", "\347\254\224\345\217\267", nullptr));
         label_7->setText(QCoreApplication::translate("mainWindowClass", "\345\212\240\345\267\245\346\225\260\347\233\256\357\274\210\344\273\266\357\274\211", nullptr));
@@ -1207,12 +1260,12 @@ public:
         label_16->setText(QCoreApplication::translate("mainWindowClass", "\345\205\263\345\205\211\345\273\266\346\227\266(us)", nullptr));
         label_19->setText(QCoreApplication::translate("mainWindowClass", "\347\273\223\346\235\237\345\273\266\346\227\266(us)", nullptr));
         label_20->setText(QCoreApplication::translate("mainWindowClass", "\346\213\220\350\247\222\345\273\266\346\227\266(us)", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("mainWindowClass", "PushButton", nullptr));
-        pushButton_13->setText(QCoreApplication::translate("mainWindowClass", "\351\253\230\347\272\247\350\256\276\347\275\256...", nullptr));
-        pushButton_16->setText(QCoreApplication::translate("mainWindowClass", "PushButton", nullptr));
-        label_9->setText(QCoreApplication::translate("mainWindowClass", "TextLabel", nullptr));
-        pushButton_15->setText(QCoreApplication::translate("mainWindowClass", "PushButton", nullptr));
-        pushButton_14->setText(QCoreApplication::translate("mainWindowClass", "PushButton", nullptr));
+        pushButton_12->setText(QCoreApplication::translate("mainWindowClass", "tupian", nullptr));
+        adSettingBtn->setText(QCoreApplication::translate("mainWindowClass", "\351\253\230\347\272\247\350\256\276\347\275\256...", nullptr));
+        paramsNameBtn->setText(QCoreApplication::translate("mainWindowClass", "\345\217\202\346\225\260\345\220\215\347\247\260", nullptr));
+        paramsNamelable->setText(QCoreApplication::translate("mainWindowClass", "TextLabel", nullptr));
+        chooseBtn->setText(QCoreApplication::translate("mainWindowClass", "\344\273\216\345\217\202\346\225\260\345\272\223\351\200\211\345\217\226\345\217\202\346\225\260", nullptr));
+        pushButton_14->setText(QCoreApplication::translate("mainWindowClass", "\350\256\276\347\275\256\346\210\220\351\273\230\350\256\244\345\217\202\346\225\260", nullptr));
         bianji->setText(QString());
         draw_line->setText(QString());
         draw_quline->setText(QCoreApplication::translate("mainWindowClass", "\346\233\262\347\272\277", nullptr));

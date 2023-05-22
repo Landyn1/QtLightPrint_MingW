@@ -19,14 +19,22 @@ QRectF MyGraphicsEllipseItem::boundingRect() const
     return temp_rect;
 	
 }
-
+QRect MyGraphicsEllipseItem::getRect()
+{
+    int x,y,w,h;
+    x = rect().x()+pos().x();
+    y = rect().y()+pos().y();
+    w = rect().width();
+    h = rect().height();
+    return QRect(x,y,w,h);
+}
 QPainterPath MyGraphicsEllipseItem::ViewPath()
 {
     QPainterPath p;
     double w = this->rect().width();
     double h = this->rect().height();
     p.moveTo(mapToScene(0,h/2));
-    int s = 6*w+4*(w-h);
+    int s = 6*w+4*(w-h); //周长
     QPainterPath path2 = brushpath;
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
 
@@ -128,8 +136,14 @@ void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     painter->drawPath(brushpath);
 }
 
-bool MyGraphicsEllipseItem::selectEvent(QPointF p)
+bool MyGraphicsEllipseItem::selectEvent(QPointF p,int k)
 {
+    if(k == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
 
     if(isSelected())
         return true;
@@ -155,33 +169,33 @@ bool MyGraphicsEllipseItem::selectEvent(QPointF p)
 
 }
 
-void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
+void MyGraphicsEllipseItem::set_brush(double angle,int linenum)
 {
     brushpath.clear();
-    this->jiaodu = jiaodu;
-    this->midu = midu;
-    if(midu == 0)
+    this->angle = angle;
+    this->linenum = linenum;
+    if(linenum == 0)
         return;
     QPainterPath path;
-    double k = tan(jiaodu*M_PI/180);//斜率
+    double k = tan(angle*M_PI/180);//斜率
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(midu==0)
+    if(linenum==0)
     {
         update();
         return;
     }
-    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    if(int(angle)%90 != 0 ||  ((int(angle)%180 == 0)&&(int(angle)%90 != 0)))
     {
         if(k==0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
 
-                //y=kx+pert*i;
+                //y=kx+n;
                 //x^2/(w/2)^2+……=1
                 double a=w/2,b=h/2;
                 double n = pert*i;
@@ -196,11 +210,9 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
         else if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                //y=kx+pert*i;
-                //x^2/(w/2)^2+……=1
                 double a=w/2,b=h/2;
                 double n = pert*i;
                 double A = b*b+a*a*k*k,B=2*a*a*k*n,C=a*a*((n*n)-(b*b));
@@ -221,8 +233,8 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
         else if( k > m )
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -244,8 +256,8 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
         else if( k < -m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -267,8 +279,8 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
         else if( k<0 && k>=-m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -292,11 +304,11 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
     else
     {
 
-        if(int(jiaodu)%180 == 0)
+        if(int(angle)%180 == 0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
 
                 //y=kx+pert*i;
@@ -314,7 +326,7 @@ void MyGraphicsEllipseItem::set_brush(double jiaodu,int midu)
 
         else
         {
-            double pert = w/double(midu);
+            double pert = w/double(linenum);
             for(double i=-w/2;i<=w/2;i+=pert)
             {
                 double a=w/2,b=h/2;

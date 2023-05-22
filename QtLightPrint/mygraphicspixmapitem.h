@@ -18,12 +18,13 @@ public:
     int printLayer = 0;
     QRectF boundingRect() const;
     QRectF rect();
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k=0);
     QString name="";
     QRect rectf;
     QString filename = "";
     void setDefault_Rect();
     void setRectF(QRect re);
+    QRect getRect();
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

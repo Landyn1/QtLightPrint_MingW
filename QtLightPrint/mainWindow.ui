@@ -39,16 +39,8 @@
      <string>编辑</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_3">
-    <property name="title">
-     <string>语言</string>
-    </property>
-    <addaction name="actionchinese"/>
-    <addaction name="actionenglish"/>
-   </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
-   <addaction name="menu_3"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="movable">
@@ -375,7 +367,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="jiaodu_text">
+             <widget class="QLineEdit" name="angle_text">
               <property name="maximumSize">
                <size>
                 <width>30</width>
@@ -410,7 +402,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="midu_text">
+             <widget class="QLineEdit" name="linenum_text">
               <property name="maximumSize">
                <size>
                 <width>30</width>
@@ -470,7 +462,62 @@
            </item>
            <item>
             <property name="text">
+             <string>Aztec</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>DataMatrix</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Codabar</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Code39</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Code93</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Code128</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>EAN-8</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>EAN-13</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ITF</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>UPC-A</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>UPC-E</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>PDF417</string>
             </property>
            </item>
           </widget>
@@ -510,11 +557,26 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>281</width>
-          <height>906</height>
+          <width>280</width>
+          <height>615</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QTableWidget" name="colortable">
            <property name="minimumSize">
@@ -958,12 +1020,15 @@
             <bool>false</bool>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QWidget" name="widget_11" native="true">
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>38</height>
+                <height>22</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -973,6 +1038,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QCheckBox" name="checkBox">
                  <property name="maximumSize">
@@ -994,7 +1071,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1004,6 +1081,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_11">
                  <property name="minimumSize">
@@ -1027,8 +1116,14 @@
                 <widget class="QLineEdit" name="lineEdit">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -1047,7 +1142,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1057,6 +1152,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_7">
                  <property name="minimumSize">
@@ -1080,8 +1187,14 @@
                 <widget class="QSpinBox" name="spinBox">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                 </widget>
@@ -1094,7 +1207,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1104,6 +1217,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_8">
                  <property name="minimumSize">
@@ -1127,13 +1252,13 @@
                 <widget class="QSpinBox" name="spinBox_2">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>100</width>
+                   <width>120</width>
                    <height>14777215</height>
                   </size>
                  </property>
@@ -1156,7 +1281,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1166,6 +1291,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_10">
                  <property name="minimumSize">
@@ -1189,8 +1326,14 @@
                 <widget class="QSpinBox" name="spinBox_4">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                  <property name="maximum">
@@ -1209,7 +1352,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1219,6 +1362,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_12">
                  <property name="minimumSize">
@@ -1242,8 +1397,14 @@
                 <widget class="QDoubleSpinBox" name="doubleSpinBox">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                  <property name="decimals">
@@ -1265,7 +1426,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1275,6 +1436,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_14">
                  <property name="minimumSize">
@@ -1298,8 +1471,14 @@
                 <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>16777215</height>
                   </size>
                  </property>
                  <property name="readOnly">
@@ -1321,7 +1500,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1331,6 +1510,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_14">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_15">
                  <property name="minimumSize">
@@ -1354,13 +1545,13 @@
                 <widget class="QSpinBox" name="spinBox_9">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>120</width>
                    <height>20</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>101</width>
+                   <width>120</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1383,7 +1574,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1393,6 +1584,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_16">
                  <property name="minimumSize">
@@ -1422,7 +1625,7 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>101</width>
+                   <width>120</width>
                    <height>12345454</height>
                   </size>
                  </property>
@@ -1445,7 +1648,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1455,6 +1658,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_18">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_19">
                  <property name="minimumSize">
@@ -1484,7 +1699,7 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>101</width>
+                   <width>120</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1507,7 +1722,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>37</height>
+                <height>20</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -1517,6 +1732,18 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_20">
                  <property name="minimumSize">
@@ -1546,7 +1773,7 @@
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>101</width>
+                   <width>120</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1579,6 +1806,12 @@
                </size>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_20">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="pushButton_12">
                  <property name="minimumSize">
@@ -1620,19 +1853,6 @@
               </layout>
              </widget>
             </item>
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
            </layout>
           </widget>
          </item>
@@ -1645,6 +1865,15 @@
             </size>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QWidget" name="widget_13" native="true">
               <property name="minimumSize">
@@ -1663,6 +1892,12 @@
                <enum>Qt::LeftToRight</enum>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="paramsNameBtn">
                  <property name="maximumSize">
@@ -1698,6 +1933,12 @@
             <item>
              <widget class="QWidget" name="widget_18" native="true">
               <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="chooseBtn">
                  <property name="maximumSize">
@@ -1717,6 +1958,21 @@
             <item>
              <widget class="QWidget" name="widget_23" native="true">
               <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>9</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>9</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QPushButton" name="pushButton_14">
                  <property name="maximumSize">
@@ -1834,7 +2090,7 @@
        <x>0</x>
        <y>0</y>
        <width>60</width>
-       <height>500</height>
+       <height>531</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -1850,6 +2106,9 @@
       </size>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>20</number>
+      </property>
       <item>
        <widget class="QPushButton" name="bianji">
         <property name="text">
@@ -1983,7 +2242,7 @@
       <item>
        <widget class="QPushButton" name="bianji_11">
         <property name="text">
-         <string/>
+         <string>打开矢量文件</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -1993,51 +2252,22 @@
         </property>
        </widget>
       </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </widget>
-  </widget>
-  <widget class="QDockWidget" name="dock_topKedu">
-   <property name="minimumSize">
-    <size>
-     <width>47</width>
-     <height>20</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>123456</width>
-     <height>20</height>
-    </size>
-   </property>
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_8"/>
-  </widget>
-  <widget class="QDockWidget" name="dock_leftKedu">
-   <property name="minimumSize">
-    <size>
-     <width>30</width>
-     <height>44</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>30</width>
-     <height>524287</height>
-    </size>
-   </property>
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_9"/>
   </widget>
   <widget class="QDockWidget" name="dock_file">
    <property name="minimumSize">
@@ -2169,6 +2399,218 @@
      </layout>
     </widget>
    </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <property name="minimumSize">
+    <size>
+     <width>42</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_8">
+    <widget class="QWidget" name="widget_31" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>160</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>40</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_22">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pathbtn">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>群组</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deletepathbtn">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>分群</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="groupbtn">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>组合</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deletegroupbtn">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>分组</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <property name="minimumSize">
+    <size>
+     <width>42</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_9"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4">
+   <property name="minimumSize">
+    <size>
+     <width>42</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_10"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_5">
+   <property name="minimumSize">
+    <size>
+     <width>42</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_11"/>
   </widget>
   <action name="actionnew">
    <property name="text">

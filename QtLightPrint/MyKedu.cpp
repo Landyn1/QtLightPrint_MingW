@@ -54,7 +54,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
     auto halfHeight = height / 2;
     int temp1 = 0;
     double x2 = 0;
-    //painter->scale(1 / scale, 1 / scale);
+
     if (x1 >= 0)
     {
         for (double i = 0; i < x1; i += t /scale)
@@ -81,9 +81,7 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
     {
         temp = temp1 + 1;
     }
-    //qDebug() << temp << x2 << "ddd" << endl;
-   // int i = x2 * 1000 + 0.5;
-   // int x = t / scale * 1000 + 0.5;
+
     if (scale >= 1.9 || scale <1)
     {
         for (double i = x2; i <= x2 + width1; i += t / scale)
@@ -117,10 +115,6 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
             else
             {
                 painter->drawLine(QPointF(i, shortLine_y), QPointF(i, height));
-            }
-            if (i == 0)
-            {
-                //qDebug() << "" << endl;
             }
             ++temp;
         }
@@ -168,14 +162,8 @@ void MyKedu::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
         }
     }
 
-
-    
-    
     painter->eraseRect(QRectF(offset*scale, 0, 20, 20));
     
     painter->drawLine(QPointF(x2, 20), QPointF(x2+width1 , 20));
 
-    //painter->setPen(Qt::transparent);
-    //painter->setBrush(slidingLineColor);
-    //painter->drawRect(slidingLinePos, 0, 3, 20);
 }

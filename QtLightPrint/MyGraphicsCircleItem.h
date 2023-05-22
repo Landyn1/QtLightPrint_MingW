@@ -12,9 +12,15 @@ public:
     QRectF boundingRect() const;
     enum { Type = 3 };
     QPainterPath brushpath;
-    double jiaodu = 0;
-    int midu = 0;
-    void set_brush(double jiaodu,int midu);
+    double angle = 0;
+    int linenum = 0;
+    QRect getRect();
+    QPainterPath path()
+    {
+        QPainterPath p;
+        return p;
+    }
+    void set_brush(double angle,int linenum);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -25,7 +31,7 @@ public:
 
     QString name="";
     QPainterPath ViewPath();
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k=0);
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

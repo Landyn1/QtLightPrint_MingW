@@ -117,26 +117,33 @@ void MyGraphicsCurveLineItem::paint(QPainter* painter, const QStyleOptionGraphic
             p.moveTo(ctl_pre);
             p.lineTo(startP);
             p.moveTo(ctl_next);
-            p.lineTo(duichengdian(ctl_next,endP));
+            p.lineTo(symmetryPoint(ctl_next,endP));
         }
 
         else
         {
-            p.moveTo(duichengdian(ctl_next,startP));
+            p.moveTo(symmetryPoint(ctl_next,startP));
             p.lineTo(startP);
         }
         painter->drawPath(p);
     }
 }
-QPointF MyGraphicsCurveLineItem::duichengdian(QPointF p1 , QPointF p2)
+//获取p1关于p2的对称点
+QPointF MyGraphicsCurveLineItem::symmetryPoint(QPointF p1 , QPointF p2)
 {
     return QPointF(p2.x()*2-p1.x(),p2.y()*2-p1.y());
 }
 
 
-bool MyGraphicsCurveLineItem::selectEvent(QPointF p)
+bool MyGraphicsCurveLineItem::selectEvent(QPointF p,int kk)
 {
 
+    if(kk == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
     if(isSelected())
         return true;
     QPainterPath path = this->path();
@@ -177,7 +184,7 @@ bool MyGraphicsCurveLineItem::selectEvent(QPointF p)
                 double temp = 0.01*i;
                 double tx = f(temp,p0.x(),p1.x(),p2.x(),p3.x());
                 double ty = f(temp,p0.y(),p1.y(),p2.y(),p3.y());
-
+                //判断点（tx，ty）
                 if(tx-p.x()>-2 && tx-p.x() < 2 && ty-p.y()>-2 && ty-p.y()<2)
                 {
                     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
@@ -186,8 +193,6 @@ bool MyGraphicsCurveLineItem::selectEvent(QPointF p)
                 }
             }
         }
-
-
         k++;
     }
 
@@ -196,8 +201,8 @@ bool MyGraphicsCurveLineItem::selectEvent(QPointF p)
     return false;
 
 }
-
-QList<double> MyGraphicsCurveLineItem::getRect()
+//获取外接矩形
+QRect MyGraphicsCurveLineItem::getRect()
 {
     QPainterPath path = this->path();
     QPointF p0,p1,p2,p3;
@@ -229,6 +234,7 @@ QList<double> MyGraphicsCurveLineItem::getRect()
                 p3 = po;
             }
         }
+        //根据极点和0,1判断
         if( k >0 && k % 3 == 0)
         {
              if(minx>f(0,p0.x(),p1.x(),p2.x(),p3.x()))
@@ -264,31 +270,32 @@ QList<double> MyGraphicsCurveLineItem::getRect()
                  maxy = f(1,p0.y(),p1.y(),p2.y(),p3.y());
              }
 
+             //三次贝塞尔曲线导数 y=ax^2+bx+c
              double a,b,c;
              a = 3*(p3.x()-3*p2.x()+3*p1.x()-p0.x());
              b = 6*(p2.x()-2*p1.x()+p0.x());
              c = 3*(p1.x()-p0.x());
              if(getDeta(a,b,c)>0)
              {
-                   double deta = getDeta(a,b,c);
-                   double t1 = ((-b)+pow(deta,0.5))/(2*a);
-                   double t2 = ((-b)-pow(deta,0.5))/(2*a);
-                   if(t1>=0&&t1<=1&& minx > f(t1,p0.x(),p1.x(),p2.x(),p3.x()) )
-                   {
-                       minx = f(t1,p0.x(),p1.x(),p2.x(),p3.x());
-                   }
-                   if(t2>=0&&t2<=1&& minx > f(t2,p0.x(),p1.x(),p2.x(),p3.x()))
-                   {
-                       minx = f(t2,p0.x(),p1.x(),p2.x(),p3.x());
-                   }
-                   if(t1>=0&&t1<=1&&maxx < f(t1,p0.x(),p1.x(),p2.x(),p3.x()))
-                   {
-                       maxx = f(t1,p0.x(),p1.x(),p2.x(),p3.x());
-                   }
-                   if(t2>=0&&t2<=1&&maxx < f(t2,p0.x(),p1.x(),p2.x(),p3.x()))
-                   {
-                       maxx = f(t2,p0.x(),p1.x(),p2.x(),p3.x());
-                   }
+                 double deta = getDeta(a,b,c);
+                 double t1 = ((-b)+pow(deta,0.5))/(2*a);
+                 double t2 = ((-b)-pow(deta,0.5))/(2*a);
+                 if(t1>=0&&t1<=1&& minx > f(t1,p0.x(),p1.x(),p2.x(),p3.x()) )
+                 {
+                     minx = f(t1,p0.x(),p1.x(),p2.x(),p3.x());
+                 }
+                 if(t2>=0&&t2<=1&& minx > f(t2,p0.x(),p1.x(),p2.x(),p3.x()))
+                 {
+                     minx = f(t2,p0.x(),p1.x(),p2.x(),p3.x());
+                 }
+                 if(t1>=0&&t1<=1&&maxx < f(t1,p0.x(),p1.x(),p2.x(),p3.x()))
+                 {
+                     maxx = f(t1,p0.x(),p1.x(),p2.x(),p3.x());
+                 }
+                 if(t2>=0&&t2<=1&&maxx < f(t2,p0.x(),p1.x(),p2.x(),p3.x()))
+                 {
+                     maxx = f(t2,p0.x(),p1.x(),p2.x(),p3.x());
+                 }
              }
              a = 3*(p3.y()-3*p2.y()+3*p1.y()-p0.y());
              b = 6*(p2.y()-2*p1.y()+p0.y());
@@ -325,7 +332,8 @@ QList<double> MyGraphicsCurveLineItem::getRect()
     list.append(miny+this->pos().y());
     list.append(maxx+this->pos().x());
     list.append(maxy+this->pos().y());
-    return list;
+    qDebug()<<minx<<miny<<maxx<<maxy<<endl;
+    return QRect(list[0],list[1],list[2]-list[0],list[3]-list[1]);
 }
 
 void MyGraphicsCurveLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)

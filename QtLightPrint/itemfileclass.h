@@ -14,19 +14,19 @@ public:
     int type=0;
     int id=0;
     QRectF rec=QRectF(0,0,0,0);
-    QPainterPath path = QPainterPath();
+    QPainterPath path  = QPainterPath();
     int bian_num = 0;
     QString text;
     QFont font = QFont();
     QString pix = QString();
     QString pixAdr;
     QString codetype = QString();
-    double jiaodu = 0;
-    int midu = 0;
+    double angle = 0;
+    int linenum = 0;
     friend QDataStream& operator >>(QDataStream &in,ItemFileClass &t);
     friend QDataStream& operator <<(QDataStream &out,ItemFileClass &t);
     friend QDebug operator <<(QDebug& q,ItemFileClass&t);
-
+    void setPathByText();
 
 };
 

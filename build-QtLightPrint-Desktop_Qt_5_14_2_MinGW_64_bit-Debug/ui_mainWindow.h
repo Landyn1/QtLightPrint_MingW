@@ -48,7 +48,6 @@ public:
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menu_2;
-    QMenu *menu_3;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
     QDockWidget *dock1;
@@ -87,11 +86,11 @@ public:
     QWidget *widget_27;
     QHBoxLayout *horizontalLayout_17;
     QLabel *label_6;
-    QLineEdit *jiaodu_text;
+    QLineEdit *angle_text;
     QWidget *widget_28;
     QHBoxLayout *horizontalLayout_21;
     QLabel *label_13;
-    QLineEdit *midu_text;
+    QLineEdit *linenum_text;
     QPushButton *brushbutton;
     QWidget *widget_30;
     QTextEdit *textEdit_2;
@@ -161,7 +160,6 @@ public:
     QHBoxLayout *horizontalLayout_20;
     QPushButton *pushButton_12;
     QPushButton *adSettingBtn;
-    QSpacerItem *verticalSpacer;
     QWidget *widget_17;
     QVBoxLayout *verticalLayout_5;
     QWidget *widget_13;
@@ -195,10 +193,7 @@ public:
     QPushButton *draw_pixmap;
     QPushButton *bianji_10;
     QPushButton *bianji_11;
-    QDockWidget *dock_topKedu;
-    QWidget *dockWidgetContents_8;
-    QDockWidget *dock_leftKedu;
-    QWidget *dockWidgetContents_9;
+    QSpacerItem *verticalSpacer;
     QDockWidget *dock_file;
     QWidget *dockWidgetContents_7;
     QWidget *widget_24;
@@ -207,6 +202,20 @@ public:
     QWidget *scrollAreaWidgetContents_3;
     QPushButton *leftmove;
     QPushButton *rightmove;
+    QDockWidget *dockWidget_2;
+    QWidget *dockWidgetContents_8;
+    QWidget *widget_31;
+    QHBoxLayout *horizontalLayout_22;
+    QPushButton *pathbtn;
+    QPushButton *deletepathbtn;
+    QPushButton *groupbtn;
+    QPushButton *deletegroupbtn;
+    QDockWidget *dockWidget_3;
+    QWidget *dockWidgetContents_9;
+    QDockWidget *dockWidget_4;
+    QWidget *dockWidgetContents_10;
+    QDockWidget *dockWidget_5;
+    QWidget *dockWidgetContents_11;
 
     void setupUi(QMainWindow *mainWindowClass)
     {
@@ -234,8 +243,6 @@ public:
         menu->setObjectName(QString::fromUtf8("menu"));
         menu_2 = new QMenu(menuBar);
         menu_2->setObjectName(QString::fromUtf8("menu_2"));
-        menu_3 = new QMenu(menuBar);
-        menu_3->setObjectName(QString::fromUtf8("menu_3"));
         mainWindowClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(mainWindowClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -401,11 +408,11 @@ public:
 
         horizontalLayout_17->addWidget(label_6);
 
-        jiaodu_text = new QLineEdit(widget_27);
-        jiaodu_text->setObjectName(QString::fromUtf8("jiaodu_text"));
-        jiaodu_text->setMaximumSize(QSize(30, 16777215));
+        angle_text = new QLineEdit(widget_27);
+        angle_text->setObjectName(QString::fromUtf8("angle_text"));
+        angle_text->setMaximumSize(QSize(30, 16777215));
 
-        horizontalLayout_17->addWidget(jiaodu_text);
+        horizontalLayout_17->addWidget(angle_text);
 
         widget_28 = new QWidget(widget_29);
         widget_28->setObjectName(QString::fromUtf8("widget_28"));
@@ -420,11 +427,11 @@ public:
 
         horizontalLayout_21->addWidget(label_13);
 
-        midu_text = new QLineEdit(widget_28);
-        midu_text->setObjectName(QString::fromUtf8("midu_text"));
-        midu_text->setMaximumSize(QSize(30, 16777215));
+        linenum_text = new QLineEdit(widget_28);
+        linenum_text->setObjectName(QString::fromUtf8("linenum_text"));
+        linenum_text->setMaximumSize(QSize(30, 16777215));
 
-        horizontalLayout_21->addWidget(midu_text);
+        horizontalLayout_21->addWidget(linenum_text);
 
         brushbutton = new QPushButton(widget_29);
         brushbutton->setObjectName(QString::fromUtf8("brushbutton"));
@@ -436,6 +443,17 @@ public:
         textEdit_2->setObjectName(QString::fromUtf8("textEdit_2"));
         textEdit_2->setGeometry(QRect(20, 70, 111, 111));
         Codetype = new QComboBox(widget_30);
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
+        Codetype->addItem(QString());
         Codetype->addItem(QString());
         Codetype->addItem(QString());
         Codetype->setObjectName(QString::fromUtf8("Codetype"));
@@ -461,11 +479,12 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 281, 906));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 280, 615));
         verticalLayout_4 = new QVBoxLayout(scrollAreaWidgetContents_2);
-        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setSpacing(0);
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
         colortable = new QTableWidget(scrollAreaWidgetContents_2);
         if (colortable->columnCount() < 6)
             colortable->setColumnCount(6);
@@ -591,17 +610,18 @@ public:
         widget_19->setMaximumSize(QSize(280, 450));
         widget_19->setAcceptDrops(false);
         verticalLayout_2 = new QVBoxLayout(widget_19);
-        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setSpacing(0);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         widget_11 = new QWidget(widget_19);
         widget_11->setObjectName(QString::fromUtf8("widget_11"));
-        widget_11->setMinimumSize(QSize(0, 38));
+        widget_11->setMinimumSize(QSize(0, 22));
         widget_11->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_8 = new QHBoxLayout(widget_11);
         horizontalLayout_8->setSpacing(6);
         horizontalLayout_8->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
         checkBox = new QCheckBox(widget_11);
         checkBox->setObjectName(QString::fromUtf8("checkBox"));
         checkBox->setMaximumSize(QSize(250, 16777215));
@@ -613,12 +633,13 @@ public:
 
         widget_9 = new QWidget(widget_19);
         widget_9->setObjectName(QString::fromUtf8("widget_9"));
-        widget_9->setMinimumSize(QSize(0, 37));
+        widget_9->setMinimumSize(QSize(0, 20));
         widget_9->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_10 = new QHBoxLayout(widget_9);
         horizontalLayout_10->setSpacing(6);
         horizontalLayout_10->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
+        horizontalLayout_10->setContentsMargins(0, 0, 0, 0);
         label_11 = new QLabel(widget_9);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setMinimumSize(QSize(120, 20));
@@ -628,7 +649,8 @@ public:
 
         lineEdit = new QLineEdit(widget_9);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setMinimumSize(QSize(0, 20));
+        lineEdit->setMinimumSize(QSize(120, 20));
+        lineEdit->setMaximumSize(QSize(120, 16777215));
         lineEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(200, 200, 200);"));
         lineEdit->setReadOnly(true);
 
@@ -639,12 +661,13 @@ public:
 
         widget_7 = new QWidget(widget_19);
         widget_7->setObjectName(QString::fromUtf8("widget_7"));
-        widget_7->setMinimumSize(QSize(0, 37));
+        widget_7->setMinimumSize(QSize(0, 20));
         widget_7->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_5 = new QHBoxLayout(widget_7);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        horizontalLayout_5->setContentsMargins(0, 0, 0, 0);
         label_7 = new QLabel(widget_7);
         label_7->setObjectName(QString::fromUtf8("label_7"));
         label_7->setMinimumSize(QSize(120, 20));
@@ -654,7 +677,8 @@ public:
 
         spinBox = new QSpinBox(widget_7);
         spinBox->setObjectName(QString::fromUtf8("spinBox"));
-        spinBox->setMinimumSize(QSize(0, 20));
+        spinBox->setMinimumSize(QSize(120, 20));
+        spinBox->setMaximumSize(QSize(120, 16777215));
 
         horizontalLayout_5->addWidget(spinBox);
 
@@ -663,12 +687,13 @@ public:
 
         widget_8 = new QWidget(widget_19);
         widget_8->setObjectName(QString::fromUtf8("widget_8"));
-        widget_8->setMinimumSize(QSize(0, 37));
+        widget_8->setMinimumSize(QSize(0, 20));
         widget_8->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_7 = new QHBoxLayout(widget_8);
         horizontalLayout_7->setSpacing(6);
         horizontalLayout_7->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
+        horizontalLayout_7->setContentsMargins(0, 0, 0, 0);
         label_8 = new QLabel(widget_8);
         label_8->setObjectName(QString::fromUtf8("label_8"));
         label_8->setMinimumSize(QSize(120, 20));
@@ -678,8 +703,8 @@ public:
 
         spinBox_2 = new QSpinBox(widget_8);
         spinBox_2->setObjectName(QString::fromUtf8("spinBox_2"));
-        spinBox_2->setMinimumSize(QSize(0, 20));
-        spinBox_2->setMaximumSize(QSize(100, 14777215));
+        spinBox_2->setMinimumSize(QSize(120, 20));
+        spinBox_2->setMaximumSize(QSize(120, 14777215));
         spinBox_2->setMinimum(1000);
         spinBox_2->setMaximum(10000);
         spinBox_2->setSingleStep(50);
@@ -691,12 +716,13 @@ public:
 
         widget_10 = new QWidget(widget_19);
         widget_10->setObjectName(QString::fromUtf8("widget_10"));
-        widget_10->setMinimumSize(QSize(0, 37));
+        widget_10->setMinimumSize(QSize(0, 20));
         widget_10->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_9 = new QHBoxLayout(widget_10);
         horizontalLayout_9->setSpacing(6);
         horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_9->setObjectName(QString::fromUtf8("horizontalLayout_9"));
+        horizontalLayout_9->setContentsMargins(0, 0, 0, 0);
         label_10 = new QLabel(widget_10);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setMinimumSize(QSize(120, 20));
@@ -706,7 +732,8 @@ public:
 
         spinBox_4 = new QSpinBox(widget_10);
         spinBox_4->setObjectName(QString::fromUtf8("spinBox_4"));
-        spinBox_4->setMinimumSize(QSize(0, 20));
+        spinBox_4->setMinimumSize(QSize(120, 20));
+        spinBox_4->setMaximumSize(QSize(120, 16777215));
         spinBox_4->setMaximum(100);
         spinBox_4->setSingleStep(10);
 
@@ -717,12 +744,13 @@ public:
 
         widget_12 = new QWidget(widget_19);
         widget_12->setObjectName(QString::fromUtf8("widget_12"));
-        widget_12->setMinimumSize(QSize(0, 37));
+        widget_12->setMinimumSize(QSize(0, 20));
         widget_12->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_11 = new QHBoxLayout(widget_12);
         horizontalLayout_11->setSpacing(6);
         horizontalLayout_11->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
+        horizontalLayout_11->setContentsMargins(0, 0, 0, 0);
         label_12 = new QLabel(widget_12);
         label_12->setObjectName(QString::fromUtf8("label_12"));
         label_12->setMinimumSize(QSize(120, 20));
@@ -732,7 +760,8 @@ public:
 
         doubleSpinBox = new QDoubleSpinBox(widget_12);
         doubleSpinBox->setObjectName(QString::fromUtf8("doubleSpinBox"));
-        doubleSpinBox->setMinimumSize(QSize(0, 20));
+        doubleSpinBox->setMinimumSize(QSize(120, 20));
+        doubleSpinBox->setMaximumSize(QSize(120, 16777215));
         doubleSpinBox->setDecimals(3);
         doubleSpinBox->setMaximum(200.000000000000000);
         doubleSpinBox->setSingleStep(0.100000000000000);
@@ -744,12 +773,13 @@ public:
 
         widget_14 = new QWidget(widget_19);
         widget_14->setObjectName(QString::fromUtf8("widget_14"));
-        widget_14->setMinimumSize(QSize(0, 37));
+        widget_14->setMinimumSize(QSize(0, 20));
         widget_14->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_13 = new QHBoxLayout(widget_14);
         horizontalLayout_13->setSpacing(6);
         horizontalLayout_13->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
+        horizontalLayout_13->setContentsMargins(0, 0, 0, 0);
         label_14 = new QLabel(widget_14);
         label_14->setObjectName(QString::fromUtf8("label_14"));
         label_14->setMinimumSize(QSize(120, 20));
@@ -759,7 +789,8 @@ public:
 
         doubleSpinBox_2 = new QDoubleSpinBox(widget_14);
         doubleSpinBox_2->setObjectName(QString::fromUtf8("doubleSpinBox_2"));
-        doubleSpinBox_2->setMinimumSize(QSize(0, 20));
+        doubleSpinBox_2->setMinimumSize(QSize(120, 20));
+        doubleSpinBox_2->setMaximumSize(QSize(120, 16777215));
         doubleSpinBox_2->setReadOnly(true);
         doubleSpinBox_2->setDecimals(3);
         doubleSpinBox_2->setValue(10.000000000000000);
@@ -771,12 +802,13 @@ public:
 
         widget_15 = new QWidget(widget_19);
         widget_15->setObjectName(QString::fromUtf8("widget_15"));
-        widget_15->setMinimumSize(QSize(0, 37));
+        widget_15->setMinimumSize(QSize(0, 20));
         widget_15->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_14 = new QHBoxLayout(widget_15);
         horizontalLayout_14->setSpacing(6);
         horizontalLayout_14->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_14->setObjectName(QString::fromUtf8("horizontalLayout_14"));
+        horizontalLayout_14->setContentsMargins(0, 0, 0, 0);
         label_15 = new QLabel(widget_15);
         label_15->setObjectName(QString::fromUtf8("label_15"));
         label_15->setMinimumSize(QSize(120, 20));
@@ -786,8 +818,8 @@ public:
 
         spinBox_9 = new QSpinBox(widget_15);
         spinBox_9->setObjectName(QString::fromUtf8("spinBox_9"));
-        spinBox_9->setMinimumSize(QSize(0, 20));
-        spinBox_9->setMaximumSize(QSize(101, 16777215));
+        spinBox_9->setMinimumSize(QSize(120, 20));
+        spinBox_9->setMaximumSize(QSize(120, 16777215));
         spinBox_9->setMinimum(-500);
         spinBox_9->setMaximum(1000000000);
         spinBox_9->setSingleStep(50);
@@ -799,12 +831,13 @@ public:
 
         widget_16 = new QWidget(widget_19);
         widget_16->setObjectName(QString::fromUtf8("widget_16"));
-        widget_16->setMinimumSize(QSize(0, 37));
+        widget_16->setMinimumSize(QSize(0, 20));
         widget_16->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_15 = new QHBoxLayout(widget_16);
         horizontalLayout_15->setSpacing(6);
         horizontalLayout_15->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_15->setObjectName(QString::fromUtf8("horizontalLayout_15"));
+        horizontalLayout_15->setContentsMargins(0, 0, 0, 0);
         label_16 = new QLabel(widget_16);
         label_16->setObjectName(QString::fromUtf8("label_16"));
         label_16->setMinimumSize(QSize(120, 20));
@@ -815,7 +848,7 @@ public:
         spinBox_10 = new QSpinBox(widget_16);
         spinBox_10->setObjectName(QString::fromUtf8("spinBox_10"));
         spinBox_10->setMinimumSize(QSize(0, 20));
-        spinBox_10->setMaximumSize(QSize(101, 12345454));
+        spinBox_10->setMaximumSize(QSize(120, 12345454));
         spinBox_10->setMinimum(1);
         spinBox_10->setMaximum(1000000000);
         spinBox_10->setSingleStep(10);
@@ -827,12 +860,13 @@ public:
 
         widget_20 = new QWidget(widget_19);
         widget_20->setObjectName(QString::fromUtf8("widget_20"));
-        widget_20->setMinimumSize(QSize(0, 37));
+        widget_20->setMinimumSize(QSize(0, 20));
         widget_20->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_18 = new QHBoxLayout(widget_20);
         horizontalLayout_18->setSpacing(6);
         horizontalLayout_18->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_18->setObjectName(QString::fromUtf8("horizontalLayout_18"));
+        horizontalLayout_18->setContentsMargins(0, 0, 0, 0);
         label_19 = new QLabel(widget_20);
         label_19->setObjectName(QString::fromUtf8("label_19"));
         label_19->setMinimumSize(QSize(120, 20));
@@ -843,7 +877,7 @@ public:
         spinBox_13 = new QSpinBox(widget_20);
         spinBox_13->setObjectName(QString::fromUtf8("spinBox_13"));
         spinBox_13->setMinimumSize(QSize(0, 20));
-        spinBox_13->setMaximumSize(QSize(101, 16777215));
+        spinBox_13->setMaximumSize(QSize(120, 16777215));
         spinBox_13->setMinimum(1);
         spinBox_13->setMaximum(1000000000);
         spinBox_13->setSingleStep(50);
@@ -855,12 +889,13 @@ public:
 
         widget_21 = new QWidget(widget_19);
         widget_21->setObjectName(QString::fromUtf8("widget_21"));
-        widget_21->setMinimumSize(QSize(0, 37));
+        widget_21->setMinimumSize(QSize(0, 20));
         widget_21->setMaximumSize(QSize(250, 16777215));
         horizontalLayout_19 = new QHBoxLayout(widget_21);
         horizontalLayout_19->setSpacing(6);
         horizontalLayout_19->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_19->setObjectName(QString::fromUtf8("horizontalLayout_19"));
+        horizontalLayout_19->setContentsMargins(0, 0, 0, 0);
         label_20 = new QLabel(widget_21);
         label_20->setObjectName(QString::fromUtf8("label_20"));
         label_20->setMinimumSize(QSize(120, 20));
@@ -871,7 +906,7 @@ public:
         spinBox_14 = new QSpinBox(widget_21);
         spinBox_14->setObjectName(QString::fromUtf8("spinBox_14"));
         spinBox_14->setMinimumSize(QSize(0, 20));
-        spinBox_14->setMaximumSize(QSize(101, 16777215));
+        spinBox_14->setMaximumSize(QSize(120, 16777215));
         spinBox_14->setMinimum(1);
         spinBox_14->setMaximum(1000000000);
         spinBox_14->setSingleStep(50);
@@ -889,6 +924,7 @@ public:
         horizontalLayout_20->setSpacing(6);
         horizontalLayout_20->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_20->setObjectName(QString::fromUtf8("horizontalLayout_20"));
+        horizontalLayout_20->setContentsMargins(-1, 0, -1, 0);
         pushButton_12 = new QPushButton(widget_22);
         pushButton_12->setObjectName(QString::fromUtf8("pushButton_12"));
         pushButton_12->setMinimumSize(QSize(0, 28));
@@ -906,10 +942,6 @@ public:
 
         verticalLayout_2->addWidget(widget_22);
 
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_2->addItem(verticalSpacer);
-
 
         verticalLayout_4->addWidget(widget_19);
 
@@ -917,9 +949,10 @@ public:
         widget_17->setObjectName(QString::fromUtf8("widget_17"));
         widget_17->setMaximumSize(QSize(280, 16777215));
         verticalLayout_5 = new QVBoxLayout(widget_17);
-        verticalLayout_5->setSpacing(6);
+        verticalLayout_5->setSpacing(0);
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout_5->setContentsMargins(-1, 0, -1, 0);
         widget_13 = new QWidget(widget_17);
         widget_13->setObjectName(QString::fromUtf8("widget_13"));
         widget_13->setMinimumSize(QSize(0, 0));
@@ -929,6 +962,7 @@ public:
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
+        horizontalLayout_6->setContentsMargins(-1, 0, -1, 0);
         paramsNameBtn = new QPushButton(widget_13);
         paramsNameBtn->setObjectName(QString::fromUtf8("paramsNameBtn"));
         paramsNameBtn->setMaximumSize(QSize(80, 16777215));
@@ -951,6 +985,7 @@ public:
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        verticalLayout_7->setContentsMargins(-1, 0, -1, 0);
         chooseBtn = new QPushButton(widget_18);
         chooseBtn->setObjectName(QString::fromUtf8("chooseBtn"));
         chooseBtn->setMaximumSize(QSize(250, 16777215));
@@ -963,9 +998,10 @@ public:
         widget_23 = new QWidget(widget_17);
         widget_23->setObjectName(QString::fromUtf8("widget_23"));
         verticalLayout_6 = new QVBoxLayout(widget_23);
-        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setSpacing(0);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        verticalLayout_6->setContentsMargins(9, 0, 9, 0);
         pushButton_14 = new QPushButton(widget_23);
         pushButton_14->setObjectName(QString::fromUtf8("pushButton_14"));
         pushButton_14->setMaximumSize(QSize(250, 16777215));
@@ -1019,11 +1055,11 @@ public:
         dockWidgetContents_6->setObjectName(QString::fromUtf8("dockWidgetContents_6"));
         widget_5 = new QWidget(dockWidgetContents_6);
         widget_5->setObjectName(QString::fromUtf8("widget_5"));
-        widget_5->setGeometry(QRect(0, 0, 60, 500));
+        widget_5->setGeometry(QRect(0, 0, 60, 531));
         widget_5->setMinimumSize(QSize(60, 0));
         widget_5->setMaximumSize(QSize(60, 8000));
         verticalLayout = new QVBoxLayout(widget_5);
-        verticalLayout->setSpacing(6);
+        verticalLayout->setSpacing(20);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         bianji = new QPushButton(widget_5);
@@ -1103,26 +1139,12 @@ public:
 
         verticalLayout->addWidget(bianji_11);
 
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer);
+
         dock7->setWidget(dockWidgetContents_6);
         mainWindowClass->addDockWidget(Qt::LeftDockWidgetArea, dock7);
-        dock_topKedu = new QDockWidget(mainWindowClass);
-        dock_topKedu->setObjectName(QString::fromUtf8("dock_topKedu"));
-        dock_topKedu->setMinimumSize(QSize(47, 20));
-        dock_topKedu->setMaximumSize(QSize(123456, 20));
-        dock_topKedu->setFeatures(QDockWidget::NoDockWidgetFeatures);
-        dockWidgetContents_8 = new QWidget();
-        dockWidgetContents_8->setObjectName(QString::fromUtf8("dockWidgetContents_8"));
-        dock_topKedu->setWidget(dockWidgetContents_8);
-        mainWindowClass->addDockWidget(Qt::LeftDockWidgetArea, dock_topKedu);
-        dock_leftKedu = new QDockWidget(mainWindowClass);
-        dock_leftKedu->setObjectName(QString::fromUtf8("dock_leftKedu"));
-        dock_leftKedu->setMinimumSize(QSize(30, 44));
-        dock_leftKedu->setMaximumSize(QSize(30, 524287));
-        dock_leftKedu->setFeatures(QDockWidget::NoDockWidgetFeatures);
-        dockWidgetContents_9 = new QWidget();
-        dockWidgetContents_9->setObjectName(QString::fromUtf8("dockWidgetContents_9"));
-        dock_leftKedu->setWidget(dockWidgetContents_9);
-        mainWindowClass->addDockWidget(Qt::LeftDockWidgetArea, dock_leftKedu);
         dock_file = new QDockWidget(mainWindowClass);
         dock_file->setObjectName(QString::fromUtf8("dock_file"));
         dock_file->setMinimumSize(QSize(86, 30));
@@ -1169,15 +1191,90 @@ public:
 
         dock_file->setWidget(dockWidgetContents_7);
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dock_file);
+        dockWidget_2 = new QDockWidget(mainWindowClass);
+        dockWidget_2->setObjectName(QString::fromUtf8("dockWidget_2"));
+        dockWidget_2->setMinimumSize(QSize(42, 30));
+        dockWidget_2->setMaximumSize(QSize(524287, 30));
+        dockWidget_2->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_2->setAllowedAreas(Qt::TopDockWidgetArea);
+        dockWidgetContents_8 = new QWidget();
+        dockWidgetContents_8->setObjectName(QString::fromUtf8("dockWidgetContents_8"));
+        widget_31 = new QWidget(dockWidgetContents_8);
+        widget_31->setObjectName(QString::fromUtf8("widget_31"));
+        widget_31->setGeometry(QRect(0, 0, 160, 40));
+        widget_31->setMinimumSize(QSize(0, 40));
+        widget_31->setMaximumSize(QSize(16777215, 40));
+        horizontalLayout_22 = new QHBoxLayout(widget_31);
+        horizontalLayout_22->setSpacing(0);
+        horizontalLayout_22->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_22->setObjectName(QString::fromUtf8("horizontalLayout_22"));
+        horizontalLayout_22->setContentsMargins(0, 0, 0, 0);
+        pathbtn = new QPushButton(widget_31);
+        pathbtn->setObjectName(QString::fromUtf8("pathbtn"));
+        pathbtn->setMinimumSize(QSize(40, 40));
+        pathbtn->setMaximumSize(QSize(40, 40));
+
+        horizontalLayout_22->addWidget(pathbtn);
+
+        deletepathbtn = new QPushButton(widget_31);
+        deletepathbtn->setObjectName(QString::fromUtf8("deletepathbtn"));
+        deletepathbtn->setMinimumSize(QSize(40, 40));
+        deletepathbtn->setMaximumSize(QSize(40, 40));
+
+        horizontalLayout_22->addWidget(deletepathbtn);
+
+        groupbtn = new QPushButton(widget_31);
+        groupbtn->setObjectName(QString::fromUtf8("groupbtn"));
+        groupbtn->setMinimumSize(QSize(40, 40));
+        groupbtn->setMaximumSize(QSize(40, 40));
+
+        horizontalLayout_22->addWidget(groupbtn);
+
+        deletegroupbtn = new QPushButton(widget_31);
+        deletegroupbtn->setObjectName(QString::fromUtf8("deletegroupbtn"));
+        deletegroupbtn->setMinimumSize(QSize(40, 40));
+        deletegroupbtn->setMaximumSize(QSize(40, 40));
+
+        horizontalLayout_22->addWidget(deletegroupbtn);
+
+        dockWidget_2->setWidget(dockWidgetContents_8);
+        mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_2);
+        dockWidget_3 = new QDockWidget(mainWindowClass);
+        dockWidget_3->setObjectName(QString::fromUtf8("dockWidget_3"));
+        dockWidget_3->setMinimumSize(QSize(42, 30));
+        dockWidget_3->setMaximumSize(QSize(524287, 30));
+        dockWidget_3->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_3->setAllowedAreas(Qt::TopDockWidgetArea);
+        dockWidgetContents_9 = new QWidget();
+        dockWidgetContents_9->setObjectName(QString::fromUtf8("dockWidgetContents_9"));
+        dockWidget_3->setWidget(dockWidgetContents_9);
+        mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_3);
+        dockWidget_4 = new QDockWidget(mainWindowClass);
+        dockWidget_4->setObjectName(QString::fromUtf8("dockWidget_4"));
+        dockWidget_4->setMinimumSize(QSize(42, 30));
+        dockWidget_4->setMaximumSize(QSize(524287, 30));
+        dockWidget_4->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_4->setAllowedAreas(Qt::TopDockWidgetArea);
+        dockWidgetContents_10 = new QWidget();
+        dockWidgetContents_10->setObjectName(QString::fromUtf8("dockWidgetContents_10"));
+        dockWidget_4->setWidget(dockWidgetContents_10);
+        mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_4);
+        dockWidget_5 = new QDockWidget(mainWindowClass);
+        dockWidget_5->setObjectName(QString::fromUtf8("dockWidget_5"));
+        dockWidget_5->setMinimumSize(QSize(42, 30));
+        dockWidget_5->setMaximumSize(QSize(524287, 30));
+        dockWidget_5->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_5->setAllowedAreas(Qt::TopDockWidgetArea);
+        dockWidgetContents_11 = new QWidget();
+        dockWidgetContents_11->setObjectName(QString::fromUtf8("dockWidgetContents_11"));
+        dockWidget_5->setWidget(dockWidgetContents_11);
+        mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_5);
 
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(menu_2->menuAction());
-        menuBar->addAction(menu_3->menuAction());
         menu->addAction(actionnew);
         menu->addAction(actionsave);
         menu->addAction(actionopen);
-        menu_3->addAction(actionchinese);
-        menu_3->addAction(actionenglish);
 
         retranslateUi(mainWindowClass);
 
@@ -1203,7 +1300,6 @@ public:
         actionenglish->setText(QCoreApplication::translate("mainWindowClass", "english", nullptr));
         menu->setTitle(QCoreApplication::translate("mainWindowClass", "\346\226\207\344\273\266", nullptr));
         menu_2->setTitle(QCoreApplication::translate("mainWindowClass", "\347\274\226\350\276\221", nullptr));
-        menu_3->setTitle(QCoreApplication::translate("mainWindowClass", "\350\257\255\350\250\200", nullptr));
         dock1->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\345\257\271\350\261\241\345\210\227\350\241\250", nullptr));
         QTableWidgetItem *___qtablewidgetitem = itemtable->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QCoreApplication::translate("mainWindowClass", "\345\220\215\347\247\260", nullptr));
@@ -1228,7 +1324,18 @@ public:
         label_13->setText(QCoreApplication::translate("mainWindowClass", "\345\257\206\345\272\246", nullptr));
         brushbutton->setText(QCoreApplication::translate("mainWindowClass", "\345\241\253\345\205\205", nullptr));
         Codetype->setItemText(0, QCoreApplication::translate("mainWindowClass", "QRCode", nullptr));
-        Codetype->setItemText(1, QCoreApplication::translate("mainWindowClass", "DataMatrix", nullptr));
+        Codetype->setItemText(1, QCoreApplication::translate("mainWindowClass", "Aztec", nullptr));
+        Codetype->setItemText(2, QCoreApplication::translate("mainWindowClass", "DataMatrix", nullptr));
+        Codetype->setItemText(3, QCoreApplication::translate("mainWindowClass", "Codabar", nullptr));
+        Codetype->setItemText(4, QCoreApplication::translate("mainWindowClass", "Code39", nullptr));
+        Codetype->setItemText(5, QCoreApplication::translate("mainWindowClass", "Code93", nullptr));
+        Codetype->setItemText(6, QCoreApplication::translate("mainWindowClass", "Code128", nullptr));
+        Codetype->setItemText(7, QCoreApplication::translate("mainWindowClass", "EAN-8", nullptr));
+        Codetype->setItemText(8, QCoreApplication::translate("mainWindowClass", "EAN-13", nullptr));
+        Codetype->setItemText(9, QCoreApplication::translate("mainWindowClass", "ITF", nullptr));
+        Codetype->setItemText(10, QCoreApplication::translate("mainWindowClass", "UPC-A", nullptr));
+        Codetype->setItemText(11, QCoreApplication::translate("mainWindowClass", "UPC-E", nullptr));
+        Codetype->setItemText(12, QCoreApplication::translate("mainWindowClass", "PDF417", nullptr));
 
         dock3->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\346\240\207\345\210\273\345\217\202\346\225\260\346\240\217", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = colortable->horizontalHeaderItem(0);
@@ -1276,9 +1383,13 @@ public:
         draw_polygon->setText(QString());
         draw_pixmap->setText(QCoreApplication::translate("mainWindowClass", "\345\233\276\347\211\207", nullptr));
         bianji_10->setText(QCoreApplication::translate("mainWindowClass", "\344\272\214\347\273\264\347\240\201", nullptr));
-        bianji_11->setText(QString());
+        bianji_11->setText(QCoreApplication::translate("mainWindowClass", "\346\211\223\345\274\200\347\237\242\351\207\217\346\226\207\344\273\266", nullptr));
         leftmove->setText(QCoreApplication::translate("mainWindowClass", "<", nullptr));
         rightmove->setText(QCoreApplication::translate("mainWindowClass", ">", nullptr));
+        pathbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\276\244\347\273\204", nullptr));
+        deletepathbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\276\244", nullptr));
+        groupbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\273\204\345\220\210", nullptr));
+        deletegroupbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\273\204", nullptr));
     } // retranslateUi
 
 };

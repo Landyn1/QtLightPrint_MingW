@@ -14,7 +14,14 @@ public:
     //QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 7 };
-    QPointF duichengdian(QPointF p1 , QPointF p2);
+    QRect rect()
+    {
+        return QRect(0,0,0,0);
+    }
+    double angle = 0;
+    int linenum = 0;
+    QRect getRect();
+    QPointF symmetryPoint(QPointF p1 , QPointF p2);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -36,8 +43,8 @@ public:
 
     bool  isfirst = true;
     bool  ispainting = false;
-    bool selectEvent(QPointF p);
-    QList<double> getRect();
+    bool selectEvent(QPointF p,int k=0);
+
     double f(double t,double p0,double p1,double p2,double p3)
     {
         return pow((1-t),3)*p0+3*t*pow((1-t),2)*p1 + 3*t*t*(1-t)*p2 + pow(t,3)*p3;

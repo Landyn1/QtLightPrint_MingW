@@ -45,6 +45,7 @@ HEADERS += ./CUDrvE.h \
     itemfileclass.h \
     mygraphicscodeitem.h \
     mygraphicscurvelineitem.h \
+    mygraphicsgroupitem.h \
     mygraphicsheplbrushrectitem.h \
     mygraphicslineitem.h \
     mygraphicspixmapitem.h \
@@ -84,6 +85,7 @@ SOURCES += ./ItemAdjust.cpp \
     itemfileclass.cpp \
     mygraphicscodeitem.cpp \
     mygraphicscurvelineitem.cpp \
+    mygraphicsgroupitem.cpp \
     mygraphicsheplbrushrectitem.cpp \
     mygraphicslineitem.cpp \
     mygraphicspixmapitem.cpp \

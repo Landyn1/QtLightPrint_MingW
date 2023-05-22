@@ -4,6 +4,7 @@
 #include"MyGraphicsView.h"
 #include"MyGraphicsScene.h"
 #include"PrintParams.h"
+#include"itemfileclass.h"
 extern int action_state;
 extern int k;
 class mainWindow : public QMainWindow
@@ -17,7 +18,7 @@ public:
     void setItemMoveble(bool moveble);
     MyGraphicsScene* scene;
     MyGraphicsView* view;
-
+    void dockConnectInit();
     Ui::mainWindowClass ui;
     void initConnect();
     PrintParams print_layer[255];
@@ -26,8 +27,8 @@ public:
     bool LightDraw(QPainterPath path, int printLayer);
     bool printItem();
     QPoint view2print(QPointF position);
-    int kkkk = 2;
-    int filenum = 1;
+    int kkkk = 2;  //0：正在绘制曲线 1：正在绘制直线 2：不在绘制
+    int filenum = 0;
     int fileid = 0;
     QWidget *files = new QWidget();
     QHBoxLayout *m_file = new QHBoxLayout();
@@ -40,8 +41,19 @@ public:
     double pre_h;
     void setpreRect();
     int clicknum = 0;
-
+    void setColortable();
+    void initFileconnect();
+    void initPenNumberConnect();
+    void initDrawConnect();
+    void initItemtableConnect();
     double spaceadjust = 1;   //用来调整实际打印的距离
+
+    template<typename T> void setItemRect_XandY(QGraphicsItem* node, int &x,int &y);
+    template<typename T> void setItemRect_WandH(QGraphicsItem* node, int x,int y,int &w,int &h);
+    template<typename T> void saveItems(QGraphicsItem* node, ItemFileClass *&iff,int type);
+    template<typename T> void saveBrush(QGraphicsItem* node, double temp,int num , double space,double angle);
+    template<typename T> void setItemPosition(QGraphicsItem* node, int &leftbuttomx,int &leftbuttomy,int &righttopx,int &righttopy);
+    template<typename T> QPainterPath getpath(QGraphicsItem* node,QPainterPath &path);
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 public slots:
     void creatnewfile();

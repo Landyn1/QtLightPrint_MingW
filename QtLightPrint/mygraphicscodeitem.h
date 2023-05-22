@@ -20,14 +20,16 @@ public:
     QString text="";
     ~MyGraphicsCodeItem();
     void setPathByStr(QString str,QString type);
-    bool selectEvent(QPointF p);
-    bool set_brush(double jiaodu,int midu);
-    QRectF getRect();
+    bool selectEvent(QPointF p,int k=0);
+    bool set_brush(double angle,int linenum);
+    QRect getRect();
     QPainterPath brushPath;
     QString codetype="";
-    double jiaodu = 0;
+    double angle = 0;
     QPainterPath path;
-    int midu = 0;
+    void setBrushpath(QList<QLineF> lins,QLineF l,QList<QPointF> intersections,QPainterPath &path2,int k=0);
+    void setLinsAndCurves(QPainterPath path2,QList<QLineF> &lins);
+    int linenum = 0;
     void makePath_fill_Rect();
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

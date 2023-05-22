@@ -8,10 +8,10 @@
 #include <QStyle>
 #include <QStyleOptionGraphicsItem>
 #include<QKeyEvent>
-#include<thirdcurve.h>
 MyGraphicsTextItem::MyGraphicsTextItem(QGraphicsTextItem *p,QString str):QGraphicsRectItem()
 {
-
+    setFlags(NULL);
+    setSelected(false);
     this->str = str;
 }
 
@@ -23,29 +23,26 @@ void MyGraphicsTextItem::setStr(QString str,QFont font)
     this->font = font;
     setDefault_Path();
     makePath_fill_Rect();
-    set_brush(jiaodu,midu);
+    set_brush(angle,linenum);
     update();
+}
+
+QRect MyGraphicsTextItem::getRect()
+{
+    int x,y,w,h;
+    x = rect().x()+pos().x();
+    y = rect().y()+pos().y();
+    w = rect().width();
+    h = rect().height();
+    return QRect(x,y,w,h);
 }
 void MyGraphicsTextItem::setRectF()
 {
     QFontMetrics fm(this->font);
     rectf = fm.boundingRect(str);
 }
-void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
+void MyGraphicsTextItem::setLinsAndCurves(QPainterPath path2, QList<QLineF> &lins,QList<ThirdCurve> &curves)
 {
-    brushpath.clear();
-    this->jiaodu = jiaodu;
-    this->midu = midu;
-    if(midu == 0)
-        return;
-    QPainterPath path2;
-    double k = tan(jiaodu*M_PI/180);//斜率
-    int w = path.boundingRect().width()+10;
-    int h = path.boundingRect().height()+10;
-    QList<QPointF> jiaodians;
-    path2 = this->path;
-    QList<QLineF> lins;
-    QList<ThirdCurve> curves;
     QPointF lp1,lp2,c1,c2;
     int kl = 0;
     int kc = 0;
@@ -98,21 +95,113 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
             }
         }
     }
+}
+
+void MyGraphicsTextItem::setBrushpath(QList<QLineF> lins, QList<ThirdCurve> curves , QLineF l, QList<QPointF> intersections, QPainterPath &path2, int k)
+{
+
+        QPointF p1,p2;
+        QPointF pp1,pp2;
+        p1 = l.p1();
+        p2 = l.p2();
+        l.setLength(-2);
+        pp1 = l.p2();
+        l.setP1(p1);
+        l.setP2(p2);
+        l.setLength(l.length()+2);
+        pp2 = l.p2();
+        l.setP1(pp1);
+        l.setP2(pp2);
+
+        for(int i=0;i<curves.length();i++)
+        {
+            QList<QPointF> cintersections = curves[i].intersection(l);
+            for(int j = 0;j<cintersections.length();j++)
+            {
+                if(cintersections[j]!=QPointF(-20000,-20000) )
+                {
+                     intersections.append(cintersections[j]);
+                }
+            }
+        }
+        for(int i=0;i<lins.length();i++)
+        {
+            QPointF intersectionPoint;
+            auto type = l.intersects(lins[i],&intersectionPoint);
+            if(type == QLineF::BoundedIntersection)
+            {
+                intersections.append(intersectionPoint);
+            }
+        }
+        if(k==0)
+        {
+            for(int i = 1;i<intersections.length();i++)
+            {
+                for(int j=0;j<intersections.length()-i;j++)
+                {
+                    if(intersections[j].x()>intersections[j+1].x())
+                    {
+                        QPointF tm = intersections[j];
+                        intersections[j] = intersections[j+1];
+                        intersections[j+1] = tm;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for(int i = 1;i<intersections.length();i++)
+            {
+                for(int j=0;j<intersections.length()-i;j++)
+                {
+                    if(intersections[j].y()>intersections[j+1].y())
+                    {
+                        QPointF tm = intersections[j];
+                        intersections[j] = intersections[j+1];
+                        intersections[j+1] = tm;
+                    }
+                }
+            }
+        }
+        for(int i = 0;i<intersections.length()-1;i= i+2)
+        {
+            if(intersections.length()%2 == 0)
+            {
+                    path2.moveTo(intersections[i]);
+                    path2.lineTo(intersections[i+1]);
+            }
+        }
+}
+void MyGraphicsTextItem::set_brush(double angle, int linenum)
+{
+    brushpath.clear();
+    this->angle = angle;
+    this->linenum = linenum;
+    if(linenum == 0)
+        return;
+    QPainterPath path2;
+    double k = tan(angle*M_PI/180);//斜率
+    int w = path.boundingRect().width()+10;
+    int h = path.boundingRect().height()+10;
+    QList<QPointF> intersections;
+    QList<QLineF> lins;
+    QList<ThirdCurve> curves;
+    setLinsAndCurves(this->path,lins,curves);
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
     double mint = (dpiX*10)/254;; //1mm = tpx;
     mint = mint*0.02; //0.02mm = tpx;
     double m = double(h)/double(w);
-    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    if(int(angle)%90 != 0 ||  ((int(angle)%180 == 0)&&(int(angle)%90 != 0)))
     {
         if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
             pert = fmax(pert,mint);
-            midu = 2*t/pert+2;
-            for(int ii=-midu/2;ii<=midu/2;ii++)
+            linenum = 2*t/pert+2;
+            for(int ii=-linenum/2;ii<=linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(w/2,(w/2*k)+(pert*ii));
                 QPointF p2(-w/2,(-w/2*k)+(pert*ii));
                 if(pert * ii >= (h/2)- (w/2*k))
@@ -126,58 +215,19 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2);
             }
 
         }
         else if( k>m )
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
             pert = fmax(pert,mint);
-            midu = 2*t/pert+2;
-            for(int ii=-midu/2;ii<midu/2;ii++)
+            linenum = 2*t/pert+2;
+            for(int ii=-linenum/2;ii<linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(((h/2)-(pert*ii))/k,h/2);
                 QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
                 if(pert * ii < (h/2)- (w/2*k))
@@ -191,46 +241,7 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2);
             }
 
         }
@@ -238,12 +249,12 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
         {
 
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
             pert = fmax(pert,mint);
-            midu = 2*t/pert+2;
-            for(int ii=-midu/2;ii<midu/2;ii++)
+            linenum = 2*t/pert+2;
+            for(int ii=-linenum/2;ii<linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(((h/2)-(pert*ii))/k,h/2);
                 QPointF p2(((-h/2)-(pert*ii))/k,-h/2);
                 if(pert * ii < (h/2)+(w/2*k))
@@ -257,58 +268,19 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2);
             }
         }
         else if( k>=-m && k<0)
         {
 
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
             pert = fmax(pert,mint);
-            midu = 2*t/pert+2;
-            for(int ii=-midu/2;ii<midu/2;ii++)
+            linenum = 2*t/pert+2;
+            for(int ii=-linenum/2;ii<linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(w/2,(w/2*k)+(pert*ii));
                 QPointF p2(-w/2,(-w/2*k)+(pert*ii));
                 if(pert * ii > (h/2)+(w/2*k))
@@ -322,46 +294,7 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2);
             }
         }
 
@@ -369,117 +302,38 @@ void MyGraphicsTextItem::set_brush(double jiaodu, int midu)
     else
     {
 
-        if(int(jiaodu)%180 == 0)
+        if(int(angle)%180 == 0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
             pert = fmax(pert,mint);
-            midu = 2*t/pert+2;
-            for(int ii=-midu/2;ii<midu/2;ii++)
+            linenum = 2*t/pert+2;
+            for(int ii=-linenum/2;ii<linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(-w/2,pert*ii);
                 QPointF p2(w/2,pert*ii);
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2);
             }
         }
 
         else
         {
-            double pert = w/double(midu);
+            double pert = w/double(linenum);
             pert = fmax(pert,mint);
-            midu = 2*w/pert+2;
-            for(int ii=-midu/2;ii<midu/2;ii++)
+            linenum = 2*w/pert+2;
+            for(int ii=-linenum/2;ii<linenum/2;ii++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(pert*ii,h/2);
                 QPointF p2(pert*ii,-h/2);
                 p1.setY(-p1.y());
                 p2.setY(-p2.y());
                 QLineF l(p1,p2);
-                for(int i=0;i<curves.length();i++)
-                {
-                    QList<QPointF> cjiaodians = curves[i].jiaodian(l);
-                    for(int j = 0;j<cjiaodians.length();j++)
-                    {
-                        if(cjiaodians[j]!=QPointF(-20000,-20000) )
-                        {
-                             jiaodians.append(cjiaodians[j]);
-                        }
-                    }
-                }
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].y()>jiaodians[j+1].y())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                for(int i = 0;i<jiaodians.length()-1;i= i+2)
-                {
-                    if(jiaodians.length()%2 == 0)
-                    {
-                            path2.moveTo(jiaodians[i]);
-                            path2.lineTo(jiaodians[i+1]);
-                    }
-                }
+                setBrushpath(lins,curves,l,intersections,path2,1);
             }
         }
 
@@ -492,7 +346,6 @@ QPainterPath MyGraphicsTextItem::ViewPath()
 {
     QPainterPath p;
     QPainterPath path = this->path;
-
     QPainterPath path2 = brushpath;
     int k=0;
     QPointF p0,c1,c2,p3;
@@ -500,6 +353,7 @@ QPainterPath MyGraphicsTextItem::ViewPath()
     {
         QPainterPath::Element element = path.elementAt(i);
         QPointF po = element;
+        po.setY(-po.y());
         QPointF po2 = mapToScene(po);
         if (element.isMoveTo())
         {
@@ -632,9 +486,14 @@ MyGraphicsTextItem::~MyGraphicsTextItem()
 
 }
 
-bool MyGraphicsTextItem::selectEvent(QPointF p)
+bool MyGraphicsTextItem::selectEvent(QPointF p,int k)
 {
-
+    if(k == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
     if(isSelected())
         return true;
     if(rect().contains(p))

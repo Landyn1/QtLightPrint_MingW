@@ -14,26 +14,32 @@ public:
 	explicit MyGraphicsRecItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem* parent = nullptr);
 	
 	enum { Type = 1 };
-
+    QRect getRect();
 	int type() const
 	{
 		// 针对该 item 启用 qgraphicsitem_cast
 		return Type;
 	}
-    void set_brush(double jiaodu,int midu);
+    void set_brush(double angle,int linenum);
 	~MyGraphicsRecItem();
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
     QPainterPath brushpath;
-    double jiaodu = 0;
-    int midu = 0;
+
+    QPainterPath path()
+    {
+        QPainterPath p;
+        return p;
+    }
+    double angle = 0;
+    int linenum = 0;
 	//QRectF boundingRect() const;
 	//QPainterPath shape() const;
 	//QRectF boundingRect() const override;
 	//QPainterPath shape() const override;
 	QPainterPath ViewPath();
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k = 0);
 	QString name = "";
 	int printLayer = 0;
 private:

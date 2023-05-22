@@ -11,7 +11,7 @@ public:
         return pow((1-t),3)*p0+3*t*pow((1-t),2)*p1 + 3*t*t*(1-t)*p2 + pow(t,3)*p3;
     }
     bool isOnLine(QLineF l , QPointF p);
-    QList<QPointF> jiaodian(QLineF l);
+    QList<QPointF> intersection(QLineF l);
     QPointF start = QPointF();
     QPointF c1 = QPointF();
     QPointF c2;

@@ -43,16 +43,19 @@ void MyGraphicsPixMapItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
     QPixmap pix = this->pixmap();
 
-
-
-
     painter->scale(1,-1);
     painter->drawPixmap(rectf,pix,pix.rect());
 
 }
 
-bool MyGraphicsPixMapItem::selectEvent(QPointF p)
+bool MyGraphicsPixMapItem::selectEvent(QPointF p,int k)
 {
+    if(k == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
     if(isSelected())
         return true;
     int w,h;
@@ -72,6 +75,15 @@ bool MyGraphicsPixMapItem::selectEvent(QPointF p)
 
 
 
+}
+QRect MyGraphicsPixMapItem::getRect()
+{
+    int x,y,w,h;
+    x = rect().x()+pos().x();
+    y = rect().y()+pos().y();
+    w = rect().width();
+    h = rect().height();
+    return QRect(x,y,w,h);
 }
 QRectF MyGraphicsPixMapItem::rect()
 {

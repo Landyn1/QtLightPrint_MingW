@@ -10,9 +10,9 @@ public:
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
-    double jiaodu = 0;
+    double angle = 0;
 
-    int midu = 1000;
+    int linenum = 1000;
 
 };
 

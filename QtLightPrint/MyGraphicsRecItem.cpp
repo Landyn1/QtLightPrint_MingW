@@ -13,6 +13,16 @@ MyGraphicsRecItem::MyGraphicsRecItem(QGraphicsItem *parent)
 	initVaiables();
 }
 
+QRect MyGraphicsRecItem::getRect()
+{
+    int x,y,w,h;
+    x = rect().x()+pos().x();
+    y = rect().y()+pos().y();
+    w = rect().width();
+    h = rect().height();
+    return QRect(x,y,w,h);
+}
+
 MyGraphicsRecItem::~MyGraphicsRecItem()
 {}
 
@@ -76,15 +86,23 @@ void MyGraphicsRecItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
 
 void MyGraphicsRecItem::initVaiables()
 {
-	//setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+    setFlags(NULL);
+    setSelected(false);
 }
 void MyGraphicsRecItem::keyPressEvent(QKeyEvent *event)
 {
 
 }
 
-bool MyGraphicsRecItem::selectEvent(QPointF p)
+bool MyGraphicsRecItem::selectEvent(QPointF p,int k)
 {
+    if(k == 1)
+    {
+        this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        this->setSelected(true);
+        return true;
+    }
+
     if(this->isSelected())
         return true;
     double w = rect().width();
@@ -125,34 +143,29 @@ bool MyGraphicsRecItem::selectEvent(QPointF p)
 
 }
 
-void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
+void MyGraphicsRecItem::set_brush(double angle,int linenum)
 {
 
-
-
     brushpath.clear();
-    this->jiaodu = jiaodu;
-    this->midu = midu;
-
+    this->angle = angle;
+    this->linenum = linenum;
     QPainterPath path;
-    double k = tan(jiaodu*M_PI/180);//斜率
+    double k = tan(angle*M_PI/180);//斜率
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(midu==0)
+    if(linenum==0)
     {
         update();
         return;
     }
-    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    if(int(angle)%90 != 0 ||  ((int(angle)%180 == 0)&&(int(angle)%90 != 0)))
     {
         if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-
-            double pert = t/(midu/2);
-
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
 
                 QPointF p1(w/2,(w/2*k)+(pert*i));
@@ -173,8 +186,8 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         else if( k > m )
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 QPointF p1(((h/2)-(pert*i))/k,h/2);
                 QPointF p2(((-h/2)-(pert*i))/k,-h/2);
@@ -193,8 +206,8 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         else if( k < -m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 QPointF p1(((h/2)-(pert*i))/k,h/2);
                 QPointF p2(((-h/2)-(pert*i))/k,-h/2);
@@ -213,8 +226,8 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         else if( k<0 && k>=-m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 QPointF p1(w/2,(w/2*k)+(pert*i));
                 QPointF p2(-w/2,(-w/2*k)+(pert*i));
@@ -234,11 +247,11 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
     }
     else
     {
-        if(int(jiaodu)%180 == 0)
+        if(int(angle)%180 == 0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 QPointF p1(-w/2,pert*i);
                 QPointF p2(w/2,pert*i);
@@ -249,8 +262,8 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
 
         else
         {
-            double pert = w/double(midu);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = w/double(linenum);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 QPointF p1(pert*i,h/2);
                 QPointF p2(pert*i,-h/2);
@@ -260,7 +273,6 @@ void MyGraphicsRecItem::set_brush(double jiaodu,int midu)
         }
 
     }
-
     brushpath = path;
     update();
 }

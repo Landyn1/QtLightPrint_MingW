@@ -15,10 +15,10 @@ public:
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 	enum { Type = 2 };
     QPainterPath brushpath;
-    double jiaodu = 0;
-    int midu = 0;
-    void set_brush(double jiaodu,int midu);
-    bool selectEvent(QPointF p);
+    double angle = 0;
+    int linenum = 0;
+    void set_brush(double angle,int linenum);
+    bool selectEvent(QPointF p,int k=0);
 	int type() const
 	{
 		// 针对该 item 启用 qgraphicsitem_cast
@@ -27,6 +27,12 @@ public:
     int printLayer = 0;
     QPainterPath ViewPath();
     QString name="";
+    QRect getRect();
+    QPainterPath path()
+    {
+        QPainterPath p;
+        return p;
+    }
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

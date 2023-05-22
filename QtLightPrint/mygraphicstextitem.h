@@ -5,6 +5,7 @@
 #include <QWidget>
 #include<qgraphicsitem.h>
 #include<math.h>
+#include"thirdcurve.h"
 class MyGraphicsTextItem : public QGraphicsRectItem
 {
 public:
@@ -26,21 +27,24 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     enum { Type = 6 };
     QPainterPath brushpath;
-    double jiaodu = 0;
-    int midu = 0;
-    void set_brush(double jiaodu,int midu);
+    double angle = 0;
+    int linenum = 0;
+    void set_brush(double angle,int linenum);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
         return Type;
     }
+    void setBrushpath(QList<QLineF> lins,QList<ThirdCurve> curves,QLineF l,QList<QPointF> intersections,QPainterPath &path2,int k=0);
+    void setLinsAndCurves(QPainterPath path2,QList<QLineF> &lins,QList<ThirdCurve> &curves);
     int printLayer = 0;
     QString str="";
     QRectF rectf;
     QString name="";
+    QRect getRect();
     QFont font = QFont(u8"微软雅黑",72);
     void setStr(QString str,QFont font);
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k=0);
     void setRectF();
     QPainterPath path;
     void setDefault_Path();

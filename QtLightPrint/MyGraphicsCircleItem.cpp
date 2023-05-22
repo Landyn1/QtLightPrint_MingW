@@ -10,37 +10,47 @@ MyGraphicsCircleItem::MyGraphicsCircleItem(QGraphicsEllipseItem*parent)
 MyGraphicsCircleItem::~MyGraphicsCircleItem()
 {}
 QRectF MyGraphicsCircleItem::boundingRect() const
-{
-
-    
+{  
     return rect();
 
 }
-void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
+QRect MyGraphicsCircleItem::getRect()
+{
+    int x,y,w,h;
+    x = rect().x()+pos().x();
+    y = rect().y()+pos().y();
+    w = rect().width();
+    h = rect().height();
+    return QRect(x,y,w,h);
+}
+void MyGraphicsCircleItem::set_brush(double angle,int linenum)
 {
     brushpath.clear();
-    this->jiaodu = jiaodu;
-    this->midu = midu;
-    if(midu == 0)
+    this->angle = angle;
+    this->linenum = linenum;
+    if(linenum == 0)
+    {
+        update();
         return;
+    }
     QPainterPath path;
-    double k = tan(jiaodu*M_PI/180);//斜率
+    double k = tan(angle*M_PI/180);//斜率
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(midu==0)
+    if(linenum==0)
     {
         update();
         return;
     }
 
-    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    if(int(angle)%90 != 0 ||  ((int(angle)%180 == 0)&&(int(angle)%90 != 0)))
     {
         if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -64,8 +74,8 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
         else if( k > m )
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -87,8 +97,8 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
         else if( k < -m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -110,8 +120,8 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
         else if( k<0 && k>=-m)
         {
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
                 //y=kx+pert*i;
                 //x^2/(w/2)^2+……=1
@@ -135,11 +145,11 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
     else
     {
 
-        if(int(jiaodu)%180 == 0)
+        if(int(angle)%180 == 0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
 
                 //y=kx+pert*i;
@@ -157,7 +167,7 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
 
         else
         {
-            double pert = w/double(midu);
+            double pert = w/double(linenum);
             for(double i=-w/2;i<=w/2;i+=pert)
             {
                 double a=w/2,b=h/2;
@@ -174,6 +184,8 @@ void MyGraphicsCircleItem::set_brush(double jiaodu,int midu)
     brushpath = path;
     update();
 }
+
+//这个函数获取绘画的path，对应的坐标为scene坐标
 QPainterPath MyGraphicsCircleItem::ViewPath()
 {
     QPainterPath path;
@@ -268,9 +280,15 @@ void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
 }
 
 
-bool MyGraphicsCircleItem::selectEvent(QPointF p)
+bool MyGraphicsCircleItem::selectEvent(QPointF p,int k)
 {
 
+    if(k == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
     if(isSelected())
         return true;
 

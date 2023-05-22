@@ -29,6 +29,7 @@
 #include<qcursor.h>
 #include"mygraphicsheplbrushrectitem.h"
 #include"thirdcurve.h"
+#include"mygraphicsgroupitem.h"
 MyGraphicsView::MyGraphicsView(QWidget *parent)
 	: QGraphicsView(parent)
 {
@@ -63,6 +64,20 @@ void MyGraphicsView::save_lefttop()
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->type() == 10&& node->isSelected())
+        {
+            MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
+            QList<QGraphicsItem*> list = g->childItems();
+            for(QGraphicsItem * l:list)
+            {
+                g->removeFromGroup(l);
+            }
+            //g->setPos(0,0);
+        }
+    }
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
 
         if(node->data(0).toInt()<0)
         {
@@ -83,7 +98,22 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs(list[0].y()-list[1].y());
                         item2->setPos(fmin(list[0].x(),list[1].x())+(w/2),fmin(list[0].y(),list[1].y())+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        //item2->setPos(item2->pos()+qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->pos());
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                        //qDebug()<<item2->pos()<<endl;
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 2)
@@ -99,7 +129,20 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 3)
@@ -115,7 +158,20 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
 
                     }
@@ -125,7 +181,20 @@ void MyGraphicsView::save_lefttop()
                         MyGraphicsLineItem *item2 = qgraphicsitem_cast<MyGraphicsLineItem*>(node2);
                         item2->setPos(item1->pos());
                         item2->setPath(item1->path());
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 5)
@@ -142,7 +211,20 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->setPath(item1->path);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 6)
@@ -158,7 +240,20 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->setPath(item1->path);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 7)
@@ -167,6 +262,19 @@ void MyGraphicsView::save_lefttop()
                         MyGraphicsCurveLineItem *item2 = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node2);
                         item2->setPos(item1->pos());
                         item2->setPath(item1->path());
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 8)
@@ -182,7 +290,19 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx,maxy);
                         item2->setRectF(QRect(0,-h,w,h));
-
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                     else if(node2->type() == 9)
@@ -198,7 +318,20 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->path = (item1->path);
-                        item2->set_brush(item1->jiaodu,item1->midu);
+                        item2->set_brush(item1->angle,item1->linenum);
+                        if(item2->data(5).toInt() != 0)
+                        {
+                            for(int i = 0;i<itemss.length();i++)
+                            {
+                                if(itemss[i]->type() == 10)
+                                {
+                                    if(item2->data(5).toInt() == itemss[i]->data(0).toInt())
+                                    {
+                                        qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->addToGroup(item2);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                 }
@@ -232,10 +365,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 
     scene()->update();
     if (event->button() == Qt::RightButton) {                 // 右键粘贴菜单
-        //QPointF scene_pos = mapToScene(event->pos());       // 坐标映射
-        //_graphicsRightMousePos->setX(scene_pos.x());        // 鼠标坐标记录--x
-        //_graphicsRightMousePos->setY(scene_pos.y());        // 鼠标坐标记录--y
-        //_isRightMousePopMenu = true;                        // 记录本次弹出了右键菜单
+
     }
     else if (event->button() == Qt::LeftButton) {
         if (action_state == 1) {
@@ -252,7 +382,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 item->setVisible(true);
                 QString str = QString::number(row + 1);
                 item->setData(0, item_id);
-                item->name = u8"矩形" + str;
+                item->name = tr("矩形") + str;
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
@@ -271,7 +401,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 item->setVisible(true);
                 QString str = QString::number(row + 1);
                 item->setData(0, item_id);
-                item->name = u8"椭圆" + str;
+                item->name = tr("椭圆") + str;
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
@@ -290,7 +420,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 item->setVisible(true);
                 QString str = QString::number(row + 1);
                 item->setData(0, item_id);
-                item->name = u8"圆形" + str;
+                item->name = tr("圆形") + str;
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
@@ -309,7 +439,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
             item->setVisible(true);
             QString str = QString::number(row + 1);
             item->setData(0, item_id);
-            item->name = u8"多边形" + str;
+            item->name = tr("多边形") + str;
             scene()->addItem(item);
             update();
             emit addItem(row,item);
@@ -331,17 +461,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
             }
             scene()->update();
         }
-        /*else if (ModeManager::get_instance().isModeEq(EditMode::Lines)) {
-            if (!_editLine) {
-                _tempPathItemPtr->reset();
-                _tempPathItemPtr->setVisible(true);
-                _tempPathItemPtr->setPos(mapToScene(event->pos()));
-                _tempPathItemPtr->addPoint(mapToScene(event->pos()));
-            }
-            _editLine = true;
-            _tempPathItemPtr->addPoint(mapToScene(event->pos()));
-            update();
-        }*/
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
@@ -363,21 +482,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     if(moveble || lefttop_move || midtop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move ||rightmid_move)
         k=1;
 
-
-    //if (ModeManager::get_instance().isModeEq(EditMode::Lines)) {
-    //    if (event->button() == Qt::RightButton) {
-    //        _tempPathItemPtr->setVisible(false);
-    //        _tempPathItemPtr->undoPoint();
-    //        CustomGraphicsPolylineItem* item = new CustomGraphicsPolylineItem(*_tempPathItemPtr);
-    //        _tempPathItemPtr->reset();
-    //        item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-    //        item->setPos(_tempPathItemPtr->pos());
-    //        item->setVisible(true);
-    //        scene()->addItem(item);
-    //        update();
-    //        _editLine = false;
-    //    }
-    //}
     if(action_state == 0)
     {
         setSelecT();
@@ -388,7 +492,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         _tempRectItemPtr->setPos(mapToScene(_lastMousePos));
         _tempRectItemPtr->setRect(QRectF(0, 0, 0, 0));
         QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
-        //pen.setColor(QColor(0, 160, 230));
         pen.setWidthF(1);
 
         _tempRectItemPtr->setPen(pen);
@@ -397,25 +500,18 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     else if (action_state==2) {
         _tempEllipseItemPtr->setPos(mapToScene(_lastMousePos));
         _tempEllipseItemPtr->setRect(QRectF(0, 0, 0, 0));
-        //_tempEllipseItemPtr->setPen(ScaleManager::get_instance().getMainViewItemPen());
         QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
-//pen.setColor(QColor(0, 160, 230));
         pen.setWidthF(1);
-
         _tempEllipseItemPtr->setPen(pen);
         _tempEllipseItemPtr->setVisible(false);
-       // scene()->addItem(_tempEllipseItemPtr);
     }
     else if (action_state == 3) {
         _tempCircleItemPtr->setPos(mapToScene(_lastMousePos));
-        _tempCircleItemPtr->setRect(QRectF(0, 0, 0, 0));
-        //_tempEllipseItemPtr->setPen(ScaleManager::get_instance().getMainViewItemPen());
+        _tempCircleItemPtr->setRect(QRectF(0, 0, 0, 0));       
         QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
         pen.setWidthF(1);
-
         _tempCircleItemPtr->setPen(pen);
         _tempCircleItemPtr->setVisible(false);
-        // scene()->addItem(_tempEllipseItemPtr);
     }
     else if (action_state == 4)
     {
@@ -423,11 +519,8 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
 
                     if(isPaintLine == false)
                     {
-                        //QPainterPath tpath;
-                        //tpath.moveTo(_lastMousePos);
                         _tempLinePath->moveTo(mapToScene(_lastMousePos));
                         _tempLineItemPtr->setPath(*_tempLinePath);
-
                         isPaintLine = true;
                     }
                     else
@@ -442,13 +535,12 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
             _tempLineItemPtr->setPath(*_tempLinePath);
             if( _tempLinePath->length()>1)
             {
-
                 MyGraphicsLineItem *item = new MyGraphicsLineItem();
                 item->setPath(_tempLineItemPtr->path());
                 item->setVisible(true);
                 item->setData(0, item_id);
                 QString str = QString::number(row+1);
-                item->name="直线"+str;
+                item->name=tr("直线")+str;
                 scene()->addItem(item);
                 emit addItem(row,item);
                 row++;
@@ -475,16 +567,13 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         QPointF p = mapToScene(_lastMousePos);
         MyGraphicsTextItem *item = new MyGraphicsTextItem();
         item->setPos(p);
-        //item->setRectF();
-
-        //item->setRect(-(item->rectf.width()/2),-(item->rectf.height()-item->rectf.height()/3*1.2)/2,item->rectf.width(),item->rectf.height()-item->rectf.height()/3*1.2);
         item->setDefault_Path();
         item->setRect(-item->path.boundingRect().width()/2,-item->path.boundingRect().height()/2,item->path.boundingRect().width(),item->path.boundingRect().height());
         item->makePath_fill_Rect();
         item->setVisible(true);
         item->setData(0, item_id);
         QString str = QString::number(row+1);
-        item->name="文本"+str;
+        item->name=tr("文本")+str;
         scene()->addItem(item);
         scene()->update();
         emit addItem(row,item);
@@ -499,9 +588,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
                     _tempCurveItemPtr->setIspaint(true);
                     if(isPaintCurve == false)
                     {
-                        //QPainterPath tpath;
-                        //tpath.moveTo(_lastMousePos);
-                        _tempCurveItemPtr->isfirst = true;
+                         _tempCurveItemPtr->isfirst = true;
                         QPointF p =mapToScene(_lastMousePos);
                         _tempCurvePath->moveTo(p);
                         _tempCurveItemPtr->setPath(*_tempLinePath);
@@ -517,25 +604,21 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
                           QPointF p =mapToScene(_lastMousePos);
                           _tempCurveItemPtr->startP = _tempCurveItemPtr->endP;
                           _tempCurveItemPtr->endP = p;
-                          _tempCurveItemPtr->ctl_pre = _tempCurveItemPtr->duichengdian(_tempCurveItemPtr->ctl_next,_tempCurveItemPtr->startP);
+                          _tempCurveItemPtr->ctl_pre = _tempCurveItemPtr->symmetryPoint(_tempCurveItemPtr->ctl_next,_tempCurveItemPtr->startP);
                           _tempCurveItemPtr->ctl_next = p;
-//                        _tempLinePath->lineTo(mapToScene(_lastMousePos));
-//                        _tempLineItemPtr->setPath(*_tempLinePath);
                     }
         }
         else if(event->button() == Qt::RightButton)
         {
             isPaintCurve = false;
             _tempCurveItemPtr->setPath(*_tempCurvePath);
-
-            //qDebug()<<*_tempCurvePath<<endl;
             _tempCurvePath->clear();
             MyGraphicsCurveLineItem *item = new MyGraphicsCurveLineItem();
             item->setPath(_tempCurveItemPtr->path());
             item->setVisible(true);
             item->setData(0, item_id);
             QString str = QString::number(row+1);
-            item->name="曲线"+str;
+            item->name=tr("曲线")+str;
             scene()->addItem(item);
             emit addItem(row,item);
             row++;
@@ -546,9 +629,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     else if(action_state == 9)
     {
         QPointF p = mapToScene(_lastMousePos);
-
         MyGraphicsCodeItem *item = new MyGraphicsCodeItem();
-
         item->setPathByStr("TEXT","QRCode");
         double w = item->path.boundingRect().width();
         double h = item->path.boundingRect().height();
@@ -557,14 +638,13 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         item->setRect(-w/2,-h/2,w,h);
         item->setData(0, item_id);
         QString str = QString::number(row+1);
-        item->name="二维码"+str;
+        item->name=tr("二维码")+str;
         scene()->addItem(item);
         scene()->update();
         emit addItem(row,item);
         row++;
         item_id++;
     }
-
     QGraphicsView::mousePressEvent(event);
 }
 void MyGraphicsView::keyPressEvent(QKeyEvent *event)
@@ -597,7 +677,18 @@ void MyGraphicsView::keyReleaseEvent(QKeyEvent *event)
 void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -618,96 +709,87 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
         if(node->type() == 1)
         {
             MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss  = item->pos();
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
+            tmp->setData(5,item->data(5).toInt());
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
         {
             MyGraphicsEllipseItem* item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsEllipseItem *tmp = new MyGraphicsEllipseItem();
-            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
         {
             MyGraphicsCircleItem* item = qgraphicsitem_cast<MyGraphicsCircleItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCircleItem *tmp = new MyGraphicsCircleItem();
-            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
             QPointF poss = item->pos();
-            //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
-
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -718,34 +800,32 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             QPointF p2 (rect.x(),rect.y());
             QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
-            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
             QPointF poss = item->pos();
-            //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -761,7 +841,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->name = item->name;
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -778,25 +858,25 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->num = item->num;
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -811,24 +891,24 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -836,7 +916,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -871,10 +951,10 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -882,29 +962,29 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
         else if(node->type() == 7)
         {
             MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
-            QList<double> list = item->getRect();
+            //QList<double> list = item->getRect();
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -912,7 +992,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -962,26 +1042,26 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->setPixmap(item->pixmap());
-            tmp->setPos((poss-roof)*bili+poss);
-            double w = qAbs(item->rect().width()*(1+bili));
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().width()*(1+bili)<0)
+            tmp->setPos((poss-roof)*proportion+poss);
+            double w = qAbs(item->rect().width()*(1+proportion));
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().width()*(1+proportion)<0)
             {
-                tmp->setPos((poss-roof)*bili+poss-QPointF(w,h));
+                tmp->setPos((poss-roof)*proportion+poss-QPointF(w,h));
             }
 
             tmp->setRectF(QRect(0,-h,w,h));
@@ -993,37 +1073,34 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
         else if(node->type() == 9)
         {
             MyGraphicsCodeItem *item = qgraphicsitem_cast<MyGraphicsCodeItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCodeItem *tmp = new MyGraphicsCodeItem();
-            double w = p3.x()-p2.x(),h = p3.y()-p2.y();
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1036,14 +1113,14 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
 
             tmp->name = item->name;
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1055,7 +1132,19 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
 
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -1076,18 +1165,17 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
         if(node->type() == 1)
         {
             MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
+
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss = item->pos();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()/2,-item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            double proportion = t2;
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1099,13 +1187,13 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
 
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1116,12 +1204,12 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            double proportion = t2;
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1133,11 +1221,11 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -1145,7 +1233,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1161,7 +1249,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1173,14 +1261,14 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             tmp->num = item->num;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1191,12 +1279,12 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
             QPointF poss = item->pos();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -1204,7 +1292,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1240,10 +1328,10 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1254,12 +1342,12 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -1267,7 +1355,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1315,12 +1403,12 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
             QPointF poss = item->pos();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             tmp->setPixmap(item->pixmap());
-            tmp->setPos( poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos( poss.x(),((poss-roof)*proportion+poss).y());
             double w = qAbs(item->rect().width());
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().height()*(1+bili)<0)
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().height()*(1+proportion)<0)
             {
                 tmp->setPos(tmp->pos()-QPointF(0,h));
             }
@@ -1338,11 +1426,11 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCodeItem *tmp = new MyGraphicsCodeItem();
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -1350,7 +1438,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1364,7 +1452,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
 
             tmp->path = (path2);
             tmp->setData(0,-1);
@@ -1372,7 +1460,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setVisible(true);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
     }
@@ -1382,6 +1470,18 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -1405,28 +1505,28 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             QPointF p2 = item->mapToScene(item->rect()).value(0);
             //QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p2);
+            QPointF poss =item->pos();
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
-            tmp->setPos((poss-roof)*bili+poss - QPointF(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1437,25 +1537,25 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1467,60 +1567,59 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
         else if(node->type() == 4)
         {
             MyGraphicsLineItem *item = qgraphicsitem_cast<MyGraphicsLineItem *>(node);
-            QRectF rect = item->getRect();
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1536,7 +1635,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1549,25 +1648,25 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->num = item->num;
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1579,24 +1678,24 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             QPointF poss = item->pos();
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
 
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
@@ -1605,7 +1704,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1640,10 +1739,10 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1651,29 +1750,29 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
         else if(node->type() == 7)
         {
             MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
-            QList<double> list = item->getRect();
+            //QList<double> list = item->getRect();
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -1681,7 +1780,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1731,26 +1830,26 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->setPixmap(item->pixmap());
-            tmp->setPos((poss-roof)*bili+poss);
-            double w = qAbs(item->rect().width()*(1+bili));
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().width()*(1+bili)<0)
+            tmp->setPos((poss-roof)*proportion+poss);
+            double w = qAbs(item->rect().width()*(1+proportion));
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().width()*(1+proportion)<0)
             {
-                tmp->setPos((poss-roof)*bili+poss-QPointF(w,h));
+                tmp->setPos((poss-roof)*proportion+poss-QPointF(w,h));
             }
 
             tmp->setRectF(QRect(0,-h,w,h));
@@ -1767,29 +1866,29 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = (p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1802,13 +1901,13 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
 
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1820,6 +1919,18 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -1840,30 +1951,29 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
         if(node->type() == 1)
         {
             MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3);
+            QPointF poss =item->pos();
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = (-p1.y()+pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1874,25 +1984,25 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = (pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1904,25 +2014,25 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1935,29 +2045,29 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -1973,7 +2083,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1986,25 +2096,25 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->num = item->num;
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2016,24 +2126,24 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
 
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
@@ -2042,7 +2152,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2077,10 +2187,10 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2088,29 +2198,29 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
         else if(node->type() == 7)
         {
             MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
-            QList<double> list = item->getRect();
+            //QList<double> list = item->getRect();
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -2118,7 +2228,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2168,26 +2278,26 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->setPixmap(item->pixmap());
-            tmp->setPos((poss-roof)*bili+poss);
-            double w = qAbs(item->rect().width()*(1+bili));
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().width()*(1+bili)<0)
+            tmp->setPos((poss-roof)*proportion+poss);
+            double w = qAbs(item->rect().width()*(1+proportion));
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().width()*(1+proportion)<0)
             {
-                tmp->setPos((poss-roof)*bili+poss-QPointF(w,h));
+                tmp->setPos((poss-roof)*proportion+poss-QPointF(w,h));
             }
 
             tmp->setRectF(QRect(0,-h,w,h));
@@ -2204,29 +2314,29 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(-pressPos.x()+p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2239,13 +2349,13 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
 
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2257,7 +2367,18 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -2281,15 +2402,15 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF p2 = item->mapToScene(item->rect()).value(0);
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss =item->pos();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()/2,-item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            double proportion = t2;
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2301,14 +2422,14 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
 
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -2318,12 +2439,12 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            double proportion = t2;
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2335,11 +2456,11 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -2347,7 +2468,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2364,7 +2485,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2376,14 +2497,14 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             tmp->num = item->num;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
-            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+bili)/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
+            tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2394,12 +2515,12 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
             QPointF poss = item->pos();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -2407,7 +2528,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2443,10 +2564,10 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2457,12 +2578,12 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -2470,7 +2591,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2518,12 +2639,12 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
             QPointF poss = item->pos();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             tmp->setPixmap(item->pixmap());
-            tmp->setPos( poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos( poss.x(),((poss-roof)*proportion+poss).y());
             double w = qAbs(item->rect().width());
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().height()*(1+bili)<0)
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().height()*(1+proportion)<0)
             {
                 tmp->setPos(tmp->pos()-QPointF(0,h));
             }
@@ -2541,11 +2662,11 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCodeItem *tmp = new MyGraphicsCodeItem();
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(poss.x(),((poss-roof)*bili+poss).y());
+            tmp->setPos(poss.x(),((poss-roof)*proportion+poss).y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -2553,7 +2674,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2567,13 +2688,13 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+bili))/2,item->rect().width(),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
 
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2585,7 +2706,18 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -2609,28 +2741,28 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             QPointF p2 = item->mapToScene(item->rect()).value(0);
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss =item->pos();
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2644,24 +2776,24 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2677,25 +2809,25 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
 
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2711,29 +2843,29 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2749,7 +2881,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2766,25 +2898,25 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->num = item->num;
-            tmp->setPos((poss-roof)*bili+poss);
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()*(1+bili)/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setPos((poss-roof)*proportion+poss);
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2799,24 +2931,24 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -2824,7 +2956,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2859,10 +2991,10 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2870,29 +3002,29 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
         else if(node->type() == 7)
         {
             MyGraphicsCurveLineItem *item = qgraphicsitem_cast<MyGraphicsCurveLineItem *>(node);
-            QList<double> list = item->getRect();
+            //QList<double> list = item->getRect();
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -2900,7 +3032,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -2950,26 +3082,26 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             tmp->setPixmap(item->pixmap());
-            tmp->setPos((poss-roof)*bili+poss);
-            double w = qAbs(item->rect().width()*(1+bili));
-            double h = qAbs(item->rect().height()*(1+bili));
-            if(item->rect().width()*(1+bili)<0)
+            tmp->setPos((poss-roof)*proportion+poss);
+            double w = qAbs(item->rect().width()*(1+proportion));
+            double h = qAbs(item->rect().height()*(1+proportion));
+            if(item->rect().width()*(1+proportion)<0)
             {
-                tmp->setPos((poss-roof)*bili+poss-QPointF(w,h));
+                tmp->setPos((poss-roof)*proportion+poss-QPointF(w,h));
             }
 
             tmp->setRectF(QRect(0,-h,w,h));
@@ -2989,29 +3121,29 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             //QPointF offset(w/2,-h/2);
             double t1 = -(pressPos.x()-p1.x())/(itemad->rec.width());
             double t2 = -(p1.y()-pressPos.y())/(itemad->rec.height());
-            double bili = 1;
+            double proportion = 1;
             if(t1>0&&t2>0)
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             else if(t1<0 && t2 <0)
             {
-                bili = fmax(t1,t2);
+                proportion = fmax(t1,t2);
             }
             else
             {
-                bili = fmin(t1,t2);
+                proportion = fmin(t1,t2);
             }
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
-            tmp->setPos((poss-roof)*bili+poss);
+            tmp->setPos((poss-roof)*proportion+poss);
             QPointF offset = tmp->pos() - item->pos();
             for (int i = 0; i < path1.elementCount(); i++)
             {
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3024,13 +3156,13 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-(item->rect().width()*(1+bili))/2,-(item->rect().height()*(1+bili))/2,item->rect().width()*(1+bili),item->rect().height()*(1+bili));
+            tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
 
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3042,7 +3174,18 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -3063,18 +3206,16 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
         if(node->type() == 1)
         {
             MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss=item->pos();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3086,13 +3227,13 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3102,12 +3243,12 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3119,11 +3260,11 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -3131,7 +3272,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3147,7 +3288,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3159,14 +3300,14 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             tmp->num = item->num;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3177,12 +3318,12 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
             QPointF poss = item->pos();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -3190,7 +3331,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3226,10 +3367,10 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3240,12 +3381,12 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -3253,7 +3394,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3301,12 +3442,12 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
             QPointF poss = item->pos();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             tmp->setPixmap(item->pixmap());
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            double w = qAbs(item->rect().width()*(1+bili));
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            double w = qAbs(item->rect().width()*(1+proportion));
             double h = qAbs(item->rect().height());
-            if(item->rect().width()*(1+bili)<0)
+            if(item->rect().width()*(1+proportion)<0)
             {
                 tmp->setPos(tmp->pos()-QPointF(w,0));
             }
@@ -3324,11 +3465,11 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCodeItem *tmp = new MyGraphicsCodeItem();
             double t2 = -(p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -3336,7 +3477,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3350,13 +3491,13 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
 
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3368,7 +3509,18 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-
+    for(QGraphicsItem * item : items)
+    {
+        if(item->type() == 10)
+        {
+            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+            for(QGraphicsItem * child : chids)
+            {
+                child->setData(5,item->data(0).toInt());
+                items.append(child);
+            }
+        }
+    }
     double s = this->matrix().m11();
     QList<QGraphicsItem *> itemss = scene()->items();
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
@@ -3389,18 +3541,16 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
         if(node->type() == 1)
         {
             MyGraphicsRecItem* item = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-            QPointF p2 = item->mapToScene(item->rect()).value(0);
-            QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsRecItem *tmp = new MyGraphicsRecItem();
-            QPointF poss (p3.x(),p2.y());
+            QPointF poss =item->pos();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos((poss-roof)*bili+poss - QPointF(item->rect().width()*(1+bili)/2,-item->rect().height()/2));
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3412,13 +3562,13 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3428,12 +3578,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            double proportion = t2;
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3445,11 +3595,11 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF p3 (rect.x()+rect.width(),rect.y()+rect.height());
             MyGraphicsLineItem *tmp = new MyGraphicsLineItem();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -3457,7 +3607,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3473,7 +3623,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3485,14 +3635,14 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF poss = item->pos();
             //QPointF offset(w/2,-h/2);
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             tmp->num = item->num;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3503,12 +3653,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsTextItem *tmp = new MyGraphicsTextItem();
             QPointF poss = item->pos();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -3516,7 +3666,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3552,10 +3702,10 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
 
                 }
             }
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3566,12 +3716,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsCurveLineItem *tmp = new MyGraphicsCurveLineItem();
             QPointF poss = item->pos();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path();
             QPainterPath path2 ;
             int k=0;
             QPointF c1,c2;
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();   //用来计算path2的pos差值
             for (int i = 0; i < path1.elementCount(); i++)
             {
@@ -3579,7 +3729,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3627,12 +3777,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             MyGraphicsPixMapItem *tmp = new MyGraphicsPixMapItem();
             QPointF poss = item->pos();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             tmp->setPixmap(item->pixmap());
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
-            double w = qAbs(item->rect().width()*(1+bili));
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
+            double w = qAbs(item->rect().width()*(1+proportion));
             double h = qAbs(item->rect().height());
-            if(item->rect().width()*(1+bili)<0)
+            if(item->rect().width()*(1+proportion)<0)
             {
                 tmp->setPos(tmp->pos()-QPointF(w,0));
             }
@@ -3650,11 +3800,11 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             QPointF p3 = item->mapToScene(item->rect()).value(2);
             MyGraphicsCodeItem *tmp = new MyGraphicsCodeItem();
             double t2 = (p1.x()-pressPos.x())/(itemad->rec.width());
-            double bili = t2;
+            double proportion = t2;
             QPainterPath path1 = item->path;
             QPainterPath path2 ;
             QPointF poss = item->pos();
-            tmp->setPos(((poss-roof)*bili+poss).x(),poss.y());
+            tmp->setPos(((poss-roof)*proportion+poss).x(),poss.y());
             QPointF offset = tmp->pos() - item->pos();
 
             for (int i = 0; i < path1.elementCount(); i++)
@@ -3662,7 +3812,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
                 QPainterPath::Element element = path1.elementAt(i);
                 QPointF po = element;
                 po = item->mapToScene(po);
-                QPointF po2 = (po-roof)*(bili)+po;
+                QPointF po2 = (po-roof)*(proportion)+po;
 
                 po2 = item->mapFromScene(po2);
                 po2 = po2-offset;
@@ -3676,12 +3826,12 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
                     path2.lineTo(po2);
                 }
             }
-            tmp->setRect(-item->rect().width()*(1+bili)/2,-item->rect().height()/2,item->rect().width()*(1+bili),item->rect().height());
+            tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->path = (path2);
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->jiaodu,item->midu);
+            tmp->set_brush(item->angle,item->linenum);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3749,11 +3899,20 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
         QList<QGraphicsItem*> items = scene()->selectedItems();
         double s = this->matrix().m11();
         itemad->setPos(itemad->pos().x() + offsetPos.x()/s,itemad->pos().y()-offsetPos.y()/s);
-
         for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
         {
             QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-            node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
+            if(node->type() != 10)
+                node->setPos(node->pos().x() + offsetPos.x()/s, node->pos().y() - offsetPos.y()/s);
+            else
+            {
+                MyGraphicsGroupItem *group = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
+                QList<QGraphicsItem*> childs = group->childItems();
+                for(QGraphicsItem* child:childs)
+                {
+                    child->setPos(child->pos().x() + offsetPos.x()/s, child->pos().y() - offsetPos.y()/s);
+                }
+            }
         }
         emit selectchange();
     }
@@ -3822,11 +3981,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
             float newWidth = qAbs(scenePos.x() - tmp_pos.x());
             float newHeight = qAbs(scenePos.y() - tmp_pos.y());
             _tempRectItemPtr->setRect(newPos_x - tmp_pos.x(), newPos_y - tmp_pos.y(), newWidth, newHeight);
-
-
-
             _tempRectItemPtr->setVisible(true);
-
         }
         else if (action_state==2) {
             QPointF tmp_pos = _tempEllipseItemPtr->pos();
@@ -3851,9 +4006,6 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
             float r = qMax(newWidth, newHeight);
             _tempPolygonItemPtr->setRect(-newWidth , -newHeight , newWidth*2, newHeight*2);
             _tempPolygonItemPtr->setDefault_Path();
-//            QPainter *p = new QPainter(this);
-
-//            _tempPolygonItemPtr->paint(p,NULL,this);
             _tempPolygonItemPtr->setVisible(true);
             update();
         }
@@ -3861,12 +4013,12 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
         {
             if(isPaintCurve == false)
             {
-                _tempCurveItemPtr->ctl_next = _tempCurveItemPtr->duichengdian(scenePos,_tempCurveItemPtr->endP);
+                _tempCurveItemPtr->ctl_next = _tempCurveItemPtr->symmetryPoint(scenePos,_tempCurveItemPtr->endP);
             }
             else
             {
 
-                _tempCurveItemPtr->ctl_next = _tempCurveItemPtr->duichengdian(scenePos,_tempCurveItemPtr->endP);
+                _tempCurveItemPtr->ctl_next = _tempCurveItemPtr->symmetryPoint(scenePos,_tempCurveItemPtr->endP);
                 QPainterPath tpath = *_tempCurvePath;
                 tpath.cubicTo(_tempCurveItemPtr->ctl_pre,_tempCurveItemPtr->ctl_next,_tempCurveItemPtr->endP);
                 _tempCurveItemPtr->setPath(tpath);
@@ -3875,14 +4027,8 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
             scene()->update();
         }
     }
-    //else {
-    //    if (ModeManager::get_instance().isModeEq(EditMode::Lines)) {
-    //        _tempPathItemPtr->modifyPoint(mapToScene(_lastMousePos));
-    //        update();
-    //    }
-    //}
     emit mouseMovePos(mapToScene(event->pos()).toPoint());
-    QGraphicsView::mouseMoveEvent(event);
+    //QGraphicsView::mouseMoveEvent(event);
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent* event)
@@ -4178,10 +4324,6 @@ void MyGraphicsView::wheelEvent(QWheelEvent* event)
 
         }
         
-        //if (currentscale < 1)
-        //{
-        //    this->scale(1 / 1.2, 1 / 1.2);
-        //}
     }
 
 
@@ -4198,88 +4340,6 @@ void MyGraphicsView::wheelEvent(QWheelEvent* event)
     leftkedu->update();
     topkedu->update();
     //scene()->update();
-}
-
-void MyGraphicsView::setItemAd(QList<QGraphicsItem*> items)
-{
-    int x, y, w, h;
-    x = 5000;
-    y = 5000;
-    w = -5000;
-    h = -5000;
-
-
-    //先确定左下角的坐标
-    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
-    {
-        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-
-        if(node->type() == 1)
-        {
-            MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem *>(node);
-
-            if (x > rect->mapRectToScene(rect->rect()).x())
-            {
-                x = rect->mapRectToScene(rect->rect()).x();
-
-            }
-            if (y > rect->mapRectToScene(rect->rect()).y())
-            {
-                y = rect->mapRectToScene(rect->rect()).y();
-            }
-        }
-        else if( node ->type() == 2)
-        {
-            MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem *>(node);
-
-            if (x > item->mapRectToScene(item->rect()).x())
-            {
-                x = item->mapRectToScene(item->rect()).x();
-
-            }
-            if (y > item->mapRectToScene(item->rect()).y())
-            {
-                y = item->mapRectToScene(item->rect()).y();
-            }
-        }
-
-    }
-    //再确定宽高
-    for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
-    {
-        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-        if(node->type() == 1)
-        {
-            MyGraphicsRecItem * rect = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
-            if (w < rect->mapToScene(rect->rect()).value(1).x() - x)
-            {
-                w = rect->mapToScene(rect->rect()).value(1).x() - x;
-
-            }
-            if (h < rect->mapToScene(rect->rect()).value(2).y() - y)
-            {
-                h = rect->mapToScene(rect->rect()).value(2).y() - y;
-            }
-        }
-        else if(node->type()==2)
-        {
-            MyGraphicsEllipseItem * item = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
-            if (w < item->mapToScene(item->rect()).value(1).x() - x)
-            {
-                w = item->mapToScene(item->rect()).value(1).x() - x;
-
-            }
-            if (h < item->mapToScene(item->rect()).value(2).y() - y)
-            {
-                h = item->mapToScene(item->rect()).value(2).y() - y;
-            }
-        }
-    }
-    itemad->setPos(x - 10 / itemad->scale, y - 10 / itemad->scale);
-    itemad->setRect(0, 0, w + 20 / itemad->scale, h + 20 / itemad->scale);
-    itemad->setRec(QRectF(0, 0, w , h ));
-    itemad->setVisible(true);
-    scene()->update();
 }
 
 void MyGraphicsView::preProcessItem()
@@ -4528,7 +4588,6 @@ void MyGraphicsView::setSelecT()
                     QPointF p = item->mapFromScene(mapToScene(_lastMousePos));
                     if(item->selectEvent(p))
                     {
-
                         if( k==0 )
                         {
                             QList<QGraphicsItem *> selectItems = scene()->selectedItems();
@@ -4561,9 +4620,29 @@ void MyGraphicsView::setSelecT()
                         }
                     }
                 }
+                if(node->type()==10)
+                {
+                    MyGraphicsGroupItem *item = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
+                    QPointF p = (mapToScene(_lastMousePos));
+                    if(item->selectEvent(p))
+                    {
+                        if( k==0 )
+                        {
+                            QList<QGraphicsItem *> selectItems = scene()->selectedItems();
+                            for(QGraphicsItem* selectitem : selectItems)
+                            {
+                                if(item->data(0)!= selectitem->data(0))
+                                {
+                                    selectitem->setFlags(NULL);
+                                }
+                            }
+                        }
+                    }
+                }
         }
 
     }
+    items = scene()->selectedItems();
 
 }
 

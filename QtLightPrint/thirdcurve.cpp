@@ -11,7 +11,7 @@ ThirdCurve::ThirdCurve(QPointF st,QPointF c1,QPointF c2, QPointF end)
     this->end = end;
 }
 
-QList<QPointF> ThirdCurve::jiaodian(QLineF l)
+QList<QPointF> ThirdCurve::intersection(QLineF l)
 {
     QPainterPath path1,path2;
     path1.moveTo(start);
@@ -19,7 +19,7 @@ QList<QPointF> ThirdCurve::jiaodian(QLineF l)
 
     path2.moveTo(l.p1());
     path2.lineTo(l.p2());
-    QList<QPointF> list,jiaodianss;
+    QList<QPointF> list,intersectionss;
     for(int i=0;i<=5;i++)
     {
         double temp = 0.2*i;
@@ -54,13 +54,13 @@ QList<QPointF> ThirdCurve::jiaodian(QLineF l)
         auto type = l.intersects(l2,&intersectionPoint);
         if(type == QLineF::BoundedIntersection)
         {
-            jiaodianss.append(intersectionPoint);
+            intersectionss.append(intersectionPoint);
         }
         p1 = p2;
 
     }
 
-    return jiaodianss;
+    return intersectionss;
 }
 bool ThirdCurve::isOnLine(QLineF l , QPointF p)
 {

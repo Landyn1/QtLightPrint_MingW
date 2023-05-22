@@ -28,6 +28,21 @@ QPainterPath MyGraphicsPolygonItem::ViewPath()
             p.lineTo(mapToScene(po));
         }
     }
+    path.clear();
+    path = brushpath;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        if (element.isMoveTo())
+        {
+            p.moveTo(mapToScene(po));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(mapToScene(po));
+        }
+    }
     return p;
 
 }
@@ -58,15 +73,16 @@ void MyGraphicsPolygonItem::setPath(QPainterPath path)
     update();
 }
 
+//根据边数和外接矩形确定多边形的path
 void MyGraphicsPolygonItem::setDefault_Path()
 {
     path.clear();
     path.moveTo(QPointF(0,rect().height()/2));
-    int bili1 = rect().width()*100/rect().height();
-    double bili = double(bili1)/100;
+    int proportion1 = rect().width()*100/rect().height();
+    double proportion = double(proportion1)/100; //w/h
     int t = 360*100/num;
-    double tt = double(t)/100;
-    double ttt = tt;
+    double tt = double(t)/100; //将360分为num份
+    double ttt = tt; //复制这个参数， 作为叠加参数
     double r = rect().height()/2;
     for(int i=1;i<num;i++)
     {
@@ -74,7 +90,7 @@ void MyGraphicsPolygonItem::setDefault_Path()
         {
             double x = r*sin(tt*M_PI/180);
             double y = r*cos(tt*M_PI/180);
-            path.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*proportion,y));
         }
 
         else if(tt>90&&tt<=180)
@@ -83,7 +99,7 @@ void MyGraphicsPolygonItem::setDefault_Path()
             double temp = tt-90;
             x = r*cos(temp*M_PI/180);
             y = -r*sin(temp*M_PI/180);
-            path.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*proportion,y));
         }
 
         else if(tt>180&&tt<=270)
@@ -92,7 +108,7 @@ void MyGraphicsPolygonItem::setDefault_Path()
             double temp = tt-180;
             x = -r*sin(temp*M_PI/180);
             y = -r*cos(temp*M_PI/180);
-            path.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*proportion,y));
         }
 
         else if(tt>270&&tt<360)
@@ -101,7 +117,7 @@ void MyGraphicsPolygonItem::setDefault_Path()
             double temp = tt-270;
             x = -r*cos(temp*M_PI/180);
             y = r*sin(temp*M_PI/180);
-            path.lineTo(QPointF(x*bili,y));
+            path.lineTo(QPointF(x*proportion,y));
         }
         tt = tt + ttt;
     }
@@ -109,23 +125,10 @@ void MyGraphicsPolygonItem::setDefault_Path()
 
 }
 
-bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
+void MyGraphicsPolygonItem::setLinsAndCurves(QPainterPath path2, QList<QLineF> &lins)
 {
-    brushpath.clear();
-    this->jiaodu = jiaodu;
-    this->midu = midu;
-    if(midu == 0)
-        return true;
-    QPainterPath path2;
-    double k = tan(jiaodu*M_PI/180);//斜率
-    double w = rect().width();
-    double h = rect().height();
-    QList<QPointF> jiaodians;
-    path2 = path;
-    QList<QLineF> lins;
-    QPointF lp1,lp2,c1,c2;
+    QPointF lp1,lp2;
     int kl = 0;
-    int kc = 0;
     for (int i = 0; i < path2.elementCount(); i++)
     {
         QPainterPath::Element element = path2.elementAt(i);
@@ -150,41 +153,65 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
                 lins.append(QLineF(lp1,lp2));
             }
         }
-        else if(element.isCurveTo())
+    }
+}
+
+void MyGraphicsPolygonItem::setBrushpath(QList<QLineF> lins, QLineF l, QList<QPointF> intersections, QPainterPath &path2, int k)
+{
+
+    QPointF p1,p2;
+    QPointF pp1,pp2;
+    p1 = l.p1();
+    p2 = l.p2();
+    l.setLength(-2);
+    pp1 = l.p2();
+    l.setP1(p1);
+    l.setP2(p2);
+    l.setLength(l.length()+2);
+    pp2 = l.p2();
+    l.setP1(pp1);
+    l.setP2(pp2);
+
+    for(int i=0;i<lins.length();i++)
+    {
+        QPointF intersectionPoint;
+        auto type = l.intersects(lins[i],&intersectionPoint);
+        if(type == QLineF::BoundedIntersection)
         {
-            if(kl != 0)
-                lp1 = lp2;
-            c1 = po;
-            kc++;
-        }
-        else
-        {
-            if(kc%3==1)
-            {
-                c2 = po;
-                kc++;
-            }
-            else if(kc%3 == 2)
-            {
-                lp2 = po;
-                //ThirdCurve curve(lp1,c1,c2,lp2);
-               // curves.append(curve);
-                kc ++;
-            }
+            intersections.append(intersectionPoint);
         }
     }
+    if(intersections.length()>1)
+    {
+        path2.moveTo(intersections[0]);
+        path2.lineTo(intersections[1]);
+    }
+}
+bool MyGraphicsPolygonItem::set_brush(double angle,int linenum)
+{
+    brushpath.clear();
+    this->angle = angle;
+    this->linenum = linenum;
+    if(linenum == 0)
+        return true;
+    QPainterPath path2;
+    double k = tan(angle*M_PI/180);//斜率
+    double w = rect().width();
+    double h = rect().height();
+    QList<QPointF> intersections;
+    QList<QLineF> lins;
+    setLinsAndCurves(this->path,lins);
     double m = double(h)/double(w);
-
-    if(int(jiaodu)%90 != 0 ||  ((int(jiaodu)%180 == 0)&&(int(jiaodu)%90 != 0)))
+    if(int(angle)%90 != 0 ||  ((int(angle)%180 == 0)&&(int(angle)%90 != 0)))
     {
         if(k>0&&k<=m)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
+            double pert = t/(linenum/2);
 
-            for(int i=-midu/2;i<midu/2;i++)
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(w/2,(w/2*k)+(pert*i));
                 QPointF p2(-w/2,(-w/2*k)+(pert*i));
                 if(pert * i >= (h/2)- (w/2*k))
@@ -196,42 +223,17 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
                     p2 = QPointF(((-h/2)-(pert*i))/k,-h/2);
                 }
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
 
         }
         else if( k>m )
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(((h/2)-(pert*i))/k,h/2);
                 QPointF p2(((-h/2)-(pert*i))/k,-h/2);
                 if(pert * i < (h/2)- (w/2*k))
@@ -243,32 +245,7 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
                     p2 = QPointF(-w/2,(-w/2*k)+(pert*i));
                 }
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
 
         }
@@ -276,10 +253,10 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
         {
 
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(((h/2)-(pert*i))/k,h/2);
                 QPointF p2(((-h/2)-(pert*i))/k,-h/2);
                 if(pert * i < (h/2)+(w/2*k))
@@ -291,42 +268,17 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
                     p2 = QPointF(w/2,(w/2*k)+(pert*i));
                 }
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
         }
         else if( k>=-m && k<0)
         {
 
             double t = -(w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(w/2,(w/2*k)+(pert*i));
                 QPointF p2(-w/2,(-w/2*k)+(pert*i));
                 if(pert * i > (h/2)+(w/2*k))
@@ -338,32 +290,7 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
                     p1 = QPointF(((-h/2)-(pert*i))/k,-h/2);
                 }
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].x()>jiaodians[j+1].x())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
         }
 
@@ -371,82 +298,29 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
     else
     {
 
-        if(int(jiaodu)%180 == 0)
+        if(int(angle)%180 == 0)
         {
             double t = (w/2*k) + (h/2); //y=kx+t
-            double pert = t/(midu/2);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = t/(linenum/2);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(-w/2,pert*i);
                 QPointF p2(w/2,pert*i);
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersects(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].y()>jiaodians[j+1].y())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                qDebug()<<jiaodians<<endl;
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
         }
         else
         {
-            double pert = w/(midu);
-            for(int i=-midu/2;i<midu/2;i++)
+            double pert = w/(linenum);
+            for(int i=-linenum/2;i<linenum/2;i++)
             {
-                jiaodians.clear();
+                intersections.clear();
                 QPointF p1(pert*i,h/2);
                 QPointF p2(pert*i,-h/2);
                 QLineF l(p1,p2);
-                for(int i=0;i<lins.length();i++)
-                {
-                    QPointF intersectionPoint;
-                    auto type = l.intersect(lins[i],&intersectionPoint);
-                    if(type == QLineF::BoundedIntersection)
-                    {
-                        jiaodians.append(intersectionPoint);
-                    }
-                }
-
-                for(int i = 1;i<jiaodians.length();i++)
-                {
-                    for(int j=0;j<jiaodians.length()-i;j++)
-                    {
-                        if(jiaodians[j].y()>jiaodians[j+1].y())
-                        {
-                            QPointF tm = jiaodians[j];
-                            jiaodians[j] = jiaodians[j+1];
-                            jiaodians[j+1] = tm;
-                        }
-                    }
-                }
-                if(jiaodians.length()>1)
-                {
-                    path2.moveTo(jiaodians[0]);
-                    path2.lineTo(jiaodians[1]);
-                }
+                setBrushpath(lins,l,intersections,path2);
             }
         }
 
@@ -455,8 +329,15 @@ bool MyGraphicsPolygonItem::set_brush(double jiaodu,int midu)
     update();
 }
 
-bool MyGraphicsPolygonItem::selectEvent(QPointF p)
+bool MyGraphicsPolygonItem::selectEvent(QPointF p,int k)
 {
+
+    if(k == 1)
+    {
+        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        setSelected(true);
+        return true;
+    }
     if(isSelected())
         return true;
 
@@ -482,33 +363,32 @@ bool MyGraphicsPolygonItem::selectEvent(QPointF p)
 QRect MyGraphicsPolygonItem::getRect()
 {
     int x,y,w,h;
-    QPoint zuoxia(10000,10000),youshang(-10000,-10000);
-
+    QPoint leftbuttom(10000,10000),righttop(-10000,-10000);
     for (int i = 0; i < path.elementCount() ;i++)
     {
         QPointF p1 = path.elementAt(i);
-        if(zuoxia.x()>p1.toPoint().x())
+        if(leftbuttom.x()>p1.toPoint().x())
         {
-            zuoxia.setX( p1.toPoint().x());
+            leftbuttom.setX( p1.toPoint().x());
         }
-        if(zuoxia.y()>p1.toPoint().y())
+        if(leftbuttom.y()>p1.toPoint().y())
         {
-            zuoxia.setY(p1.toPoint().y());
+            leftbuttom.setY(p1.toPoint().y());
         }
-        if(youshang.x()<p1.toPoint().x())
+        if(righttop.x()<p1.toPoint().x())
         {
-            youshang.setX(p1.toPoint().x());
+            righttop.setX(p1.toPoint().x());
         }
-        if(youshang.y()<p1.toPoint().y())
+        if(righttop.y()<p1.toPoint().y())
         {
-            youshang.setY(p1.toPoint().y());
+            righttop.setY(p1.toPoint().y());
         }
     }
     QPoint pos = this->pos().toPoint();
-    x = zuoxia.x()+pos.x();
-    y = zuoxia.y()+pos.y();
-    w = youshang.x()-zuoxia.x();
-    h = youshang.y()-zuoxia.y();
+    x = leftbuttom.x()+pos.x();
+    y = leftbuttom.y()+pos.y();
+    w = righttop.x()-leftbuttom.x();
+    h = righttop.y()-leftbuttom.y();
     return QRect(x,y,w,h);
 }
 bool MyGraphicsPolygonItem::isOnLine(QLine l , QPoint p)

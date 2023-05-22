@@ -20,10 +20,11 @@ public:
     {
         return rect();
     }
-
+    void setBrushpath(QList<QLineF> lins,QLineF l,QList<QPointF> intersections,QPainterPath &path2,int k=0);
+    void setLinsAndCurves(QPainterPath path2,QList<QLineF> &lins);
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 5 };
-    bool set_brush(double jiaodu,int midu);
+    bool set_brush(double angle,int linenum);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -33,12 +34,12 @@ public:
 
     QString name="";
     int num = 5;
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k=0);
     QPainterPath path;
     void setPath(QPainterPath path);
     QPainterPath brushpath;
-    double jiaodu = 0;
-    int midu = 0;
+    double angle = 0;
+    int linenum = 0;
     void setDefault_Path();
     bool isOnLine(QLine l , QPoint p);
     QRect getRect();

@@ -16,11 +16,12 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 4 };
     QPainterPath ViewPath();
-    bool set_brush(double jiaodu,int midu);
+    bool set_brush(double angle,int linenum);
     QPainterPath brushPath;
-
-    double jiaodu = 0;
-    int midu = 0;
+    void setBrushpath(QList<QLineF> lins,QLineF l,QList<QPointF> intersections,QPainterPath &path2,int k=0);
+    void setLinsAndCurves(QPainterPath path2,QList<QLineF> &lins);
+    double angle = 0;
+    int linenum = 0;
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -28,10 +29,14 @@ public:
     }
     bool readPLT(QString file);
     int printLayer = 0;
-    bool selectEvent(QPointF p);
+    bool selectEvent(QPointF p,int k=0);
     QString name="";
     bool isOnLine(QLine l , QPoint p);
     QRect getRect();
+    QRect rect()
+    {
+        return QRect(0,0,0,0);
+    }
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

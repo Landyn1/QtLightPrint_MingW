@@ -85,8 +85,8 @@ public:
     int row = 0;
     void setSelecT();
     QPointF lastPos;
-    double jiaodu = 0;
-    int midu = 0 ;
+    double angle = 0;
+    int linenum = 0 ;
 private:
    // QMenu* _generalMenu;              // 主要的右键菜单
 

@@ -39,7 +39,7 @@ public:
 //MyGraphicsView(QWidget* parent);
 
     
-    
+    QList<QGraphicsItem*> sceneItems;
 
     ~MyGraphicsView();
     void wheelEvent(QWheelEvent* event) Q_DECL_OVERRIDE;
@@ -86,7 +86,7 @@ public:
     void setSelecT();
     QPointF lastPos;
     double angle = 0;
-    int linenum = 0 ;
+    double space = 0 ;
 private:
    // QMenu* _generalMenu;              // 主要的右键菜单
 
@@ -138,6 +138,7 @@ signals:
     void mouseMovePos(QPoint p);
     void ScaleChanged(double p);
     void addItem(int row,QGraphicsItem * item);
+    void sceneChange();
     void selectchange();
     void mouseleave(int k);
     void removeItem(int id);

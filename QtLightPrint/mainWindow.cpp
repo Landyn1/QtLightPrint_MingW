@@ -75,21 +75,25 @@ mainWindow::mainWindow(QWidget *parent)
 
     lTitleBar = ui.dock_file->titleBarWidget();
     lEmptyWidget = new QWidget();
+
     ui.dock_file->setTitleBarWidget(lEmptyWidget);
 
-    lTitleBar = ui.dockWidget_5->titleBarWidget();
-    lEmptyWidget = new QWidget();
-    ui.dockWidget_5->setTitleBarWidget(lEmptyWidget);
+    QLabel *label = new QLabel("| ");
+    label->setStyleSheet("color: black; font-size: 14pt; font-weight: bold;");
+    ui.dockWidget_2->setTitleBarWidget(label);
+    ui.dockWidget_2->setWidget(ui.widget_31);
 
-    lTitleBar = ui.dockWidget_2->titleBarWidget();
-    lEmptyWidget = new QWidget();
-    ui.dockWidget_2->setTitleBarWidget(lEmptyWidget);
-    lTitleBar = ui.dockWidget_3->titleBarWidget();
-    lEmptyWidget = new QWidget();
-    ui.dockWidget_3->setTitleBarWidget(lEmptyWidget);
-    lTitleBar = ui.dockWidget_4->titleBarWidget();
-    lEmptyWidget = new QWidget();
-    ui.dockWidget_4->setTitleBarWidget(lEmptyWidget);
+
+    QLabel *label2 = new QLabel("| ");
+    label2->setStyleSheet("color: black; font-size: 14pt; font-weight: bold;");
+    ui.dockWidget_3->setTitleBarWidget(label2);
+    ui.dockWidget_3->setWidget(ui.widget_32);
+
+    QLabel *label3 = new QLabel("| ");
+    label3->setStyleSheet("color: black; font-size: 14pt; font-weight: bold;");
+    ui.dockWidget_4->setTitleBarWidget(label3);
+    ui.dockWidget_4->setWidget(ui.widget_33);
+
 
     //设置图片
     ui.bianji->setIcon(QIcon(":/res/Select.png"));
@@ -105,6 +109,9 @@ mainWindow::mainWindow(QWidget *parent)
     ui.dock2->setWidget(ui.scrollArea_2);
     ui.dock7->setWidget(ui.widget_5);
     ui.dock_file->setWidget(ui.widget_24);
+
+
+
 
 
     connect(ui.leftmove,&QPushButton::clicked,[=](){
@@ -139,7 +146,7 @@ mainWindow::mainWindow(QWidget *parent)
     ui.widget_26->setVisible(false);
 
 
-    initConnect();
+
     dockConnectInit();
     initPenNumberConnect();
     initDrawConnect();
@@ -170,17 +177,17 @@ mainWindow::mainWindow(QWidget *parent)
     ui.pushButton_9->setAutoFillBackground(true);
     ui.pushButton_10->setAutoFillBackground(true);
     ui.pushButton_11->setAutoFillBackground(true);
-
-
+    QList<QGraphicsItem *> l;
+    present_items.append(l);
     //设置笔画表
     setColortable();
 }
 template<typename T> QPainterPath mainWindow::getpath(QGraphicsItem* node,QPainterPath &path)
 {
     T *item = qgraphicsitem_cast<T *>(node);
-    for (int i = 0; i < item->ViewPath().elementCount(); i++)
+    for (int i = 0; i < item->ViewPath(1).elementCount(); i++)
     {
-        QPainterPath::Element element = item->ViewPath().elementAt(i);
+        QPainterPath::Element element = item->ViewPath(1).elementAt(i);
         QPointF po = element;
         if (element.isMoveTo())
         {
@@ -194,28 +201,179 @@ template<typename T> QPainterPath mainWindow::getpath(QGraphicsItem* node,QPaint
     return path;
 }
 
+
+QList<QGraphicsItem*> mainWindow::copyall(QList<QGraphicsItem*> itemss)
+{
+    QList<QGraphicsItem*> l ;
+    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+    {
+
+        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+        if(node->data(0).toInt()>0)
+        {
+            if(node->type()==1)
+            {
+                MyGraphicsRecItem *item1 = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
+                MyGraphicsRecItem *item2 = new MyGraphicsRecItem();
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->name = item1->name;
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 2)
+            {
+                MyGraphicsEllipseItem *item1 = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                MyGraphicsEllipseItem *item2 = new MyGraphicsEllipseItem();
+                //
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->name = item1->name;
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 3)
+            {
+                MyGraphicsCircleItem *item1 = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                MyGraphicsCircleItem *item2 = new MyGraphicsCircleItem();
+                //
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->name = item1->name;
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 4)
+            {
+                MyGraphicsLineItem *item1 = qgraphicsitem_cast<MyGraphicsLineItem*>(node);
+                MyGraphicsLineItem *item2 = new MyGraphicsLineItem();
+                item2->setPath(item1->path());
+                item2->setPos(item1->pos());
+                item2->set_brush(item1->angle,item1->space);
+
+                item2->name = item1->name;
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 5)
+            {
+                MyGraphicsPolygonItem *item1 = qgraphicsitem_cast<MyGraphicsPolygonItem*>(node);
+                MyGraphicsPolygonItem *item2 = new MyGraphicsPolygonItem();
+                //
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->setPath(item1->path);
+                item2->name = item1->name;
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 6)
+            {
+                MyGraphicsTextItem *item1 = qgraphicsitem_cast<MyGraphicsTextItem*>(node);
+                MyGraphicsTextItem *item2 = new MyGraphicsTextItem();
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->setPath(item1->path);
+                item2->name = item1->name;
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 7)
+            {
+                MyGraphicsCurveLineItem *item1 = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node);
+                MyGraphicsCurveLineItem *item2 = new MyGraphicsCurveLineItem();
+                item2->setPos(item1->pos());
+                item2->setPath(item1->path());
+                item2->name = item1->name;
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 8)
+            {
+                MyGraphicsPixMapItem *item1 = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
+                MyGraphicsPixMapItem *item2 = new MyGraphicsPixMapItem();
+                item2->name = item1->name;
+                item2->setPos(item1->pos());
+                item2->setRectF(item1->rectf);
+                item2->setPixmap(item1->pixmap());
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 9)
+            {
+                MyGraphicsCodeItem *item1 = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                MyGraphicsCodeItem *item2 = new MyGraphicsCodeItem();
+                item2->setPos(item1->pos());
+                item2->setRect(item1->rect());
+                item2->path = (item1->path);
+                item2->set_brush(item1->angle,item1->space);
+                item2->name = item1->name;
+                item2->setData(0,item1->data(0).toInt());
+                item2->setData(5,item1->data(5).toInt());
+                l.append(item2);
+            }
+            else if(node->type() == 10)
+            {
+                MyGraphicsGroupItem *item3 = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
+                QList<QGraphicsItem*> childs;
+                MyGraphicsGroupItem *item2 = new MyGraphicsGroupItem(childs);
+                item2->setPos(item3->pos());
+                item2->name = item3->name;
+                item2->setData(0,item3->data(0).toInt());
+                item2->setData(5,item3->data(5).toInt());
+                l.append(item2);
+            }
+        }
+    }
+    return l;
+}
+
 void mainWindow::dockConnectInit()
 {
     connect(ui.groupbtn,&QPushButton::clicked,this,[=](){
-        qDebug()<<" 组合"<<endl;
-        MyGraphicsGroupItem *group = new MyGraphicsGroupItem(scene->selectedItems());
+        qDebug()<<" 群组"<<endl;
+        QList<QGraphicsItem*> selectitems = scene->selectedItems();
+        if(selectitems.length() == 1)
+            return;
+        MyGraphicsGroupItem *group = new MyGraphicsGroupItem(selectitems);
         QList<QGraphicsItem*> items = group->childItems();
-        for(int i=0;i<items.length();i++)
-        {
-            emit view->removeItem(items[i]->data(0).toInt());
-        }
+
         scene->addItem(group);
         group->setData(0, view->item_id);
+        for(int i=0;i<items.length();i++)
+        {
+            items[i]->setData(5,view->item_id);
+            emit view->removeItem(items[i]->data(0).toInt());
+        }
+        QList<QGraphicsItem*> jjjj = scene->items();
         QString str = QString::number(view->row + 1);
-        group->name = tr("组合") + str;
+        group->name = tr("群组") + str;
         update();
         emit view->addItem(view->row,group);
+        emit view->sceneChange();
+        group->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+        group->setSelected(true);
         view->row++;
         view->item_id++;
     });
 
+
+
     connect(ui.deletegroupbtn,&QPushButton::clicked,this,[=](){
-        qDebug()<<" 分组"<<endl;
+        qDebug()<<" 分群"<<endl;
         QList<QGraphicsItem*> selectitem = scene->selectedItems();
         if(selectitem.length() == 1)
         {
@@ -223,6 +381,7 @@ void mainWindow::dockConnectInit()
             {
                 MyGraphicsGroupItem *group = new MyGraphicsGroupItem(qgraphicsitem_cast<MyGraphicsGroupItem*>(selectitem[0])->childItems());
                 QList<QGraphicsItem*> items = group->childItems();
+                qgraphicsitem_cast<MyGraphicsGroupItem*>(selectitem[0])->set_brush(0,0);
                 emit view->removeItem(selectitem[0]->data(0).toInt());
                 scene->removeItem(selectitem[0]);
                 for(int i=0;i<items.length();i++)
@@ -236,9 +395,11 @@ void mainWindow::dockConnectInit()
     });
 
     connect(ui.pathbtn,&QPushButton::clicked,this,[=](){
-        qDebug()<<"群组"<<endl;
+        qDebug()<<"组合"<<endl;
         MyGraphicsLineItem *line = new MyGraphicsLineItem();
         QList<QGraphicsItem*> items = scene->selectedItems();
+        if(items.length() == 1)
+            return;
         QPainterPath path;
         for(int i=0;i<items.length();i++)
         {
@@ -282,7 +443,7 @@ void mainWindow::dockConnectInit()
         scene->addItem(line);
         line->setData(0, view->item_id);
         QString str = QString::number(view->row + 1);
-        line->name = tr("群组") + str;
+        line->name = tr("组合") + str;
         update();
         emit view->addItem(view->row,line);
         view->row++;
@@ -291,7 +452,7 @@ void mainWindow::dockConnectInit()
 
 
     connect(ui.deletepathbtn,&QPushButton::clicked,this,[=](){
-        qDebug()<<"分群"<<endl;
+        qDebug()<<"分组"<<endl;
 
         QList<QGraphicsItem*> selectitem = scene->selectedItems();
         if(selectitem.length() == 1)
@@ -311,27 +472,679 @@ void mainWindow::dockConnectInit()
                     QPainterPath p;
                     p.moveTo(po);
                     i++;
-                        while(path.elementAt(i).isLineTo())
-                        {
-                            p.lineTo(path.elementAt(i)+line->pos());
-                            i++;
-                        }
-                        MyGraphicsLineItem *l = new MyGraphicsLineItem();
-                        l->setPath(p);
-                        scene->addItem(l);
-                        l->setData(0, view->item_id);
-                        QString str = QString::number(view->row + 1);
-                        l->name = tr("直线") + str;
-                        update();
-                        emit view->addItem(view->row,l);
-                        view->row++;
-                        view->item_id++;
+                    while(path.elementAt(i).isLineTo() && i<path.elementCount())
+                    {
+                        p.lineTo(path.elementAt(i)+line->pos());
+                        i++;
+                    }
+                    MyGraphicsLineItem *l = new MyGraphicsLineItem();
+                    l->setPath(p);
+                    scene->addItem(l);
+                    l->setData(0, view->item_id);
+                    QString str = QString::number(view->row + 1);
+                    l->name = tr("直线") + str;
+                    update();
+                    emit view->addItem(view->row,l);
+                    view->row++;
+                    view->item_id++;
 
                 }
             }
         }
 
 
+    });
+
+    connect ( ui.newfilebtn, &QPushButton::clicked, this, [=](){
+        creatnewfile();
+    } );
+    connect ( ui.savefilebtn, &QPushButton::clicked, this, [=](){
+        savefile();
+    });
+    connect ( ui.openfilebtn, &QPushButton::clicked, this, [=](){
+        openfile();
+    });
+
+
+    connect(ui.copybtn,&QPushButton::clicked,this,[=](){
+        copyitems.clear();
+        copyitems = scene->selectedItems();
+    });
+
+    connect(ui.shearbtn,&QPushButton::clicked,this,[=](){
+        copyitems.clear();
+        copyitems = scene->selectedItems();
+        QList<QGraphicsItem*> items = scene->selectedItems();
+        for(int i=0;i<items.length();i++)
+        {
+            scene->removeItem(items[i]);
+            emit view->removeItem(items[i]->data(0).toInt());
+        }
+        scene->update();
+    });
+
+    connect(ui.pastebtn,&QPushButton::clicked,this,[=](){
+        QList<QGraphicsItem*> itemss = copyitems;
+        QList<QGraphicsItem*> items;
+        while(1)
+        {
+            int k=0;
+            for(QGraphicsItem* item:itemss)
+            {
+
+                if(item->type() == 10 && (item->data(2).toInt() == 0))
+                {
+                    k=1;
+                    item->setData(2,1);
+                    MyGraphicsGroupItem *g =qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+                    for(QGraphicsItem * t:g->childItems())
+                    {
+                        t->setData(5,g->data(0));
+                    }
+                    itemss.append(g->childItems());
+                }
+            }
+            if(k == 0)
+            {
+                break;
+            }
+        }
+        for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
+        {
+            QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
+            if(node->type()==1)
+            {
+                MyGraphicsRecItem *item1 = qgraphicsitem_cast<MyGraphicsRecItem*>(node);
+                MyGraphicsRecItem *item2 = new MyGraphicsRecItem();
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->name = item1->name+tr("副本");
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 2)
+            {
+                MyGraphicsEllipseItem *item1 = qgraphicsitem_cast<MyGraphicsEllipseItem*>(node);
+                MyGraphicsEllipseItem *item2 = new MyGraphicsEllipseItem();
+                //
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->name = item1->name+tr("副本");
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 3)
+            {
+                MyGraphicsCircleItem *item1 = qgraphicsitem_cast<MyGraphicsCircleItem*>(node);
+                MyGraphicsCircleItem *item2 = new MyGraphicsCircleItem();
+                //
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->name = item1->name+tr("副本");
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 4)
+            {
+                MyGraphicsLineItem *item1 = qgraphicsitem_cast<MyGraphicsLineItem*>(node);
+                MyGraphicsLineItem *item2 = new MyGraphicsLineItem();
+                item2->setPath(item1->path());
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->set_brush(item1->angle,item1->space);
+                item2->name = item1->name+tr("副本");
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 5)
+            {
+                MyGraphicsPolygonItem *item1 = qgraphicsitem_cast<MyGraphicsPolygonItem*>(node);
+                MyGraphicsPolygonItem *item2 = new MyGraphicsPolygonItem();
+                //
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->setPath(item1->path);
+                item2->name = item1->name+tr("副本");
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 6)
+            {
+                MyGraphicsTextItem *item1 = qgraphicsitem_cast<MyGraphicsTextItem*>(node);
+                MyGraphicsTextItem *item2 = new MyGraphicsTextItem();
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->setPath(item1->path);
+                item2->name = item1->name+tr("副本");
+                item2->set_brush(item1->angle,item1->space);
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 7)
+            {
+                MyGraphicsCurveLineItem *item1 = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(node);
+                MyGraphicsCurveLineItem *item2 = new MyGraphicsCurveLineItem();
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setPath(item1->path());
+                item2->name = item1->name+tr("副本");
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 8)
+            {
+                MyGraphicsPixMapItem *item1 = qgraphicsitem_cast<MyGraphicsPixMapItem*>(node);
+                MyGraphicsPixMapItem *item2 = new MyGraphicsPixMapItem();
+                item2->name = item1->name+tr("副本");
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRectF(item1->rectf);
+                item2->setPixmap(item1->pixmap());
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 9)
+            {
+                MyGraphicsCodeItem *item1 = qgraphicsitem_cast<MyGraphicsCodeItem*>(node);
+                MyGraphicsCodeItem *item2 = new MyGraphicsCodeItem();
+                item2->setPos(item1->pos()+QPointF(5,5));
+                item2->setRect(item1->rect());
+                item2->path = (item1->path);
+                item2->set_brush(item1->angle,item1->space);
+                item2->name = item1->name+tr("副本");
+                item2->setData(0,view->item_id);
+                item2->setData(5,item1->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+            else if(node->type() == 10)
+            {
+                MyGraphicsGroupItem *item3 = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
+                QList<QGraphicsItem*> childs;
+                MyGraphicsGroupItem *item2 = new MyGraphicsGroupItem(childs);
+                item2->setPos(item3->pos());
+                item2->name = item3->name+tr("副本");
+                item2->setData(0,view->item_id);
+                item2->setData(1,item3->data(0).toInt());
+                item2->setData(5,item3->data(5).toInt());
+                scene->addItem(item2);
+                emit view->addItem(view->row,item2);
+                view->item_id++;
+                view->row++;
+                items.append(item2);
+            }
+
+        }
+        for(int i = 0;i<items.length();i++)
+        {
+            if(items[i]->data(5).toInt()!=0)
+            {
+                for(int j=0;j<items.length();j++)
+                {
+                    if(items[i]->data(5).toInt() == items[j]->data(1).toInt())
+                    {
+                        MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(items[j]);
+                        g->addToGroup(items[i]);
+                    }
+                }
+                removeitem_notEmitChange(items[i]->data(0).toInt());
+            }
+        }
+        update();
+        for(QGraphicsItem* item:itemss)
+        {
+
+            if(item->type() == 10 )
+            {
+                item->setData(2,0);
+            }
+        }
+        emit view->sceneChange();
+    });
+
+
+    connect(view,&MyGraphicsView::sceneChange,this,[=](){
+        while(present_items.length()>present + 1)
+        {
+            present_items.removeAt(present+1);
+        }
+        QList<QGraphicsItem*> itemss = scene->items();
+        QList<QGraphicsItem*> l;
+
+        //l变了，items也变了，但是由于修改图元针对的是当前图元，所以会同时修改掉这个图元。
+        l = copyall(itemss);
+        present_items.append(l);
+        present++;
+    });
+
+    connect(ui.revokebtn,&QPushButton::clicked,this,[=](){
+        if(present>0)
+            present -- ;
+        else
+            return;
+        QList<QGraphicsItem*> visibleItems = copyall( present_items[present]);
+        QList<QGraphicsItem*> deleteitems = scene->items();
+
+        for(int i=0;i<deleteitems.length();i++)
+        {
+            if(deleteitems[i]->data(0).toInt()>0)
+            {
+                scene->removeItem(deleteitems[i]);
+                removeitem_notEmitChange(deleteitems[i]->data(0).toInt());
+            }
+        }
+        int l = visibleItems.length();
+        QGraphicsItem *temp;
+        for(int i=0;i<l-1;i++)
+        {
+            for(int j=0;j<l-i-1;j++)
+            {
+                if(visibleItems[j]->data(0).toInt()>visibleItems[j+1]->data(0).toInt())
+                {
+                    temp = visibleItems[j];
+                    visibleItems[j] = visibleItems[j+1];
+                    visibleItems[j+1] = temp;
+                }
+            }
+        }
+        for(int i=0;i<l;i++)
+        {
+            scene->addItem(visibleItems[i]);
+            additem_notEmitChange(i,visibleItems[i]);
+        }
+        int t=0;
+        for(int i = 0;i<l;i++)
+        {
+            if(visibleItems[i]->data(5).toInt() != 0 )
+            {
+                int id = visibleItems[i]->data(5).toInt();
+                for(int j=0;j<l;j++)
+                {
+                    if(visibleItems[j]->data(0).toInt() == id)
+                    {
+                        t++;
+                        MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(visibleItems[j]);
+                        g->addToGroup(visibleItems[i]);
+                        removeitem_notEmitChange(visibleItems[i]->data(0).toInt());
+                    }
+                }
+            }
+        }
+        view->row = l - t;
+        update();
+    });
+
+
+    connect(ui.restorebtn,&QPushButton::clicked,this,[=](){
+        if(present<present_items.length()-1)
+            present ++ ;
+        else
+            return;
+        QList<QGraphicsItem*> visibleItems = copyall( present_items[present]);
+        QList<QGraphicsItem*> deleteitems = scene->items();
+        for(int i=0;i<deleteitems.length();i++)
+        {
+            if(deleteitems[i]->data(0).toInt()>0)
+            {
+                scene->removeItem(deleteitems[i]);
+                removeitem_notEmitChange(deleteitems[i]->data(0).toInt());
+            }
+
+        }
+        int l = visibleItems.length();
+        QGraphicsItem *temp;
+        for(int i=0;i<l-1;i++)
+        {
+            for(int j=0;j<l-i-1;j++)
+            {
+                if(visibleItems[j]->data(0).toInt()>visibleItems[j+1]->data(0).toInt())
+                {
+                    temp = visibleItems[j];
+                    visibleItems[j] = visibleItems[j+1];
+                    visibleItems[j+1] = temp;
+                }
+            }
+        }
+        for(int i=0;i<l;i++)
+        {
+            scene->addItem(visibleItems[i]);
+            additem_notEmitChange(i,visibleItems[i]);
+        }
+        int t=0;
+        for(int i = 0;i<l;i++)
+        {
+            if(visibleItems[i]->data(5).toInt() != 0 )
+            {
+                int id = visibleItems[i]->data(5).toInt();
+                for(int j=0;j<l;j++)
+                {
+                    if(visibleItems[j]->data(0).toInt() == id)
+                    {
+                        t++;
+                        MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(visibleItems[j]);
+                        g->addToGroup(visibleItems[i]);
+                        removeitem_notEmitChange(visibleItems[i]->data(0).toInt());
+                    }
+                }
+            }
+        }
+        view->row = l - t;
+        update();
+    });
+
+    connect(ui.verMirrorBtn,&QPushButton::clicked,this,[=](){
+       qDebug()<<"水平镜像";
+        QList<QGraphicsItem*> selectitems = scene->selectedItems();
+        for(QGraphicsItem* item : selectitems)
+        {
+            if(item->type() == 4)
+            {
+                qgraphicsitem_cast<MyGraphicsLineItem*>(item)->rotateX();
+            }
+            else if(item->type() == 5)
+            {
+                qgraphicsitem_cast<MyGraphicsPolygonItem*>(item)->rotateX();
+            }
+            else if(item->type() == 6)
+            {
+                qgraphicsitem_cast<MyGraphicsTextItem*>(item)->rotateX();
+            }
+            else if(item->type() == 7)
+            {
+                qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item)->rotateX();
+            }
+            else if(item->type() == 9)
+            {
+                qgraphicsitem_cast<MyGraphicsCodeItem*>(item)->rotateX();
+            }
+        }
+        scene->update();
+    });
+
+
+    connect(ui.centerbtn,&QPushButton::clicked,this,[=](){
+        qDebug()<<"中心点对齐"<<endl;
+        QList<QGraphicsItem*> selectitems = scene->selectedItems();
+        QList<QGraphicsItem*> items;
+        QList<QGraphicsItem*> rootgroupitems;
+        QList<QGraphicsItem*> groups;
+        for(QGraphicsItem* item:selectitems)
+        {
+            if(item->type() == 10)
+            {
+                items.append(item);
+                rootgroupitems.append(item);
+            }
+        }
+        while(1)
+        {
+            int k=0;
+            for(QGraphicsItem* item:items)
+            {
+                if(item->type() == 10)
+                {
+                    k=1;
+                    groups.append(item);
+                    items.removeOne(item);
+                    MyGraphicsGroupItem *g =qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+                    items.append(g->childItems());
+                }
+            }
+            if(k == 0)
+            {
+                break;
+            }
+        }
+
+        QPointF rootPos;
+        if(selectitems.length()>0)
+            rootPos = selectitems[0]->pos();
+        for(QGraphicsItem* item : selectitems)
+        {
+            if(item->type()>0&&item->type()!=4&&item->type()!=7&&item->type()!=10)
+            {
+                item->setPos(rootPos);
+            }
+            if(item->type() == 4)
+            {
+                MyGraphicsLineItem *t = qgraphicsitem_cast<MyGraphicsLineItem*>(item);
+                QRectF rect = t->getRect();
+                QPointF tpoint = QPointF(rect.x()+rect.width()/2,rect.y()+rect.height()/2);
+                QPointF offsetPoint = tpoint-rootPos;
+                t->setPos(t->pos()-offsetPoint);
+            }
+            if(item->type() == 7)
+            {
+                MyGraphicsCurveLineItem *t = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item);
+                QRectF rect = t->getRect();
+                QPointF tpoint = QPointF(rect.x()+rect.width()/2,rect.y()+rect.height()/2);
+                QPointF offsetPoint = tpoint-rootPos;
+                t->setPos(t->pos()-offsetPoint);
+            }
+        }
+        for(QGraphicsItem* item : rootgroupitems)
+        {
+            MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+            QRect rect = g->getRect();
+            QPointF gpoint = QPoint(rect.x()+rect.width()/2,rect.y()+rect.height()/2);
+            QPointF offsetPoint = gpoint-rootPos;
+            for(QGraphicsItem* child:items)
+            {
+                if(findroot(child->data(5).toInt(),groups) == item->data(0).toInt())
+                {
+                    child->setPos(child->pos()-offsetPoint);
+                }
+            }
+        }
+        scene->update();
+        emit scene->selectionChanged();
+    });
+
+    connect(ui.leftbtn,&QPushButton::clicked,this,[=](){
+        qDebug()<<"左对齐"<<endl;
+        QList<QGraphicsItem*> selectitems = scene->selectedItems();
+        QList<QGraphicsItem*> items;
+        QList<QGraphicsItem*> rootgroupitems;
+        QList<QGraphicsItem*> groups;
+        for(QGraphicsItem* item:selectitems)
+        {
+            if(item->type() == 10)
+            {
+                items.append(item);
+                rootgroupitems.append(item);
+            }
+        }
+        while(1)
+        {
+            int k=0;
+            for(QGraphicsItem* item:items)
+            {
+                if(item->type() == 10)
+                {
+                    k=1;
+                    groups.append(item);
+                    items.removeOne(item);
+                    MyGraphicsGroupItem *g =qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+                    items.append(g->childItems());
+                }
+            }
+            if(k == 0)
+            {
+                break;
+            }
+        }
+        QPointF rootPos(0,0);
+        if(selectitems.length()>0)
+        {
+            if(selectitems[0]->type() == 1)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsRecItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 2)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsEllipseItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 3)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsCircleItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 4)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsLineItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 5)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsPolygonItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 6)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsTextItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 7)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsCurveLineItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 8)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsPixMapItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 9)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsCodeItem*>(selectitems[0])->getRect().x());
+            }
+            else if(selectitems[1]->type() == 10)
+            {
+                rootPos.setX(qgraphicsitem_cast<MyGraphicsGroupItem*>(selectitems[0])->getRect().x());
+            }
+        }
+        for(QGraphicsItem* item : selectitems)
+        {
+            if(item->type() == 1)
+            {
+                leftAlign<MyGraphicsRecItem>(item,rootPos);
+            }
+            else if(item->type() == 2)
+            {
+                leftAlign<MyGraphicsEllipseItem>(item,rootPos);
+            }
+            else if(item->type() == 3)
+            {
+                leftAlign<MyGraphicsCircleItem>(item,rootPos);
+            }
+            else if(item->type() == 4)
+            {
+                leftAlign<MyGraphicsLineItem>(item,rootPos);
+            }
+            else if(item->type() == 5)
+            {
+                leftAlign<MyGraphicsPolygonItem>(item,rootPos);
+            }
+            else if(item->type() == 6)
+            {
+                leftAlign<MyGraphicsTextItem>(item,rootPos);
+            }
+            else if(item->type() == 7)
+            {
+                leftAlign<MyGraphicsCurveLineItem>(item,rootPos);
+            }
+            else if(item->type() == 8)
+            {
+                leftAlign<MyGraphicsPixMapItem>(item,rootPos);
+            }
+            else if(item->type() == 9)
+            {
+                leftAlign<MyGraphicsCodeItem>(item,rootPos);
+            }
+        }
+        for(QGraphicsItem* item : rootgroupitems)
+        {
+            MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+            QRect rect = g->getRect();
+            QPointF gpoint = QPoint(rect.x(),rect.y()+rect.height()/2);
+            QPointF offsetPoint = gpoint-rootPos;
+            for(QGraphicsItem* child:items)
+            {
+                if(findroot(child->data(5).toInt(),groups) == item->data(0).toInt())
+                {
+                    child->setPos((child->pos()-offsetPoint).x(),child->y());
+                }
+            }
+        }
+        scene->update();
+        emit scene->selectionChanged();
+    });
+
+    connect(ui.horMirrorBtn,&QPushButton::clicked,this,[=](){
+       qDebug()<<"垂直镜像";
+        QList<QGraphicsItem*> selectitems = scene->selectedItems();
+        for(QGraphicsItem* item : selectitems)
+        {
+            if(item->type() == 4)
+            {
+                qgraphicsitem_cast<MyGraphicsLineItem*>(item)->rotateY();
+            }
+            else if(item->type() == 5)
+            {
+                qgraphicsitem_cast<MyGraphicsPolygonItem*>(item)->rotateY();
+            }
+            else if(item->type() == 6)
+            {
+                qgraphicsitem_cast<MyGraphicsTextItem*>(item)->rotateY();
+            }
+            else if(item->type() == 7)
+            {
+                qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item)->rotateY();
+            }
+            else if(item->type() == 9)
+            {
+                qgraphicsitem_cast<MyGraphicsCodeItem*>(item)->rotateY();
+            }
+        }
+        scene->update();
     });
 }
 
@@ -462,7 +1275,7 @@ template<typename T> void mainWindow::saveItems(QGraphicsItem* node, ItemFileCla
     T *item = qgraphicsitem_cast<T *>(node);
     iff->name = item->name;
     iff->angle = item->angle;
-    iff->linenum = item->linenum;
+    iff->space = item->space;
     iff->rec = item->rect();
     iff->id = item->data(0).toInt();
     iff->pos = item->pos();
@@ -536,7 +1349,6 @@ void mainWindow::savefile()
                     {
                         iff->path = item->path();
                     }
-                    qDebug()<<iff->text<<iff->path<<endl;
                 }
                 else if(node->type() == 5)
                 {
@@ -587,6 +1399,40 @@ void mainWindow::savefile()
             }
         }
         file.close();
+}
+
+int mainWindow::findroot(int id,QList<QGraphicsItem*> items)
+{
+
+
+        int maxid = 0;
+        for(QGraphicsItem* item : items)
+        {
+            if(item->data(0).toInt()>maxid)
+                maxid = item->data(0).toInt();
+        }
+        maxid = maxid +1;
+        int *ids = new int[maxid];
+        qDebug()<<"maxid"<<maxid<<"id"<<id;
+        for(int i =0;i<maxid;i++)
+            ids[i]=0;
+        for(QGraphicsItem* item : items)
+        {
+            ids[item->data(0).toInt()] = item->data(5).toInt();
+        }
+        for(int i=0;i<maxid;i++)
+        {
+            qDebug()<<i<<ids[i];
+        }
+        while(1)
+        {
+            if(ids[id] == 0)
+            {
+                qDebug()<<"ddd"<<id;
+                return id;
+            }
+            id = ids[id];
+        }
 }
 
 void mainWindow::openfile()
@@ -640,8 +1486,8 @@ void mainWindow::openfile()
                     item->name = t.name;
                     item->setData(0,t.id);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -659,8 +1505,8 @@ void mainWindow::openfile()
                     item->name = t.name;
                     item->setData(0,t.id);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -678,8 +1524,8 @@ void mainWindow::openfile()
                     item->name = t.name;
                     item->setData(0,t.id);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     scene->addItem(item);
                     item->setVisible(true);
                     scene->update();
@@ -702,8 +1548,8 @@ void mainWindow::openfile()
                     item->setPos( t.pos);
                     item->name=t.name;
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     scene->addItem(item);
                     items.append(item);
                     //emit view->addItem(view->row,item);
@@ -720,8 +1566,8 @@ void mainWindow::openfile()
                     item->setData(0, t.id);
                     item->setPos( t.pos);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     item->name=t.name;
                     scene->addItem(item);
                     items.append(item);
@@ -741,8 +1587,8 @@ void mainWindow::openfile()
                     item->path = t.path;
                     item->setStr(t.text,t.font);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
-                    item->set_brush(item->angle,item->linenum);
+                    item->space = t.space;
+                    item->set_brush(item->angle,item->space);
                     scene->addItem(item);
                     items.append(item);
                     //emit view->addItem(view->row,item);
@@ -794,9 +1640,9 @@ void mainWindow::openfile()
                     item->codetype = t.codetype;
                     item->path = (t.path);
                     item->angle = t.angle;
-                    item->linenum = t.linenum;
+                    item->space = t.space;
                     item->setRect(t.rec);
-                    item->set_brush(item->angle,item->linenum);
+                    item->set_brush(item->angle,item->space);
                     item->setVisible(true);
                     item->setData(0, t.id);
                     item->setPos( t.pos);
@@ -1022,6 +1868,10 @@ void mainWindow::creatnewfile()
     fileid++;
     MyGraphicsScene *scene1 = new MyGraphicsScene();
     MyGraphicsView *view1 = new MyGraphicsView();
+    //添加
+    connect(view1, &MyGraphicsView::addItem,ui.itemtable, [=](int row,QGraphicsItem * item) {
+        additem(row,item);
+    });
     scenes.append(scene1);
     views.append(view1);
     isfirst.append(true);
@@ -1365,6 +2215,7 @@ void mainWindow::initDrawConnect()
                     item->name = tr(u8"图片") + str;
                     scene->addItem(item);
                     emit view->addItem(view->row,item);
+                    emit view->sceneChange();
                     view->item_id++;
                     view->row++;
                 }
@@ -1407,6 +2258,292 @@ void mainWindow::initDrawConnect()
 }
 
 
+void mainWindow::additem(int row,QGraphicsItem * item)
+{
+    int type = item->type();
+    QTableWidgetItem* item0;
+    QTableWidgetItem* item1;
+    QTableWidgetItem* item2;
+    QTableWidgetItem* item3;
+    int id;
+    if (type == 1)
+    {
+        MyGraphicsRecItem* node;
+         node = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+         item1 = new QTableWidgetItem(tr("矩形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type==2)
+    {
+         MyGraphicsEllipseItem* node;
+         node = qgraphicsitem_cast<MyGraphicsEllipseItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("椭圆"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 3)
+    {
+         MyGraphicsCircleItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCircleItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("圆形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+
+    else if(type == 4)
+    {
+        MyGraphicsLineItem *node;
+        node = qgraphicsitem_cast<MyGraphicsLineItem*>(item);
+        item0 = new QTableWidgetItem(node->name);
+        item1 = new QTableWidgetItem(tr("直线"));
+        item2 = new QTableWidgetItem("");
+        id = node->data(0).value<int>();
+        QString s = QString::number(id);
+        item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 5)
+    {
+        MyGraphicsPolygonItem* node;
+         node = qgraphicsitem_cast<MyGraphicsPolygonItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("多边形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 6)
+    {
+        MyGraphicsTextItem* node;
+         node = qgraphicsitem_cast<MyGraphicsTextItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("文本"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 7)
+    {
+        MyGraphicsCurveLineItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("曲线"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 8)
+    {
+        MyGraphicsPixMapItem* node;
+         node = qgraphicsitem_cast<MyGraphicsPixMapItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("图片"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 9)
+    {
+        MyGraphicsCodeItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCodeItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("二维码"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 10)
+    {
+        MyGraphicsGroupItem* node;
+         node = qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("组合"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    ui.itemtable->setRowCount(row + 1);
+    ui.itemtable->setItem(row, 0, item0);
+    ui.itemtable->setItem(row, 1, item1);
+    ui.itemtable->setItem(row, 2, item2);
+    ui.itemtable->setItem(row, 3, item3);
+    ui.itemtable->update();
+}
+
+void mainWindow::removeitem_notEmitChange(int id)
+{
+    for (int i = 0;i<ui.itemtable->rowCount();i++)
+    {
+        QTableWidgetItem* item1 = new QTableWidgetItem;
+        item1 = ui.itemtable->item(i, 3);
+        QString tid = item1->text();
+        int table_id = tid.toInt();
+        if(table_id  == id)
+        {
+            ui.itemtable->removeRow(i);
+            view->row--;
+        }
+    }
+}
+
+void mainWindow::additem_notEmitChange(int row, QGraphicsItem *item)
+{
+    int type = item->type();
+    QTableWidgetItem* item0;
+    QTableWidgetItem* item1;
+    QTableWidgetItem* item2;
+    QTableWidgetItem* item3;
+    int id;
+    if (type == 1)
+    {
+         MyGraphicsRecItem* node;
+         node = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+         item1 = new QTableWidgetItem(tr("矩形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type==2)
+    {
+         MyGraphicsEllipseItem* node;
+         node = qgraphicsitem_cast<MyGraphicsEllipseItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("椭圆"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 3)
+    {
+         MyGraphicsCircleItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCircleItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("圆形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+
+    else if(type == 4)
+    {
+        MyGraphicsLineItem *node;
+        node = qgraphicsitem_cast<MyGraphicsLineItem*>(item);
+        item0 = new QTableWidgetItem(node->name);
+        item1 = new QTableWidgetItem(tr("直线"));
+        item2 = new QTableWidgetItem("");
+        id = node->data(0).value<int>();
+        QString s = QString::number(id);
+        item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 5)
+    {
+        MyGraphicsPolygonItem* node;
+         node = qgraphicsitem_cast<MyGraphicsPolygonItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("多边形"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 6)
+    {
+        MyGraphicsTextItem* node;
+         node = qgraphicsitem_cast<MyGraphicsTextItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("文本"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 7)
+    {
+        MyGraphicsCurveLineItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("曲线"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 8)
+    {
+        MyGraphicsPixMapItem* node;
+         node = qgraphicsitem_cast<MyGraphicsPixMapItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("图片"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 9)
+    {
+        MyGraphicsCodeItem* node;
+         node = qgraphicsitem_cast<MyGraphicsCodeItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("二维码"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    else if(type == 10)
+    {
+        MyGraphicsGroupItem* node;
+         node = qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+         item0 = new QTableWidgetItem(node->name);
+
+         item1 = new QTableWidgetItem(tr("组合"));
+         item2 = new QTableWidgetItem("");
+         id = node->data(0).value<int>();
+         QString s = QString::number(id);
+         item3 = new QTableWidgetItem(s);
+    }
+    ui.itemtable->setRowCount(row + 1);
+    ui.itemtable->setItem(row, 0, item0);
+    ui.itemtable->setItem(row, 1, item1);
+    ui.itemtable->setItem(row, 2, item2);
+    ui.itemtable->setItem(row, 3, item3);
+    ui.itemtable->update();
+}
+
 void mainWindow::initItemtableConnect()
 {
 
@@ -1421,7 +2558,6 @@ void mainWindow::initItemtableConnect()
             ids.append(id1);
 
         }
-        qDebug()<<ids<<endl;
         for (int i = 0;i<ui.itemtable->rowCount();i++)
         {
             QTableWidgetItem* item1 = new QTableWidgetItem;
@@ -1463,141 +2599,7 @@ void mainWindow::initItemtableConnect()
         emit ui.itemtable->itemSelectionChanged();
     });
 
-    //添加
-    connect(view, &MyGraphicsView::addItem,ui.itemtable, [=](int row,QGraphicsItem * item) {
-        int type = item->type();
-        QTableWidgetItem* item0;
-        QTableWidgetItem* item1;
-        QTableWidgetItem* item2;
-        QTableWidgetItem* item3;
-        int id;
-        if (type == 1)
-        {
-            MyGraphicsRecItem* node;
-             node = qgraphicsitem_cast<MyGraphicsRecItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-             item1 = new QTableWidgetItem(tr("矩形"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type==2)
-        {
-             MyGraphicsEllipseItem* node;
-             node = qgraphicsitem_cast<MyGraphicsEllipseItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
 
-             item1 = new QTableWidgetItem(tr("椭圆"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 3)
-        {
-             MyGraphicsCircleItem* node;
-             node = qgraphicsitem_cast<MyGraphicsCircleItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("圆形"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-
-        else if(type == 4)
-        {
-            MyGraphicsLineItem *node;
-            node = qgraphicsitem_cast<MyGraphicsLineItem*>(item);
-            item0 = new QTableWidgetItem(node->name);
-            item1 = new QTableWidgetItem(tr("直线"));
-            item2 = new QTableWidgetItem("");
-            id = node->data(0).value<int>();
-            QString s = QString::number(id);
-            item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 5)
-        {
-            MyGraphicsPolygonItem* node;
-             node = qgraphicsitem_cast<MyGraphicsPolygonItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("多边形"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 6)
-        {
-            MyGraphicsTextItem* node;
-             node = qgraphicsitem_cast<MyGraphicsTextItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("文本"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 7)
-        {
-            MyGraphicsCurveLineItem* node;
-             node = qgraphicsitem_cast<MyGraphicsCurveLineItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("曲线"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 8)
-        {
-            MyGraphicsPixMapItem* node;
-             node = qgraphicsitem_cast<MyGraphicsPixMapItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("图片"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 9)
-        {
-            MyGraphicsCodeItem* node;
-             node = qgraphicsitem_cast<MyGraphicsCodeItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("二维码"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        else if(type == 10)
-        {
-            MyGraphicsGroupItem* node;
-             node = qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
-             item0 = new QTableWidgetItem(node->name);
-
-             item1 = new QTableWidgetItem(tr("组合"));
-             item2 = new QTableWidgetItem("");
-             id = node->data(0).value<int>();
-             QString s = QString::number(id);
-             item3 = new QTableWidgetItem(s);
-        }
-        ui.itemtable->setRowCount(row + 1);
-
-        ui.itemtable->setItem(row, 0, item0);
-        ui.itemtable->setItem(row, 1, item1);
-        ui.itemtable->setItem(row, 2, item2);
-        ui.itemtable->setItem(row, 3, item3);
-        ui.itemtable->update();
-        });
 
 
     //修改名字
@@ -1705,9 +2707,11 @@ void mainWindow::initItemtableConnect()
 
         });
 
+
+
+
     //同步删除表格里的东西
     connect(view,&MyGraphicsView::removeItem,ui.itemtable,[=](int id){
-
         for (int i = 0;i<ui.itemtable->rowCount();i++)
         {
             QTableWidgetItem* item1 = new QTableWidgetItem;
@@ -1719,7 +2723,6 @@ void mainWindow::initItemtableConnect()
                 ui.itemtable->removeRow(i);
                 view->row--;
             }
-
         }
     });
 }
@@ -1736,6 +2739,14 @@ template<typename T> void mainWindow::setItemRect_XandY(QGraphicsItem* node,int 
         y = t->getRect().y();
     }
 
+}
+template<typename T> void mainWindow::leftAlign(QGraphicsItem* node,QPointF rootPos)
+{
+    T *t = qgraphicsitem_cast<T*>(node);
+    QRectF rect = t->getRect();
+    QPointF tpoint = QPointF(rect.x(),rect.y()+rect.height()/2);
+    QPointF offsetPoint = tpoint-rootPos;
+    t->setPos((t->pos()-offsetPoint).x(),t->pos().y());
 }
 template<typename T> void mainWindow::setItemRect_WandH(QGraphicsItem* node , int x,int y,int &w,int &h)
 {
@@ -2024,6 +3035,7 @@ void mainWindow::initConnect()
             QTableWidgetItem* item1 = new QTableWidgetItem;
             item1 = ui.itemtable->item(row, 3);
             QString id = item1->text();
+
             QList<QGraphicsItem*> items = scene->items();
             for (QList<QGraphicsItem*>::iterator it = items.begin(); it != items.end(); it++)
             {
@@ -2163,12 +3175,30 @@ void mainWindow::initConnect()
     //应用，修改图元位置和大小
     connect(ui.pushButton_2,&QPushButton::clicked,this,[=](){
         QList<QGraphicsItem *> selectitems = scene->selectedItems();
+        while(1)
+        {
+            int k=0;
+            for(QGraphicsItem* item:selectitems)
+            {
+                if(item->type() == 10)
+                {
+                    k=1;
+                    selectitems.removeOne(item);
+                    MyGraphicsGroupItem *g =qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+                    selectitems.append(g->childItems());
+                }
+            }
+            if(k == 0)
+            {
+                break;
+            }
+        }
+
         double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
         double t = (dpiX*10)/254;; //1mm = tpx;
         double x = ui.xposition->text().toDouble();
         double y = ui.yposition->text().toDouble();
         QPointF offset = QPointF(x*t,y*t)-pre_Pos;
-
         double w = ui.xsize->text().toDouble();
         double h = ui.ysize->text().toDouble();
         double offset_w = w*t - pre_w;
@@ -2188,7 +3218,7 @@ void mainWindow::initConnect()
                 ww = (ww)*(bilix)+ww;
                 hh = (hh)*(biliy)+hh;
                 item->setRect(-ww/2,-hh/2,ww,hh);
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 2)
             {
@@ -2199,7 +3229,7 @@ void mainWindow::initConnect()
                 ww = (ww)*(bilix)+ww;
                 hh = (hh)*(biliy)+hh;
                 item->setRect(-ww/2,-hh/2,ww,hh);
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 3)
             {
@@ -2210,7 +3240,7 @@ void mainWindow::initConnect()
                 ww = (ww)*(bilix)+ww;
                 hh = (hh)*(biliy)+hh;
                 item->setRect(-ww/2,-hh/2,ww,hh);
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 4)
             {
@@ -2235,7 +3265,7 @@ void mainWindow::initConnect()
                     }
                 }
                 item->setPath(path2);
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 5)
             {
@@ -2248,7 +3278,7 @@ void mainWindow::initConnect()
                 hh = (hh)*(biliy)+hh;
                 item->setRect(-ww/2,-hh/2,ww,hh);
                 item->setDefault_Path();
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 6)
             {
@@ -2263,7 +3293,7 @@ void mainWindow::initConnect()
 
                 item->setRect(-ww/2,-hh/2,ww,hh);
                 item->makePath_fill_Rect();
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
             else if(type == 7)
             {
@@ -2338,7 +3368,7 @@ void mainWindow::initConnect()
                 item->setRect(-ww/2,-hh/2,ww,hh);
                 item->makePath_fill_Rect();
 
-                item->set_brush(item->angle,item->linenum);
+                item->set_brush(item->angle,item->space);
             }
         }
         for(int i=0;i<selectitems.length();i++)
@@ -2346,14 +3376,16 @@ void mainWindow::initConnect()
             selectitems[i]->setPos(selectitems[i]->pos()+offset);
         }
         emit scene->selectionChanged();
+        emit view->sceneChange();
         setpreRect();
         scene->update();
     });
 
     connect(ui.brushbutton,&QPushButton::clicked,this,[=](){
+        qDebug()<<"brush"<<endl;
         QList<QGraphicsItem *> selectitems = scene->selectedItems();
         bool m,j;
-        double space = ui.linenum_text->text().toDouble(&m);
+        double space = ui.space_text->text().toDouble(&m);
         int num ;
         double angle = ui.angle_text->text().toDouble(&j);
         if(selectitems.length()==1 && m && j)
@@ -2391,6 +3423,19 @@ void mainWindow::initConnect()
             {
                 saveBrush<MyGraphicsCodeItem>(selectitems[0],temp,num,space,angle);
             }
+
+            else if(type == 10)
+            {
+                saveBrush<MyGraphicsGroupItem>(selectitems[0],temp,num,space,angle);
+            }
+
+        }
+        else if(selectitems.length() > 1 && m && j)
+        {
+            emit ui.groupbtn->clicked();
+            selectitems.clear();
+            selectitems = scene->selectedItems();
+            saveBrush<MyGraphicsGroupItem>(selectitems[0],0,num,space,angle);
         }
 
     });
@@ -2398,14 +3443,8 @@ void mainWindow::initConnect()
 
 template<typename T> void mainWindow::saveBrush(QGraphicsItem* node, double temp,int num , double space,double angle)
 {
-    T* item = new T();
-    item = qgraphicsitem_cast<T*>(node);
-    double maxh = fmax(item->getRect().width(),item->getRect().height());
-    view->linenum = (maxh/temp) / space;
-    if(space == 0)
-        view->linenum = 0;
-    num = view->linenum;
-    item->set_brush(angle,num);
+    T* item =  qgraphicsitem_cast<T*>(node);
+    item->set_brush(angle,space);
 }
 
 void mainWindow::setItemMoveble(bool moveble)

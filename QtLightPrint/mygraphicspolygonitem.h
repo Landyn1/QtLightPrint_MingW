@@ -14,8 +14,9 @@ class MyGraphicsPolygonItem : public QGraphicsRectItem
 public:
     MyGraphicsPolygonItem(QGraphicsRectItem *parent = nullptr);
     ~MyGraphicsPolygonItem();
-
-    QPainterPath ViewPath();
+    void rotateY();
+    void rotateX();
+    QPainterPath ViewPath(int k=0);
     QRectF boundingRect() const
     {
         return rect();
@@ -24,7 +25,7 @@ public:
     void setLinsAndCurves(QPainterPath path2,QList<QLineF> &lins);
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     enum { Type = 5 };
-    bool set_brush(double angle,int linenum);
+    bool set_brush(double angle,double space);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -39,10 +40,10 @@ public:
     void setPath(QPainterPath path);
     QPainterPath brushpath;
     double angle = 0;
-    int linenum = 0;
+    double space = 0;
     void setDefault_Path();
     bool isOnLine(QLine l , QPoint p);
-    QRect getRect();
+    QRectF getRect();
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

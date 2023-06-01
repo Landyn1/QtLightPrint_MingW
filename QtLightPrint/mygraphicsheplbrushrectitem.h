@@ -12,7 +12,7 @@ public:
 
     double angle = 0;
 
-    int linenum = 1000;
+    double space = 1000;
 
 };
 

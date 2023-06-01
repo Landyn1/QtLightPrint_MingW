@@ -13,14 +13,14 @@ public:
     enum { Type = 3 };
     QPainterPath brushpath;
     double angle = 0;
-    int linenum = 0;
+    double space = 0;
     QRect getRect();
     QPainterPath path()
     {
         QPainterPath p;
         return p;
     }
-    void set_brush(double angle,int linenum);
+    void set_brush(double angle,double space);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -30,7 +30,7 @@ public:
     int printLayer = 0;
 
     QString name="";
-    QPainterPath ViewPath();
+    QPainterPath ViewPath(int k=0);
     bool selectEvent(QPointF p,int k=0);
 private:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

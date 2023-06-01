@@ -42,25 +42,29 @@ QPainterPath MyGraphicsRecItem::shape() const
     return temp;
 }
 
-QPainterPath MyGraphicsRecItem::ViewPath()
+QPainterPath MyGraphicsRecItem::ViewPath(int k)
 {
 
     QPainterPath path;
     QPainterPath path2 = brushpath;
     QRectF temp(mapToScene(rect()).value(0).x(), mapToScene(rect()).value(0).y(), rect().width(), rect().height());
-    for (int i = 0; i < path2.elementCount(); i++)
+    if(k == 0)
     {
-        QPainterPath::Element element = path2.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path2.elementCount(); i++)
         {
-            path.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            path.lineTo(mapToScene(po));
+            QPainterPath::Element element = path2.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                path.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                path.lineTo(mapToScene(po));
+            }
         }
     }
+
     path.addRect(temp);
     return path;
 }
@@ -70,17 +74,21 @@ void MyGraphicsRecItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
    // QPen pen = ScaleManager::get_instance().getMainViewItemPen();
     QPen pen;   // 定义一个画笔，设置画笔颜色和宽度
     //pen.setColor(QColor(0, 160, 230));
-    QList<QGraphicsView*> list = scene()->views();
-    QGraphicsView* view = list.first();
-    double s = view->matrix().m11();
-    pen.setWidthF(1/s);
+//    QList<QGraphicsView*> list = scene()->views();
+
+//    QGraphicsView* view = list.first();
+//    double s = view->matrix().m11();
+    pen.setWidthF(1);
+    int k=0;
     if(data(0).toInt() == -1)
     {
         pen.setColor(Qt::blue);
+        k=1;
     }
     painter->setPen(pen);
     painter->drawRect(this->rect());
-    painter->drawPath(brushpath);
+    if(k == 0)
+        painter->drawPath(brushpath);
 
 }
 
@@ -143,18 +151,22 @@ bool MyGraphicsRecItem::selectEvent(QPointF p,int k)
 
 }
 
-void MyGraphicsRecItem::set_brush(double angle,int linenum)
+void MyGraphicsRecItem::set_brush(double angle,double space)
 {
 
     brushpath.clear();
     this->angle = angle;
-    this->linenum = linenum;
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
     QPainterPath path;
     double k = tan(angle*M_PI/180);//斜率
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(linenum==0)
+    if(space==0)
     {
         update();
         return;

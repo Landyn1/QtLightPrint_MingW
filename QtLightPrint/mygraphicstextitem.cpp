@@ -23,18 +23,18 @@ void MyGraphicsTextItem::setStr(QString str,QFont font)
     this->font = font;
     setDefault_Path();
     makePath_fill_Rect();
-    set_brush(angle,linenum);
+    set_brush(angle,space);
     update();
 }
 
-QRect MyGraphicsTextItem::getRect()
+QRectF MyGraphicsTextItem::getRect()
 {
-    int x,y,w,h;
+    double x,y,w,h;
     x = rect().x()+pos().x();
     y = rect().y()+pos().y();
     w = rect().width();
     h = rect().height();
-    return QRect(x,y,w,h);
+    return QRectF(x,y,w,h);
 }
 void MyGraphicsTextItem::setRectF()
 {
@@ -172,13 +172,20 @@ void MyGraphicsTextItem::setBrushpath(QList<QLineF> lins, QList<ThirdCurve> curv
             }
         }
 }
-void MyGraphicsTextItem::set_brush(double angle, int linenum)
+void MyGraphicsTextItem::set_brush(double angle, double space)
 {
     brushpath.clear();
     this->angle = angle;
-    this->linenum = linenum;
-    if(linenum == 0)
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
+    if(space == 0)
+    {
+        update();
         return;
+    }
     QPainterPath path2;
     double k = tan(angle*M_PI/180);//斜率
     int w = path.boundingRect().width()+10;
@@ -187,7 +194,7 @@ void MyGraphicsTextItem::set_brush(double angle, int linenum)
     QList<QLineF> lins;
     QList<ThirdCurve> curves;
     setLinsAndCurves(this->path,lins,curves);
-    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+
     double mint = (dpiX*10)/254;; //1mm = tpx;
     mint = mint*0.02; //0.02mm = tpx;
     double m = double(h)/double(w);
@@ -342,7 +349,7 @@ void MyGraphicsTextItem::set_brush(double angle, int linenum)
     update();
 }
 
-QPainterPath MyGraphicsTextItem::ViewPath()
+QPainterPath MyGraphicsTextItem::ViewPath(int kk)
 {
     QPainterPath p;
     QPainterPath path = this->path;
@@ -421,26 +428,165 @@ QPainterPath MyGraphicsTextItem::ViewPath()
         }
     }
 
-    for (int i = 0; i < path2.elementCount(); i++)
+    if(kk == 0)
     {
-        QPainterPath::Element element = path2.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path2.elementCount(); i++)
         {
-            p.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            p.lineTo(mapToScene(po));
+            QPainterPath::Element element = path2.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                p.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                p.lineTo(mapToScene(po));
+            }
         }
     }
     return p;
+}
+
+
+void MyGraphicsTextItem::rotateY()
+{
+    double rooty = getRect().y()+(getRect().height()/2);
+    rooty = rooty-pos().y();
+    QPainterPath p;
+    QPainterPath path = this->path;
+
+    QPointF lp1,lp2,c1,c2;
+    int kl = 0;
+    int kc = 0;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = po.x();
+        y1 = rooty*2-po.y();
+        po.setX(x1);
+        po.setY(y1);
+        if (element.isMoveTo())
+        {
+            lp1 = po;
+            kl = 0;
+            p.moveTo(po);
+        }
+        else if (element.isLineTo())
+        {
+            if(kl == 0)
+            {
+                lp2 = po;
+                p.lineTo(po);
+                kl++;
+            }
+            else
+            {
+                lp1 = lp2;
+                lp2 = po;
+                p.lineTo(po);
+            }
+        }
+        else if(element.isCurveTo())
+        {
+            if(kl != 0)
+                lp1 = lp2;
+            c1 = po;
+            kc++;
+        }
+        else
+        {
+            if(kc%3==1)
+            {
+                c2 = po;
+                kc++;
+            }
+            else if(kc%3 == 2)
+            {
+                lp2 = po;
+                //curve lp1,c1,c2,lp2
+                p.cubicTo(c1,c2,lp2);
+                kc ++;
+                lp1 = lp2;
+            }
+        }
+    }
+    this->setPath(p);
+}
+
+void MyGraphicsTextItem::rotateX()
+{
+    double rootx = getRect().x()+(getRect().width()/2);
+    rootx = rootx-pos().x();
+    QPainterPath p;
+    QPainterPath path = this->path;
+
+    QPointF lp1,lp2,c1,c2;
+    int kl = 0;
+    int kc = 0;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = rootx*2-po.x();
+        y1 = po.y();
+        po.setX(x1);
+        po.setY(y1);
+        if (element.isMoveTo())
+        {
+            lp1 = po;
+            kl = 0;
+            p.moveTo(po);
+        }
+        else if (element.isLineTo())
+        {
+            if(kl == 0)
+            {
+                lp2 = po;
+                p.lineTo(po);
+                kl++;
+            }
+            else
+            {
+                lp1 = lp2;
+                lp2 = po;
+                p.lineTo(po);
+            }
+        }
+        else if(element.isCurveTo())
+        {
+            if(kl != 0)
+                lp1 = lp2;
+            c1 = po;
+            kc++;
+        }
+        else
+        {
+            if(kc%3==1)
+            {
+                c2 = po;
+                kc++;
+            }
+            else if(kc%3 == 2)
+            {
+                lp2 = po;
+                //curve lp1,c1,c2,lp2
+                p.cubicTo(c1,c2,lp2);
+                kc ++;
+                lp1 = lp2;
+            }
+        }
+    }
+    this->setPath(p);
 }
 
 void MyGraphicsTextItem::setDefault_Path()
 {
     path.clear();
     path.addText(0,0, font, str);
+
 }
 
 void MyGraphicsTextItem::makePath_fill_Rect()
@@ -479,7 +625,10 @@ void MyGraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     painter->scale(1,-1);
    // painter->drawRect(rect());
     painter->drawPath(path);
-    painter->drawPath(brushpath);
+    if(data(0).toInt() > 0)
+    {
+            painter->drawPath(brushpath);
+    }
 }
 MyGraphicsTextItem::~MyGraphicsTextItem()
 {

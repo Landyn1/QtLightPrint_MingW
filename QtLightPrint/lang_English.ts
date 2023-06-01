@@ -1439,7 +1439,7 @@ puls suppression ends</source>
     <message>
         <location filename="mainWindow.ui" line="400"/>
         <source>密度</source>
-        <translation>linenum</translation>
+        <translation>space</translation>
     </message>
     <message>
         <location filename="mainWindow.ui" line="426"/>

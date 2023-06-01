@@ -10,6 +10,55 @@ MyGraphicsCodeItem::MyGraphicsCodeItem():QGraphicsRectItem()
 MyGraphicsCodeItem::~MyGraphicsCodeItem(){
 
 }
+void MyGraphicsCodeItem::rotateY()
+{
+    double rooty = getRect().y()+(getRect().height()/2);
+    rooty = rooty-pos().y();
+    QPainterPath p;
+    QPainterPath path = this->path;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = po.x();
+        y1 = rooty*2-po.y();
+        if (element.isMoveTo())
+        {
+            p.moveTo(QPointF(x1,y1));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(QPointF(x1,y1));
+        }
+    }
+    this->path = p;
+}
+
+void MyGraphicsCodeItem::rotateX()
+{
+    double rootx = getRect().x()+(getRect().width()/2);
+    rootx = rootx-pos().x();
+    QPainterPath p;
+    QPainterPath path = this->path;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = rootx*2-po.x();
+        y1 = po.y();
+        if (element.isMoveTo())
+        {
+            p.moveTo(QPointF(x1,y1));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(QPointF(x1,y1));
+        }
+    }
+    this->path = p;
+}
 
 
 bool MyGraphicsCodeItem::selectEvent(QPointF p,int k)
@@ -89,7 +138,7 @@ void MyGraphicsCodeItem::setPathByStr(QString str,QString codeType)
             path.lineTo(QPointF((*it).x-(w/2),(*it).y-(h/2)));
         }
     }
-    set_brush(this->angle,this->linenum);
+    set_brush(this->angle,this->space);
     this->path = path;
 }
 
@@ -108,11 +157,14 @@ void MyGraphicsCodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     //painter->setBrush(Qt::blue);
     painter->setPen(pen);
     painter->scale(1,-1);
-    painter->drawPath(brushPath);
+    if(data(0).toInt() > 0)
+    {
+            painter->drawPath(brushPath);
+    }
     painter->drawPath(this->path);
 
 }
-QPainterPath MyGraphicsCodeItem::ViewPath()
+QPainterPath MyGraphicsCodeItem::ViewPath(int k)
 {
     QPainterPath p;
     QPainterPath path = this->path;
@@ -131,17 +183,20 @@ QPainterPath MyGraphicsCodeItem::ViewPath()
         }
     }
     QPainterPath path2 = brushPath;
-    for (int i = 0; i < path2.elementCount(); i++)
+    if(k == 0)
     {
-        QPainterPath::Element element = path2.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path2.elementCount(); i++)
         {
-            p.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            p.lineTo(mapToScene(po));
+            QPainterPath::Element element = path2.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                p.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                p.lineTo(mapToScene(po));
+            }
         }
     }
     return p;
@@ -159,12 +214,16 @@ QRectF MyGraphicsCodeItem::boundingRect() const
 
       return rect();
 }
-bool MyGraphicsCodeItem::set_brush(double angle, int linenum)
+bool MyGraphicsCodeItem::set_brush(double angle, double space)
 {
     this->angle = angle;
-    this->linenum = linenum;
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
     brushPath.clear();
-    if(linenum == 0)
+    if(space == 0)
     {
         update();
         return true;
@@ -176,7 +235,6 @@ bool MyGraphicsCodeItem::set_brush(double angle, int linenum)
     QList<QPointF> intersections;
     QList<QLineF> lins;
     setLinsAndCurves(this->path,lins);
-    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
     double mint = (dpiX*10)/254;; //1mm = tpx;
     mint = mint*0.02; //0.02mm = tpx; 最小的线间距0.02mm
     double m = double(h)/double(w);

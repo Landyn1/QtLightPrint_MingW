@@ -23,12 +23,16 @@ QRect MyGraphicsCircleItem::getRect()
     h = rect().height();
     return QRect(x,y,w,h);
 }
-void MyGraphicsCircleItem::set_brush(double angle,int linenum)
+void MyGraphicsCircleItem::set_brush(double angle,double space)
 {
     brushpath.clear();
     this->angle = angle;
-    this->linenum = linenum;
-    if(linenum == 0)
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
+    if(space == 0)
     {
         update();
         return;
@@ -38,7 +42,7 @@ void MyGraphicsCircleItem::set_brush(double angle,int linenum)
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(linenum==0)
+    if(space==0)
     {
         update();
         return;
@@ -186,7 +190,7 @@ void MyGraphicsCircleItem::set_brush(double angle,int linenum)
 }
 
 //这个函数获取绘画的path，对应的坐标为scene坐标
-QPainterPath MyGraphicsCircleItem::ViewPath()
+QPainterPath MyGraphicsCircleItem::ViewPath(int k)
 {
     QPainterPath path;
     QPainterPath path2 = brushpath;
@@ -242,17 +246,20 @@ QPainterPath MyGraphicsCircleItem::ViewPath()
     }
     path.lineTo(mapToScene(0,rect().height()/2));
 
-    for (int i = 0; i < path2.elementCount(); i++)
+    if(k == 0)
     {
-        QPainterPath::Element element = path2.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path2.elementCount(); i++)
         {
-            path.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            path.lineTo(mapToScene(po));
+            QPainterPath::Element element = path2.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                path.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                path.lineTo(mapToScene(po));
+            }
         }
     }
     return path;
@@ -276,7 +283,10 @@ void MyGraphicsCircleItem::paint(QPainter* painter, const QStyleOptionGraphicsIt
 
     painter->drawEllipse(QPointF(0, 0), rect().width() / 2, rect().height() / 2);
 
-    painter->drawPath(brushpath);
+    if(data(0).toInt() > 0)
+    {
+            painter->drawPath(brushpath);
+    }
 }
 
 

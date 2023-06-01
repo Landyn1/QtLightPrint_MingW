@@ -44,10 +44,14 @@ public:
     QAction *actionopen;
     QAction *actionchinese;
     QAction *actionenglish;
+    QAction *actionsystem;
+    QAction *actionoperation;
+    QAction *actionalign;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menu_2;
+    QMenu *menu_3;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
     QDockWidget *dock1;
@@ -90,7 +94,7 @@ public:
     QWidget *widget_28;
     QHBoxLayout *horizontalLayout_21;
     QLabel *label_13;
-    QLineEdit *linenum_text;
+    QLineEdit *space_text;
     QPushButton *brushbutton;
     QWidget *widget_30;
     QTextEdit *textEdit_2;
@@ -206,16 +210,35 @@ public:
     QWidget *dockWidgetContents_8;
     QWidget *widget_31;
     QHBoxLayout *horizontalLayout_22;
+    QPushButton *newfilebtn;
+    QPushButton *openfilebtn;
+    QPushButton *savefilebtn;
     QPushButton *pathbtn;
     QPushButton *deletepathbtn;
     QPushButton *groupbtn;
     QPushButton *deletegroupbtn;
     QDockWidget *dockWidget_3;
     QWidget *dockWidgetContents_9;
+    QWidget *widget_32;
+    QHBoxLayout *horizontalLayout_24;
+    QPushButton *shearbtn;
+    QPushButton *copybtn;
+    QPushButton *pastebtn;
+    QPushButton *revokebtn;
+    QPushButton *restorebtn;
+    QPushButton *verMirrorBtn;
+    QPushButton *horMirrorBtn;
     QDockWidget *dockWidget_4;
     QWidget *dockWidgetContents_10;
-    QDockWidget *dockWidget_5;
-    QWidget *dockWidgetContents_11;
+    QWidget *widget_33;
+    QHBoxLayout *horizontalLayout_25;
+    QPushButton *centerbtn;
+    QPushButton *leftbtn;
+    QPushButton *rightbtn;
+    QPushButton *topbtn;
+    QPushButton *buttombtn;
+    QPushButton *visiblebtn;
+    QPushButton *notvisiblebtn;
 
     void setupUi(QMainWindow *mainWindowClass)
     {
@@ -233,6 +256,12 @@ public:
         actionchinese->setObjectName(QString::fromUtf8("actionchinese"));
         actionenglish = new QAction(mainWindowClass);
         actionenglish->setObjectName(QString::fromUtf8("actionenglish"));
+        actionsystem = new QAction(mainWindowClass);
+        actionsystem->setObjectName(QString::fromUtf8("actionsystem"));
+        actionoperation = new QAction(mainWindowClass);
+        actionoperation->setObjectName(QString::fromUtf8("actionoperation"));
+        actionalign = new QAction(mainWindowClass);
+        actionalign->setObjectName(QString::fromUtf8("actionalign"));
         centralWidget = new QWidget(mainWindowClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         mainWindowClass->setCentralWidget(centralWidget);
@@ -243,6 +272,8 @@ public:
         menu->setObjectName(QString::fromUtf8("menu"));
         menu_2 = new QMenu(menuBar);
         menu_2->setObjectName(QString::fromUtf8("menu_2"));
+        menu_3 = new QMenu(menuBar);
+        menu_3->setObjectName(QString::fromUtf8("menu_3"));
         mainWindowClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(mainWindowClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -427,11 +458,11 @@ public:
 
         horizontalLayout_21->addWidget(label_13);
 
-        linenum_text = new QLineEdit(widget_28);
-        linenum_text->setObjectName(QString::fromUtf8("linenum_text"));
-        linenum_text->setMaximumSize(QSize(30, 16777215));
+        space_text = new QLineEdit(widget_28);
+        space_text->setObjectName(QString::fromUtf8("space_text"));
+        space_text->setMaximumSize(QSize(30, 16777215));
 
-        horizontalLayout_21->addWidget(linenum_text);
+        horizontalLayout_21->addWidget(space_text);
 
         brushbutton = new QPushButton(widget_29);
         brushbutton->setObjectName(QString::fromUtf8("brushbutton"));
@@ -467,6 +498,7 @@ public:
         dock3 = new QDockWidget(mainWindowClass);
         dock3->setObjectName(QString::fromUtf8("dock3"));
         dock3->setMinimumSize(QSize(300, 136));
+        dock3->setMaximumSize(QSize(400, 524287));
         dock3->setFeatures(QDockWidget::NoDockWidgetFeatures);
         dockWidgetContents_3 = new QWidget();
         dockWidgetContents_3->setObjectName(QString::fromUtf8("dockWidgetContents_3"));
@@ -1193,47 +1225,70 @@ public:
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dock_file);
         dockWidget_2 = new QDockWidget(mainWindowClass);
         dockWidget_2->setObjectName(QString::fromUtf8("dockWidget_2"));
-        dockWidget_2->setMinimumSize(QSize(42, 30));
-        dockWidget_2->setMaximumSize(QSize(524287, 30));
-        dockWidget_2->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_2->setMinimumSize(QSize(250, 30));
+        dockWidget_2->setMaximumSize(QSize(250, 30));
+        dockWidget_2->setStyleSheet(QString::fromUtf8(""));
+        dockWidget_2->setFloating(false);
+        dockWidget_2->setFeatures(QDockWidget::DockWidgetFeatureMask);
         dockWidget_2->setAllowedAreas(Qt::TopDockWidgetArea);
         dockWidgetContents_8 = new QWidget();
         dockWidgetContents_8->setObjectName(QString::fromUtf8("dockWidgetContents_8"));
         widget_31 = new QWidget(dockWidgetContents_8);
         widget_31->setObjectName(QString::fromUtf8("widget_31"));
-        widget_31->setGeometry(QRect(0, 0, 160, 40));
-        widget_31->setMinimumSize(QSize(0, 40));
-        widget_31->setMaximumSize(QSize(16777215, 40));
+        widget_31->setGeometry(QRect(0, 0, 210, 30));
+        widget_31->setMinimumSize(QSize(0, 30));
+        widget_31->setMaximumSize(QSize(16777215, 30));
         horizontalLayout_22 = new QHBoxLayout(widget_31);
         horizontalLayout_22->setSpacing(0);
         horizontalLayout_22->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_22->setObjectName(QString::fromUtf8("horizontalLayout_22"));
         horizontalLayout_22->setContentsMargins(0, 0, 0, 0);
+        newfilebtn = new QPushButton(widget_31);
+        newfilebtn->setObjectName(QString::fromUtf8("newfilebtn"));
+        newfilebtn->setMinimumSize(QSize(30, 30));
+        newfilebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_22->addWidget(newfilebtn);
+
+        openfilebtn = new QPushButton(widget_31);
+        openfilebtn->setObjectName(QString::fromUtf8("openfilebtn"));
+        openfilebtn->setMinimumSize(QSize(30, 30));
+        openfilebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_22->addWidget(openfilebtn);
+
+        savefilebtn = new QPushButton(widget_31);
+        savefilebtn->setObjectName(QString::fromUtf8("savefilebtn"));
+        savefilebtn->setMinimumSize(QSize(30, 30));
+        savefilebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_22->addWidget(savefilebtn);
+
         pathbtn = new QPushButton(widget_31);
         pathbtn->setObjectName(QString::fromUtf8("pathbtn"));
-        pathbtn->setMinimumSize(QSize(40, 40));
-        pathbtn->setMaximumSize(QSize(40, 40));
+        pathbtn->setMinimumSize(QSize(30, 30));
+        pathbtn->setMaximumSize(QSize(30, 30));
 
         horizontalLayout_22->addWidget(pathbtn);
 
         deletepathbtn = new QPushButton(widget_31);
         deletepathbtn->setObjectName(QString::fromUtf8("deletepathbtn"));
-        deletepathbtn->setMinimumSize(QSize(40, 40));
-        deletepathbtn->setMaximumSize(QSize(40, 40));
+        deletepathbtn->setMinimumSize(QSize(30, 30));
+        deletepathbtn->setMaximumSize(QSize(30, 30));
 
         horizontalLayout_22->addWidget(deletepathbtn);
 
         groupbtn = new QPushButton(widget_31);
         groupbtn->setObjectName(QString::fromUtf8("groupbtn"));
-        groupbtn->setMinimumSize(QSize(40, 40));
-        groupbtn->setMaximumSize(QSize(40, 40));
+        groupbtn->setMinimumSize(QSize(30, 30));
+        groupbtn->setMaximumSize(QSize(30, 30));
 
         horizontalLayout_22->addWidget(groupbtn);
 
         deletegroupbtn = new QPushButton(widget_31);
         deletegroupbtn->setObjectName(QString::fromUtf8("deletegroupbtn"));
-        deletegroupbtn->setMinimumSize(QSize(40, 40));
-        deletegroupbtn->setMaximumSize(QSize(40, 40));
+        deletegroupbtn->setMinimumSize(QSize(30, 30));
+        deletegroupbtn->setMaximumSize(QSize(30, 30));
 
         horizontalLayout_22->addWidget(deletegroupbtn);
 
@@ -1241,40 +1296,154 @@ public:
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_2);
         dockWidget_3 = new QDockWidget(mainWindowClass);
         dockWidget_3->setObjectName(QString::fromUtf8("dockWidget_3"));
-        dockWidget_3->setMinimumSize(QSize(42, 30));
-        dockWidget_3->setMaximumSize(QSize(524287, 30));
-        dockWidget_3->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_3->setMinimumSize(QSize(250, 30));
+        dockWidget_3->setMaximumSize(QSize(250, 30));
+        dockWidget_3->setStyleSheet(QString::fromUtf8(""));
+        dockWidget_3->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar);
         dockWidget_3->setAllowedAreas(Qt::TopDockWidgetArea);
         dockWidgetContents_9 = new QWidget();
         dockWidgetContents_9->setObjectName(QString::fromUtf8("dockWidgetContents_9"));
+        widget_32 = new QWidget(dockWidgetContents_9);
+        widget_32->setObjectName(QString::fromUtf8("widget_32"));
+        widget_32->setGeometry(QRect(0, 0, 210, 30));
+        widget_32->setMinimumSize(QSize(0, 30));
+        widget_32->setMaximumSize(QSize(16777215, 30));
+        horizontalLayout_24 = new QHBoxLayout(widget_32);
+        horizontalLayout_24->setSpacing(0);
+        horizontalLayout_24->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_24->setObjectName(QString::fromUtf8("horizontalLayout_24"));
+        horizontalLayout_24->setContentsMargins(0, 0, 0, 0);
+        shearbtn = new QPushButton(widget_32);
+        shearbtn->setObjectName(QString::fromUtf8("shearbtn"));
+        shearbtn->setMinimumSize(QSize(30, 30));
+        shearbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(shearbtn);
+
+        copybtn = new QPushButton(widget_32);
+        copybtn->setObjectName(QString::fromUtf8("copybtn"));
+        copybtn->setMinimumSize(QSize(30, 30));
+        copybtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(copybtn);
+
+        pastebtn = new QPushButton(widget_32);
+        pastebtn->setObjectName(QString::fromUtf8("pastebtn"));
+        pastebtn->setMinimumSize(QSize(30, 30));
+        pastebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(pastebtn);
+
+        revokebtn = new QPushButton(widget_32);
+        revokebtn->setObjectName(QString::fromUtf8("revokebtn"));
+        revokebtn->setMinimumSize(QSize(30, 30));
+        revokebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(revokebtn);
+
+        restorebtn = new QPushButton(widget_32);
+        restorebtn->setObjectName(QString::fromUtf8("restorebtn"));
+        restorebtn->setMinimumSize(QSize(30, 30));
+        restorebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(restorebtn);
+
+        verMirrorBtn = new QPushButton(widget_32);
+        verMirrorBtn->setObjectName(QString::fromUtf8("verMirrorBtn"));
+        verMirrorBtn->setMinimumSize(QSize(30, 30));
+        verMirrorBtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(verMirrorBtn);
+
+        horMirrorBtn = new QPushButton(widget_32);
+        horMirrorBtn->setObjectName(QString::fromUtf8("horMirrorBtn"));
+        horMirrorBtn->setMinimumSize(QSize(30, 30));
+        horMirrorBtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_24->addWidget(horMirrorBtn);
+
         dockWidget_3->setWidget(dockWidgetContents_9);
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_3);
         dockWidget_4 = new QDockWidget(mainWindowClass);
         dockWidget_4->setObjectName(QString::fromUtf8("dockWidget_4"));
-        dockWidget_4->setMinimumSize(QSize(42, 30));
-        dockWidget_4->setMaximumSize(QSize(524287, 30));
-        dockWidget_4->setFeatures(QDockWidget::NoDockWidgetFeatures);
+        dockWidget_4->setMinimumSize(QSize(250, 30));
+        dockWidget_4->setMaximumSize(QSize(250, 30));
+        dockWidget_4->setStyleSheet(QString::fromUtf8(""));
+        dockWidget_4->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar);
         dockWidget_4->setAllowedAreas(Qt::TopDockWidgetArea);
         dockWidgetContents_10 = new QWidget();
         dockWidgetContents_10->setObjectName(QString::fromUtf8("dockWidgetContents_10"));
+        widget_33 = new QWidget(dockWidgetContents_10);
+        widget_33->setObjectName(QString::fromUtf8("widget_33"));
+        widget_33->setGeometry(QRect(0, 0, 210, 30));
+        widget_33->setMinimumSize(QSize(0, 30));
+        widget_33->setMaximumSize(QSize(16777215, 30));
+        horizontalLayout_25 = new QHBoxLayout(widget_33);
+        horizontalLayout_25->setSpacing(0);
+        horizontalLayout_25->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_25->setObjectName(QString::fromUtf8("horizontalLayout_25"));
+        horizontalLayout_25->setContentsMargins(0, 0, 0, 0);
+        centerbtn = new QPushButton(widget_33);
+        centerbtn->setObjectName(QString::fromUtf8("centerbtn"));
+        centerbtn->setMinimumSize(QSize(30, 30));
+        centerbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(centerbtn);
+
+        leftbtn = new QPushButton(widget_33);
+        leftbtn->setObjectName(QString::fromUtf8("leftbtn"));
+        leftbtn->setMinimumSize(QSize(30, 30));
+        leftbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(leftbtn);
+
+        rightbtn = new QPushButton(widget_33);
+        rightbtn->setObjectName(QString::fromUtf8("rightbtn"));
+        rightbtn->setMinimumSize(QSize(30, 30));
+        rightbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(rightbtn);
+
+        topbtn = new QPushButton(widget_33);
+        topbtn->setObjectName(QString::fromUtf8("topbtn"));
+        topbtn->setMinimumSize(QSize(30, 30));
+        topbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(topbtn);
+
+        buttombtn = new QPushButton(widget_33);
+        buttombtn->setObjectName(QString::fromUtf8("buttombtn"));
+        buttombtn->setMinimumSize(QSize(30, 30));
+        buttombtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(buttombtn);
+
+        visiblebtn = new QPushButton(widget_33);
+        visiblebtn->setObjectName(QString::fromUtf8("visiblebtn"));
+        visiblebtn->setMinimumSize(QSize(30, 30));
+        visiblebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(visiblebtn);
+
+        notvisiblebtn = new QPushButton(widget_33);
+        notvisiblebtn->setObjectName(QString::fromUtf8("notvisiblebtn"));
+        notvisiblebtn->setMinimumSize(QSize(30, 30));
+        notvisiblebtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(notvisiblebtn);
+
         dockWidget_4->setWidget(dockWidgetContents_10);
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_4);
-        dockWidget_5 = new QDockWidget(mainWindowClass);
-        dockWidget_5->setObjectName(QString::fromUtf8("dockWidget_5"));
-        dockWidget_5->setMinimumSize(QSize(42, 30));
-        dockWidget_5->setMaximumSize(QSize(524287, 30));
-        dockWidget_5->setFeatures(QDockWidget::NoDockWidgetFeatures);
-        dockWidget_5->setAllowedAreas(Qt::TopDockWidgetArea);
-        dockWidgetContents_11 = new QWidget();
-        dockWidgetContents_11->setObjectName(QString::fromUtf8("dockWidgetContents_11"));
-        dockWidget_5->setWidget(dockWidgetContents_11);
-        mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_5);
 
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(menu_2->menuAction());
+        menuBar->addAction(menu_3->menuAction());
         menu->addAction(actionnew);
         menu->addAction(actionsave);
         menu->addAction(actionopen);
+        menu_2->addAction(actionsystem);
+        menu_2->addAction(actionoperation);
+        menu_2->addAction(actionalign);
 
         retranslateUi(mainWindowClass);
 
@@ -1298,8 +1467,12 @@ public:
         actionopen->setText(QCoreApplication::translate("mainWindowClass", "open", nullptr));
         actionchinese->setText(QCoreApplication::translate("mainWindowClass", "chinese", nullptr));
         actionenglish->setText(QCoreApplication::translate("mainWindowClass", "english", nullptr));
+        actionsystem->setText(QCoreApplication::translate("mainWindowClass", "system", nullptr));
+        actionoperation->setText(QCoreApplication::translate("mainWindowClass", "operation", nullptr));
+        actionalign->setText(QCoreApplication::translate("mainWindowClass", "align", nullptr));
         menu->setTitle(QCoreApplication::translate("mainWindowClass", "\346\226\207\344\273\266", nullptr));
-        menu_2->setTitle(QCoreApplication::translate("mainWindowClass", "\347\274\226\350\276\221", nullptr));
+        menu_2->setTitle(QCoreApplication::translate("mainWindowClass", "\346\237\245\347\234\213", nullptr));
+        menu_3->setTitle(QCoreApplication::translate("mainWindowClass", "\345\270\256\345\212\251", nullptr));
         dock1->setWindowTitle(QCoreApplication::translate("mainWindowClass", "\345\257\271\350\261\241\345\210\227\350\241\250", nullptr));
         QTableWidgetItem *___qtablewidgetitem = itemtable->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QCoreApplication::translate("mainWindowClass", "\345\220\215\347\247\260", nullptr));
@@ -1386,10 +1559,27 @@ public:
         bianji_11->setText(QCoreApplication::translate("mainWindowClass", "\346\211\223\345\274\200\347\237\242\351\207\217\346\226\207\344\273\266", nullptr));
         leftmove->setText(QCoreApplication::translate("mainWindowClass", "<", nullptr));
         rightmove->setText(QCoreApplication::translate("mainWindowClass", ">", nullptr));
-        pathbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\276\244\347\273\204", nullptr));
-        deletepathbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\276\244", nullptr));
-        groupbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\273\204\345\220\210", nullptr));
-        deletegroupbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\273\204", nullptr));
+        newfilebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\226\260\345\273\272", nullptr));
+        openfilebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\211\223\345\274\200", nullptr));
+        savefilebtn->setText(QCoreApplication::translate("mainWindowClass", "\344\277\235\345\255\230", nullptr));
+        pathbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\273\204\345\220\210", nullptr));
+        deletepathbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\273\204", nullptr));
+        groupbtn->setText(QCoreApplication::translate("mainWindowClass", "\347\276\244\347\273\204", nullptr));
+        deletegroupbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\210\206\347\276\244", nullptr));
+        shearbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\211\252\345\210\207", nullptr));
+        copybtn->setText(QCoreApplication::translate("mainWindowClass", "\345\244\215\345\210\266", nullptr));
+        pastebtn->setText(QCoreApplication::translate("mainWindowClass", "\351\273\217\350\264\264", nullptr));
+        revokebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\222\244\351\224\200", nullptr));
+        restorebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\201\242\345\244\215", nullptr));
+        verMirrorBtn->setText(QCoreApplication::translate("mainWindowClass", "\346\260\264\345\271\263\351\225\234\345\203\217", nullptr));
+        horMirrorBtn->setText(QCoreApplication::translate("mainWindowClass", "\345\236\202\347\233\264\351\225\234\345\203\217", nullptr));
+        centerbtn->setText(QCoreApplication::translate("mainWindowClass", "\344\270\255\345\277\203", nullptr));
+        leftbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\267\246", nullptr));
+        rightbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\217\263", nullptr));
+        topbtn->setText(QCoreApplication::translate("mainWindowClass", "\344\270\212", nullptr));
+        buttombtn->setText(QCoreApplication::translate("mainWindowClass", "\344\270\213", nullptr));
+        visiblebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\230\276\347\244\272", nullptr));
+        notvisiblebtn->setText(QCoreApplication::translate("mainWindowClass", "\351\232\220\350\227\217", nullptr));
     } // retranslateUi
 
 };

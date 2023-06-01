@@ -19,8 +19,10 @@ public:
         return QRect(0,0,0,0);
     }
     double angle = 0;
-    int linenum = 0;
+    double space = 0;
     QRect getRect();
+    void rotateY();
+    void rotateX();
     QPointF symmetryPoint(QPointF p1 , QPointF p2);
     int type() const
     {
@@ -33,7 +35,7 @@ public:
         update();
     }
     int printLayer = 0;
-    QPainterPath ViewPath();
+    QPainterPath ViewPath(int k=0);
     QString name="";
 
     QPointF ctl_pre;

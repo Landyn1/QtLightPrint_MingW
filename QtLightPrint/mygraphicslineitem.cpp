@@ -9,7 +9,7 @@ MyGraphicsLineItem::~MyGraphicsLineItem()
 {
 
 }
-QPainterPath MyGraphicsLineItem::ViewPath()
+QPainterPath MyGraphicsLineItem::ViewPath(int k)
 {
     QPainterPath p;
     QPainterPath path = this->path();
@@ -30,20 +30,22 @@ QPainterPath MyGraphicsLineItem::ViewPath()
 
     path.clear();
     path = brushPath;
-    for (int i = 0; i < path.elementCount(); i++)
+    if( k == 0)
     {
-        QPainterPath::Element element = path.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path.elementCount(); i++)
         {
-            p.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            p.lineTo(mapToScene(po));
+            QPainterPath::Element element = path.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                p.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                p.lineTo(mapToScene(po));
+            }
         }
     }
-
     return p;
 
 }
@@ -186,13 +188,20 @@ void MyGraphicsLineItem::setBrushpath(QList<QLineF> lins, QLineF l, QList<QPoint
     }
 }
 
-bool MyGraphicsLineItem::set_brush(double angle,int linenum)
+bool MyGraphicsLineItem::set_brush(double angle,double space)
 {
     brushPath.clear();
     this->angle = angle;
-    this->linenum = linenum;
-    if(linenum == 0)
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
+    if(space == 0)
+    {
+        update();
         return true;
+    }
     QPainterPath path2;
     double k = tan(angle*M_PI/180);//斜率
     double w = this->path().boundingRect().width();
@@ -332,6 +341,7 @@ bool MyGraphicsLineItem::set_brush(double angle,int linenum)
         }
 
     }
+
     brushPath = path2;
     update();
 }
@@ -454,6 +464,58 @@ bool MyGraphicsLineItem::readPLT(QString filename)
            this->setPath(path);
      }
 }
+
+void MyGraphicsLineItem::rotateY()
+{
+    double rooty = getRect().y()+(getRect().height()/2);
+    rooty = rooty-pos().y();
+    QPainterPath p;
+    QPainterPath path = this->path();
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = po.x();
+        y1 = rooty*2-po.y();
+        if (element.isMoveTo())
+        {
+            p.moveTo(QPointF(x1,y1));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(QPointF(x1,y1));
+        }
+    }
+    this->setPath(p);
+}
+
+void MyGraphicsLineItem::rotateX()
+{
+    double rootx = getRect().x()+(getRect().width()/2);
+    rootx = rootx-pos().x();
+    QPainterPath p;
+    QPainterPath path = this->path();
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = rootx*2-po.x();
+        y1 = po.y();
+        if (element.isMoveTo())
+        {
+            p.moveTo(QPointF(x1,y1));
+        }
+        else if (element.isLineTo())
+        {
+            p.lineTo(QPointF(x1,y1));
+        }
+    }
+    this->setPath(p);
+}
+
+
 void MyGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 
@@ -469,43 +531,49 @@ void MyGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     }
     //+painter->setBrush(Qt::blue);
     painter->setPen(pen);
+
     painter->drawPath(this->path());
-    painter->drawPath(brushPath);
+
+
+    if(data(0).toInt() > 0)
+    {
+         painter->drawPath(brushPath);
+    }
 }
 
-QRect MyGraphicsLineItem::getRect()
+QRectF MyGraphicsLineItem::getRect()
 {
-    int x,y,w,h;
-    QPoint leftbuttom(10000,10000),righttop(-10000,-10000);
+    double x,y,w,h;
+    QPointF leftbuttom(10000,10000),righttop(-10000,-10000);
 
     QPainterPath path = this->path();
 
     for (int i = 0; i < path.elementCount() ;i++)
     {
         QPointF p1 = path.elementAt(i);
-        if(leftbuttom.x()>p1.toPoint().x())
+        if(leftbuttom.x()>p1.x())
         {
-            leftbuttom.setX( p1.toPoint().x());
+            leftbuttom.setX( p1.x());
         }
-        if(leftbuttom.y()>p1.toPoint().y())
+        if(leftbuttom.y()>p1.y())
         {
-            leftbuttom.setY(p1.toPoint().y());
+            leftbuttom.setY(p1.y());
         }
-        if(righttop.x()<p1.toPoint().x())
+        if(righttop.x()<p1.x())
         {
-            righttop.setX(p1.toPoint().x());
+            righttop.setX(p1.x());
         }
-        if(righttop.y()<p1.toPoint().y())
+        if(righttop.y()<p1.y())
         {
-            righttop.setY(p1.toPoint().y());
+            righttop.setY(p1.y());
         }
     }
-    QPoint pos = this->pos().toPoint();
+    QPointF pos = this->pos();
     x = leftbuttom.x()+pos.x();
     y = leftbuttom.y()+pos.y();
     w = righttop.x()-leftbuttom.x();
     h = righttop.y()-leftbuttom.y();
-    return QRect(x,y,w,h);
+    return QRectF(x,y,w,h);
 }
 
 bool MyGraphicsLineItem::selectEvent(QPointF p,int k)

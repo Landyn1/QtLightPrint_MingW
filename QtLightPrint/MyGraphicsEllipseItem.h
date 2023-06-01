@@ -16,8 +16,8 @@ public:
 	enum { Type = 2 };
     QPainterPath brushpath;
     double angle = 0;
-    int linenum = 0;
-    void set_brush(double angle,int linenum);
+    double space = 0;
+    void set_brush(double angle,double space);
     bool selectEvent(QPointF p,int k=0);
 	int type() const
 	{
@@ -25,7 +25,7 @@ public:
 		return Type;
 	}
     int printLayer = 0;
-    QPainterPath ViewPath();
+    QPainterPath ViewPath(int k=0);
     QString name="";
     QRect getRect();
     QPainterPath path()

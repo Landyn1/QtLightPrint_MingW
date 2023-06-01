@@ -28,7 +28,7 @@ QRect MyGraphicsEllipseItem::getRect()
     h = rect().height();
     return QRect(x,y,w,h);
 }
-QPainterPath MyGraphicsEllipseItem::ViewPath()
+QPainterPath MyGraphicsEllipseItem::ViewPath(int k)
 {
     QPainterPath p;
     double w = this->rect().width();
@@ -39,7 +39,7 @@ QPainterPath MyGraphicsEllipseItem::ViewPath()
     double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
 
     double ms1 = (dpiX * 10) / 254; //1mm是几个像素
-    int num = s/ms1*10;//mm*10 0.1mm一个线段;
+    int num = s/ms1*5;//mm*10 0.1mm一个线段;
     int t = 360*100/num;
 
     double tt = double(t)/100;
@@ -100,17 +100,20 @@ QPainterPath MyGraphicsEllipseItem::ViewPath()
     }
     p.lineTo(mapToScene(0,h/2));
 
-    for (int i = 0; i < path2.elementCount(); i++)
+    if(k == 0)
     {
-        QPainterPath::Element element = path2.elementAt(i);
-        QPointF po = element;
-        if (element.isMoveTo())
+        for (int i = 0; i < path2.elementCount(); i++)
         {
-            p.moveTo(mapToScene(po));
-        }
-        else if (element.isLineTo())
-        {
-            p.lineTo(mapToScene(po));
+            QPainterPath::Element element = path2.elementAt(i);
+            QPointF po = element;
+            if (element.isMoveTo())
+            {
+                p.moveTo(mapToScene(po));
+            }
+            else if (element.isLineTo())
+            {
+                p.lineTo(mapToScene(po));
+            }
         }
     }
     return p;
@@ -133,7 +136,11 @@ void MyGraphicsEllipseItem::paint(QPainter* painter, const QStyleOptionGraphicsI
     
         
     painter->drawEllipse(QPointF(0, 0), this->rect().width() / 2, this->rect().height() / 2);
-    painter->drawPath(brushpath);
+    if(data(0).toInt() > 0)
+    {
+            painter->drawPath(brushpath);
+    }
+
 }
 
 bool MyGraphicsEllipseItem::selectEvent(QPointF p,int k)
@@ -169,19 +176,26 @@ bool MyGraphicsEllipseItem::selectEvent(QPointF p,int k)
 
 }
 
-void MyGraphicsEllipseItem::set_brush(double angle,int linenum)
+void MyGraphicsEllipseItem::set_brush(double angle,double space)
 {
     brushpath.clear();
     this->angle = angle;
-    this->linenum = linenum;
-    if(linenum == 0)
+    double dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+    double  temp = (dpiX * 10) / 254; //1mm = tpx
+    double maxh = fmax(this->getRect().width(),this->getRect().height());
+    double linenum = (maxh/temp) / space;
+    this->space = space;
+    if(space == 0)
+    {
+        update();
         return;
+    }
     QPainterPath path;
     double k = tan(angle*M_PI/180);//斜率
     int w = rect().width();
     int h = rect().height();
     double m = double(h)/double(w);
-    if(linenum==0)
+    if(space==0)
     {
         update();
         return;

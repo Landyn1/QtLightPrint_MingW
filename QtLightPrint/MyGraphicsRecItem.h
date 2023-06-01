@@ -20,7 +20,7 @@ public:
 		// 针对该 item 启用 qgraphicsitem_cast
 		return Type;
 	}
-    void set_brush(double angle,int linenum);
+    void set_brush(double angle,double space);
 	~MyGraphicsRecItem();
 	QRectF boundingRect() const;
 	QPainterPath shape() const;
@@ -32,12 +32,12 @@ public:
         return p;
     }
     double angle = 0;
-    int linenum = 0;
+    double space = 0;
 	//QRectF boundingRect() const;
 	//QPainterPath shape() const;
 	//QRectF boundingRect() const override;
 	//QPainterPath shape() const override;
-	QPainterPath ViewPath();
+    QPainterPath ViewPath(int k=0);
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
     bool selectEvent(QPointF p,int k = 0);
 	QString name = "";

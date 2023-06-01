@@ -13,7 +13,7 @@ class mainWindow : public QMainWindow
 
 public:
     mainWindow(QWidget *parent = nullptr);
-
+    int findroot(int id,QList<QGraphicsItem*> items);
     ~mainWindow();
     void setItemMoveble(bool moveble);
     MyGraphicsScene* scene;
@@ -32,8 +32,13 @@ public:
     int fileid = 0;
     QWidget *files = new QWidget();
     QHBoxLayout *m_file = new QHBoxLayout();
-    QList<MyGraphicsScene *> scenes;
+    QList<QList<QGraphicsItem*>> present_items; //二维数组，记录items的情况
+    int present = 0;                   //用于当前的item定位。
+    QList<QGraphicsItem*> copyall(QList<QGraphicsItem*> itemss);
     QList<MyGraphicsView *> views;
+    QList<MyGraphicsScene *> scenes;
+    void additem_notEmitChange(int row, QGraphicsItem *item);
+    void removeitem_notEmitChange(int id);
     QList<bool> isfirst;
     void creatnewfile(QString filename);
     QPointF pre_Pos;
@@ -46,15 +51,18 @@ public:
     void initPenNumberConnect();
     void initDrawConnect();
     void initItemtableConnect();
-    double spaceadjust = 1;   //用来调整实际打印的距离
 
+    double spaceadjust = 1;   //用来调整实际打印的距离
+    QList<QGraphicsItem*> copyitems;
     template<typename T> void setItemRect_XandY(QGraphicsItem* node, int &x,int &y);
+    template<typename T> void leftAlign(QGraphicsItem* node,QPointF rootPos);
     template<typename T> void setItemRect_WandH(QGraphicsItem* node, int x,int y,int &w,int &h);
     template<typename T> void saveItems(QGraphicsItem* node, ItemFileClass *&iff,int type);
     template<typename T> void saveBrush(QGraphicsItem* node, double temp,int num , double space,double angle);
     template<typename T> void setItemPosition(QGraphicsItem* node, int &leftbuttomx,int &leftbuttomy,int &righttopx,int &righttopy);
     template<typename T> QPainterPath getpath(QGraphicsItem* node,QPainterPath &path);
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void additem(int row,QGraphicsItem * item);
 public slots:
     void creatnewfile();
     void savefile();

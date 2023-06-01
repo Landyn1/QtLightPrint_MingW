@@ -11,7 +11,7 @@ class MyGraphicsTextItem : public QGraphicsRectItem
 public:
     MyGraphicsTextItem(QGraphicsTextItem *parent = NULL,QString str = "C");
     ~MyGraphicsTextItem();
-    QPainterPath ViewPath();
+    QPainterPath ViewPath(int k=0);
     QRectF boundingRect() const
     {
         return rect();
@@ -28,8 +28,8 @@ public:
     enum { Type = 6 };
     QPainterPath brushpath;
     double angle = 0;
-    int linenum = 0;
-    void set_brush(double angle,int linenum);
+    double space = 0;
+    void set_brush(double angle,double space);
     int type() const
     {
         // 针对该 item 启用 qgraphicsitem_cast
@@ -41,12 +41,14 @@ public:
     QString str="";
     QRectF rectf;
     QString name="";
-    QRect getRect();
+    QRectF getRect();
     QFont font = QFont(u8"微软雅黑",72);
     void setStr(QString str,QFont font);
     bool selectEvent(QPointF p,int k=0);
     void setRectF();
     QPainterPath path;
+    void rotateY();
+    void rotateX();
     void setDefault_Path();
     void makePath_fill_Rect();
     void setPath(QPainterPath path)

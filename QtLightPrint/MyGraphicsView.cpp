@@ -60,21 +60,8 @@ void MyGraphicsView::leaveEvent(QEvent *event)
 
 void MyGraphicsView::save_lefttop()
 {
+
     QList<QGraphicsItem *> itemss = scene()->items();
-    for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
-    {
-        QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
-        if(node->type() == 10&& node->isSelected())
-        {
-            MyGraphicsGroupItem *g = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
-            QList<QGraphicsItem*> list = g->childItems();
-            for(QGraphicsItem * l:list)
-            {
-                g->removeFromGroup(l);
-            }
-            //g->setPos(0,0);
-        }
-    }
     for (QList<QGraphicsItem*>::iterator it = itemss.begin(); it != itemss.end(); it++)
     {
         QGraphicsItem* node = qgraphicsitem_cast<QGraphicsItem*>(*it);
@@ -98,7 +85,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs(list[0].y()-list[1].y());
                         item2->setPos(fmin(list[0].x(),list[1].x())+(w/2),fmin(list[0].y(),list[1].y())+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -129,7 +116,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -158,7 +145,7 @@ void MyGraphicsView::save_lefttop()
                         double h = qAbs( list[1].y()-list[0].y());
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -181,7 +168,7 @@ void MyGraphicsView::save_lefttop()
                         MyGraphicsLineItem *item2 = qgraphicsitem_cast<MyGraphicsLineItem*>(node2);
                         item2->setPos(item1->pos());
                         item2->setPath(item1->path());
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -211,7 +198,7 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->setPath(item1->path);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -240,7 +227,7 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->setPath(item1->path);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -318,7 +305,7 @@ void MyGraphicsView::save_lefttop()
                         item2->setPos(minx+(w/2),miny+(h/2));
                         item2->setRect(-w/2,-h/2,w,h);
                         item2->path = (item1->path);
-                        item2->set_brush(item1->angle,item1->linenum);
+                        item2->set_brush(item1->angle,item1->space);
                         if(item2->data(5).toInt() != 0)
                         {
                             for(int i = 0;i<itemss.length();i++)
@@ -336,10 +323,19 @@ void MyGraphicsView::save_lefttop()
                     }
                 }
             }
+
+            for(int i = 0;i<itemss.length();i++)
+            {
+                if(itemss[i]->type() == 10)
+                {
+                      qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->set_brush(qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->angle,qgraphicsitem_cast<MyGraphicsGroupItem*>(itemss[i])->space);
+                }
+            }
             scene()->removeItem(node);
         }
     }
     emit selectchange();
+
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
@@ -347,10 +343,17 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 
     //k=0;
     if(moveble || lefttop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move || rightmid_move)
+    {
         k=0;
+    }
+    if(moveble)
+    {
+        emit sceneChange();
+    }
     if(lefttop_move || midtop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move || rightmid_move)
     {
         save_lefttop();
+        emit sceneChange();
     }
     moveble = false;
     lefttop_move = false;
@@ -386,6 +389,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
+                emit sceneChange();
                 row++;
                 item_id++;
             }
@@ -405,6 +409,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
+                emit sceneChange();
                 row++;
                 item_id++;
             }
@@ -424,6 +429,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
                 scene()->addItem(item);
                 update();
                 emit addItem(row,item);
+                emit sceneChange();
                 row++;
                 item_id++;
             }
@@ -443,6 +449,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent* event)
             scene()->addItem(item);
             update();
             emit addItem(row,item);
+            emit sceneChange();
             row++;
             item_id++;
         }
@@ -480,8 +487,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
     rightmid_move = QRectF(itemad->pos().x() + itemad->rightmid.x(),itemad->pos().y() + itemad->rightmid.y(),itemad->rightmid.width(),itemad->rightmid.height()).contains(mapToScene(event->pos()));
 
     if(moveble || lefttop_move || midtop_move || righttop_move || leftbuttom_move || midbuttom_move || rightbuttom_move || leftmid_move ||rightmid_move)
+    {
         k=1;
 
+    }
     if(action_state == 0)
     {
         setSelecT();
@@ -543,6 +552,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
                 item->name=tr("直线")+str;
                 scene()->addItem(item);
                 emit addItem(row,item);
+                emit sceneChange();
                 row++;
                 item_id++;
             }
@@ -577,6 +587,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         scene()->addItem(item);
         scene()->update();
         emit addItem(row,item);
+        emit sceneChange();
         row++;
         item_id++;
 
@@ -621,6 +632,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
             item->name=tr("曲线")+str;
             scene()->addItem(item);
             emit addItem(row,item);
+            emit sceneChange();
             row++;
             item_id++;
             _tempCurveItemPtr->setPath(*_tempCurvePath);
@@ -642,6 +654,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent* event)
         scene()->addItem(item);
         scene()->update();
         emit addItem(row,item);
+        emit sceneChange();
         row++;
         item_id++;
     }
@@ -663,7 +676,8 @@ void MyGraphicsView::keyPressEvent(QKeyEvent *event)
         }
 
         scene()->update();
-       return;
+        emit sceneChange();
+        return;
     }
 
 }
@@ -677,16 +691,26 @@ void MyGraphicsView::keyReleaseEvent(QKeyEvent *event)
 void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -732,7 +756,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setData(5,item->data(5).toInt());
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -761,7 +785,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -789,7 +813,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -841,7 +865,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->name = item->name;
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -876,7 +900,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -954,7 +978,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1120,7 +1144,7 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1132,17 +1156,26 @@ void MyGraphicsView::lefttop_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
-
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -1175,7 +1208,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1193,7 +1226,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1209,7 +1242,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1249,7 +1282,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1268,7 +1301,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1331,7 +1364,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1460,7 +1493,7 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
             tmp->setVisible(true);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
     }
@@ -1470,16 +1503,26 @@ void MyGraphicsView::midtop_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -1526,7 +1569,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -1555,7 +1598,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1585,7 +1628,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -1635,7 +1678,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1666,7 +1709,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1742,7 +1785,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1907,7 +1950,7 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -1919,16 +1962,26 @@ void MyGraphicsView::righttop_set(QPointF p1, QPointF pressPos)
 void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -1973,7 +2026,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2002,7 +2055,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2032,7 +2085,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2083,7 +2136,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2114,7 +2167,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2190,7 +2243,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2355,7 +2408,7 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2367,16 +2420,26 @@ void MyGraphicsView::leftbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -2410,7 +2473,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2429,7 +2492,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -2444,7 +2507,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()/2,-item->rect().height()*(1+proportion)/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2485,7 +2548,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2504,7 +2567,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2567,7 +2630,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width())/2,-(item->rect().height()*(1+proportion))/2,item->rect().width(),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2694,7 +2757,7 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2706,16 +2769,26 @@ void MyGraphicsView::midbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -2762,7 +2835,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -2793,7 +2866,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setPos((poss-roof)*proportion+poss);
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2827,7 +2900,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -2881,7 +2954,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2916,7 +2989,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()*(1+proportion)/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -2994,7 +3067,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-(item->rect().width()*(1+proportion))/2,-(item->rect().height()*(1+proportion))/2,item->rect().width()*(1+proportion),item->rect().height()*(1+proportion));
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3162,7 +3235,7 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3174,16 +3247,26 @@ void MyGraphicsView::rightbuttom_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -3215,7 +3298,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3233,7 +3316,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3248,7 +3331,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3288,7 +3371,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3307,7 +3390,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3370,7 +3453,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3497,7 +3580,7 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3509,16 +3592,26 @@ void MyGraphicsView::leftmid_set(QPointF p1,QPointF pressPos)
 void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
 {
     QList<QGraphicsItem*> items = scene()->selectedItems();
-    for(QGraphicsItem * item : items)
+    while(1)
     {
-        if(item->type() == 10)
+        int k=0;
+        for(QGraphicsItem * item : items)
         {
-            QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
-            for(QGraphicsItem * child : chids)
+            if(item->type() == 10)
             {
-                child->setData(5,item->data(0).toInt());
-                items.append(child);
+                k=1;
+                QList<QGraphicsItem*> chids = qgraphicsitem_cast<MyGraphicsGroupItem *>(item)->childItems();
+                items.removeOne(item);
+                for(QGraphicsItem * child : chids)
+                {
+                    child->setData(5,item->data(0).toInt());
+                    items.append(child);
+                }
             }
+        }
+        if(k == 0)
+        {
+            break;
         }
     }
     double s = this->matrix().m11();
@@ -3550,7 +3643,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 2)
@@ -3568,7 +3661,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             scene()->addItem(tmp);
         }
         else if(node->type() == 3)
@@ -3583,7 +3676,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setData(0,-1);
             tmp->setData(1,item->data(0).toInt());
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setVisible(true);
             scene()->addItem(tmp);
         }
@@ -3623,7 +3716,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             }
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3642,7 +3735,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->setDefault_Path();
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3705,7 +3798,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setRect(-item->rect().width()*(1+proportion)/2,-item->rect().height()/2,item->rect().width()*(1+proportion),item->rect().height());
             tmp->setPath(path2);
             tmp->setData(0,-1);
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3831,7 +3924,7 @@ void MyGraphicsView::rightmid_set(QPointF p1,QPointF pressPos)
             tmp->setData(0,-1);
             tmp->text = item->text;
             tmp->codetype = item->codetype;
-            tmp->set_brush(item->angle,item->linenum);
+            tmp->set_brush(item->angle,item->space);
             tmp->setData(1,item->data(0).toInt());
             tmp->setVisible(true);
             scene()->addItem(tmp);
@@ -3908,10 +4001,31 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* event)
             {
                 MyGraphicsGroupItem *group = qgraphicsitem_cast<MyGraphicsGroupItem*>(node);
                 QList<QGraphicsItem*> childs = group->childItems();
+
+                while(1)
+                {
+                    int k=0;
+                    for(QGraphicsItem* item:childs)
+                    {
+                        if(item->type() == 10)
+                        {
+                            k=1;
+                            childs.removeOne(item);
+                            MyGraphicsGroupItem *g =qgraphicsitem_cast<MyGraphicsGroupItem*>(item);
+                            childs.append(g->childItems());
+                        }
+                    }
+                    if(k == 0)
+                    {
+                        break;
+                    }
+                }
+
                 for(QGraphicsItem* child:childs)
                 {
                     child->setPos(child->pos().x() + offsetPos.x()/s, child->pos().y() - offsetPos.y()/s);
                 }
+                group->set_brush(group->angle,group->space);
             }
         }
         emit selectchange();

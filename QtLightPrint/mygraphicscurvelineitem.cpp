@@ -10,7 +10,143 @@ MyGraphicsCurveLineItem::~MyGraphicsCurveLineItem()
 
 }
 
-QPainterPath MyGraphicsCurveLineItem::ViewPath()
+
+void MyGraphicsCurveLineItem::rotateY()
+{
+    double rooty = getRect().y()+(getRect().height()/2);
+    rooty = rooty-pos().y();
+    QPainterPath p;
+    QPainterPath path = this->path();
+
+    QPointF lp1,lp2,c1,c2;
+    int kl = 0;
+    int kc = 0;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = po.x();
+        y1 = rooty*2-po.y();
+        po.setX(x1);
+        po.setY(y1);
+        if (element.isMoveTo())
+        {
+            lp1 = po;
+            kl = 0;
+            p.moveTo(po);
+        }
+        else if (element.isLineTo())
+        {
+            if(kl == 0)
+            {
+                lp2 = po;
+                p.lineTo(po);
+                kl++;
+            }
+            else
+            {
+                lp1 = lp2;
+                lp2 = po;
+                p.lineTo(po);
+            }
+        }
+        else if(element.isCurveTo())
+        {
+            if(kl != 0)
+                lp1 = lp2;
+            c1 = po;
+            kc++;
+        }
+        else
+        {
+            if(kc%3==1)
+            {
+                c2 = po;
+                kc++;
+            }
+            else if(kc%3 == 2)
+            {
+                lp2 = po;
+                //curve lp1,c1,c2,lp2
+                p.cubicTo(c1,c2,lp2);
+                kc ++;
+                lp1 = lp2;
+            }
+        }
+    }
+    this->setPath(p);
+}
+
+void MyGraphicsCurveLineItem::rotateX()
+{
+    double rootx = getRect().x()+(getRect().width()/2);
+    rootx = rootx-pos().x();
+    QPainterPath p;
+    QPainterPath path = this->path();
+
+    QPointF lp1,lp2,c1,c2;
+    int kl = 0;
+    int kc = 0;
+    for (int i = 0; i < path.elementCount(); i++)
+    {
+        QPainterPath::Element element = path.elementAt(i);
+        QPointF po = element;
+        int x1,y1;
+        x1 = rootx*2-po.x();
+        y1 = po.y();
+        po.setX(x1);
+        po.setY(y1);
+        if (element.isMoveTo())
+        {
+            lp1 = po;
+            kl = 0;
+            p.moveTo(po);
+        }
+        else if (element.isLineTo())
+        {
+            if(kl == 0)
+            {
+                lp2 = po;
+                p.lineTo(po);
+                kl++;
+            }
+            else
+            {
+                lp1 = lp2;
+                lp2 = po;
+                p.lineTo(po);
+            }
+        }
+        else if(element.isCurveTo())
+        {
+            if(kl != 0)
+                lp1 = lp2;
+            c1 = po;
+            kc++;
+        }
+        else
+        {
+            if(kc%3==1)
+            {
+                c2 = po;
+                kc++;
+            }
+            else if(kc%3 == 2)
+            {
+                lp2 = po;
+                //curve lp1,c1,c2,lp2
+                p.cubicTo(c1,c2,lp2);
+                kc ++;
+                lp1 = lp2;
+            }
+        }
+    }
+    this->setPath(p);
+}
+
+
+QPainterPath MyGraphicsCurveLineItem::ViewPath(int kk)
 {
     QPainterPath p;
     QPainterPath path = this->path();

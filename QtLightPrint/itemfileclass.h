@@ -22,7 +22,7 @@ public:
     QString pixAdr;
     QString codetype = QString();
     double angle = 0;
-    int linenum = 0;
+    double space = 0;
     friend QDataStream& operator >>(QDataStream &in,ItemFileClass &t);
     friend QDataStream& operator <<(QDataStream &out,ItemFileClass &t);
     friend QDebug operator <<(QDebug& q,ItemFileClass&t);

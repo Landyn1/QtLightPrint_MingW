@@ -5,6 +5,16 @@
 class ThirdCurve
 {
 public:
+
+
+
+
+    QPointF start = QPointF();
+    QPointF c1 = QPointF();
+    QPointF c2;
+    QPointF end;
+
+
     ThirdCurve(QPointF st,QPointF c1,QPointF c2, QPointF end);
     double f(double t,double p0,double p1,double p2,double p3)
     {
@@ -12,10 +22,6 @@ public:
     }
     bool isOnLine(QLineF l , QPointF p);
     QList<QPointF> intersection(QLineF l);
-    QPointF start = QPointF();
-    QPointF c1 = QPointF();
-    QPointF c2;
-    QPointF end;
 };
 
 #endif // THIRDCURVE_H

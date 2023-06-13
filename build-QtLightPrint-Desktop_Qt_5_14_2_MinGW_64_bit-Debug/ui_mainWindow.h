@@ -239,6 +239,9 @@ public:
     QPushButton *buttombtn;
     QPushButton *visiblebtn;
     QPushButton *notvisiblebtn;
+    QPushButton *originbtn;
+    QPushButton *lockitembtn;
+    QPushButton *unlockitembtn;
 
     void setupUi(QMainWindow *mainWindowClass)
     {
@@ -1366,8 +1369,8 @@ public:
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_3);
         dockWidget_4 = new QDockWidget(mainWindowClass);
         dockWidget_4->setObjectName(QString::fromUtf8("dockWidget_4"));
-        dockWidget_4->setMinimumSize(QSize(250, 30));
-        dockWidget_4->setMaximumSize(QSize(250, 30));
+        dockWidget_4->setMinimumSize(QSize(340, 30));
+        dockWidget_4->setMaximumSize(QSize(340, 30));
         dockWidget_4->setStyleSheet(QString::fromUtf8(""));
         dockWidget_4->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar);
         dockWidget_4->setAllowedAreas(Qt::TopDockWidgetArea);
@@ -1375,7 +1378,7 @@ public:
         dockWidgetContents_10->setObjectName(QString::fromUtf8("dockWidgetContents_10"));
         widget_33 = new QWidget(dockWidgetContents_10);
         widget_33->setObjectName(QString::fromUtf8("widget_33"));
-        widget_33->setGeometry(QRect(0, 0, 210, 30));
+        widget_33->setGeometry(QRect(0, 0, 340, 30));
         widget_33->setMinimumSize(QSize(0, 30));
         widget_33->setMaximumSize(QSize(16777215, 30));
         horizontalLayout_25 = new QHBoxLayout(widget_33);
@@ -1431,6 +1434,27 @@ public:
         notvisiblebtn->setMaximumSize(QSize(30, 30));
 
         horizontalLayout_25->addWidget(notvisiblebtn);
+
+        originbtn = new QPushButton(widget_33);
+        originbtn->setObjectName(QString::fromUtf8("originbtn"));
+        originbtn->setMinimumSize(QSize(30, 30));
+        originbtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(originbtn);
+
+        lockitembtn = new QPushButton(widget_33);
+        lockitembtn->setObjectName(QString::fromUtf8("lockitembtn"));
+        lockitembtn->setMinimumSize(QSize(30, 30));
+        lockitembtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(lockitembtn);
+
+        unlockitembtn = new QPushButton(widget_33);
+        unlockitembtn->setObjectName(QString::fromUtf8("unlockitembtn"));
+        unlockitembtn->setMinimumSize(QSize(30, 30));
+        unlockitembtn->setMaximumSize(QSize(30, 30));
+
+        horizontalLayout_25->addWidget(unlockitembtn);
 
         dockWidget_4->setWidget(dockWidgetContents_10);
         mainWindowClass->addDockWidget(Qt::TopDockWidgetArea, dockWidget_4);
@@ -1580,6 +1604,9 @@ public:
         buttombtn->setText(QCoreApplication::translate("mainWindowClass", "\344\270\213", nullptr));
         visiblebtn->setText(QCoreApplication::translate("mainWindowClass", "\346\230\276\347\244\272", nullptr));
         notvisiblebtn->setText(QCoreApplication::translate("mainWindowClass", "\351\232\220\350\227\217", nullptr));
+        originbtn->setText(QCoreApplication::translate("mainWindowClass", "\345\216\237\347\202\271", nullptr));
+        lockitembtn->setText(QCoreApplication::translate("mainWindowClass", "\351\224\201\345\256\232", nullptr));
+        unlockitembtn->setText(QCoreApplication::translate("mainWindowClass", "\350\247\243\351\224\201", nullptr));
     } // retranslateUi
 
 };

@@ -3,6 +3,17 @@
 #include <QGraphicsRectItem>
 #include<qgraphicssceneevent.h>
 #include<qgraphicsscene.h>
+#include"mainWindow.h"
+#include"GraphicsItems/MyGraphicsCircleItem.h"
+#include"GraphicsItems/MyGraphicsEllipseItem.h"
+#include"GraphicsItems/MyGraphicsRecItem.h"
+#include"GraphicsItems/mygraphicslineitem.h"
+#include"GraphicsItems/mygraphicspolygonitem.h"
+#include"GraphicsItems/mygraphicstextitem.h"
+#include"GraphicsItems/mygraphicscurvelineitem.h"
+#include"GraphicsItems/mygraphicspixmapitem.h"
+#include"GraphicsItems/mygraphicscodeitem.h"
+#include"GraphicsItems/mygraphicsgroupitem.h"
 class ItemAdjust : public QGraphicsRectItem
 {
 public:
@@ -29,5 +40,6 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
+    void setitemad(mainWindow* mw);
 };
 

@@ -14,6 +14,7 @@
         <file>res/Rectangle.png</file>
         <file>res/RegularPolygon.png</file>
         <file>res/Select.png</file>
+        <file>res/lock.png</file>
     </qresource>
     <qresource prefix="/lan">
         <file>lang_English.qm</file>

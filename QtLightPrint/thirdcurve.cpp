@@ -2,7 +2,7 @@
 #include"QDebug"
 #include<math.h>
 #include<QApplication>
-#include"MyGraphicsView.h"
+#include"GraphicsItems/MyGraphicsView.h"
 ThirdCurve::ThirdCurve(QPointF st,QPointF c1,QPointF c2, QPointF end)
 {
     this->start = st;

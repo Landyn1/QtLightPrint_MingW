@@ -14,92 +14,102 @@ MOC_DIR += .
 OBJECTS_DIR += debug
 UI_DIR += .
 RCC_DIR += .
-HEADERS += ./CUDrvE.h \
-    ./ItemAdjust.h \
-    ./MyGraphicsCircleItem.h \
-    ./MyGraphicsEllipseItem.h \
-    ./MyGraphicsRecItem.h \
+HEADERS += ./ItemAdjust.h \
     ./PrintParams.h \
-    ./MyKedu.h \
-    ./MyMianArea.h \
-    ./MygraphicsLinePre.h \
-    ./MyleftKedu.h \
-    ./MyGraphicsScene.h \
-    ./MyGraphicsView.h \
     ./mainWindow.h \
-    CUDrvE.h \
-    CUDrvE_global.h \
-    ZXingWriter.h \
-    advancedwidget.h \
-    bottomdockwidget.h \
-    configtabwidget.h \
-    configtabwidgetarea.h \
-    configtabwidgetlasercontrol.h \
-    configtabwidgetother.h \
-    configtabwidgetport.h \
-    configtabwidgetred.h \
-    configwidget.h \
-    dialogcalculaterecommendvalues.h \
-    dialogcalculationratio.h \
-    dialogpasswordsetting.h \
-    itemfileclass.h \
-    mygraphicscodeitem.h \
-    mygraphicscurvelineitem.h \
-    mygraphicsgroupitem.h \
-    mygraphicsheplbrushrectitem.h \
-    mygraphicslineitem.h \
-    mygraphicspixmapitem.h \
-    mygraphicspolygonitem.h \
-    mygraphicstextitem.h \
-    mylabel.h \
-    thirdcurve.h \
-    widgetco2.h \
-    widgetfiber.h \
-    widgetuv.h \
-    widgetyag.h
+    FileHandel/itemfileclass.h \
+    FileHandel/pltfilehandle.h \
+    FileHandel/qlptfilehandle.h \
+    GraphicsItems/MyGraphicsCircleItem.h \
+    GraphicsItems/MyGraphicsEllipseItem.h \
+    GraphicsItems/MyGraphicsRecItem.h \
+    GraphicsItems/MyGraphicsScene.h \
+    GraphicsItems/MyGraphicsView.h \
+    GraphicsItems/MyKedu.h \
+    GraphicsItems/MyMianArea.h \
+    GraphicsItems/MygraphicsLinePre.h \
+    GraphicsItems/MyleftKedu.h \
+    GraphicsItems/mygraphicscodeitem.h \
+    GraphicsItems/mygraphicscurvelineitem.h \
+    GraphicsItems/mygraphicsgroupitem.h \
+    GraphicsItems/mygraphicslineitem.h \
+    GraphicsItems/mygraphicspixmapitem.h \
+    GraphicsItems/mygraphicspolygonitem.h \
+    GraphicsItems/mygraphicstextitem.h \
+    GraphicsItems/mylabel.h \
+    ItemHandle/itemalignhandle.h \
+    ItemHandle/itemprinthandle.h \
+    ItemHandle/itemsizehandle.h \
+    Widgets/advancedwidget.h \
+    Widgets/bottomdockwidget.h \
+    Widgets/configtabwidget.h \
+    Widgets/configtabwidgetarea.h \
+    Widgets/configtabwidgetlasercontrol.h \
+    Widgets/configtabwidgetother.h \
+    Widgets/configtabwidgetport.h \
+    Widgets/configtabwidgetred.h \
+    Widgets/configwidget.h \
+    Widgets/dialogcalculaterecommendvalues.h \
+    Widgets/dialogcalculationratio.h \
+    Widgets/dialogpasswordsetting.h \
+    Widgets/widgetco2.h \
+    Widgets/widgetfiber.h \
+    Widgets/widgetuv.h \
+    Widgets/widgetyag.h \
+    libsHeaders/CUDrvE.h \
+    libsHeaders/CUDrvE_global.h \
+    libsHeaders/ZXingWriter.h \
+    ./thirdcurve.h
+
+
 SOURCES += ./ItemAdjust.cpp \
-    ./MyGraphicsCircleItem.cpp \
-    ./MyGraphicsEllipseItem.cpp \
-    ./MyGraphicsRecItem.cpp \
-    ./MyGraphicsScene.cpp \
-    ./MyGraphicsView.cpp \
-    ./MyKedu.cpp \
-    ./MyMianArea.cpp \
-    ./MygraphicsLinePre.cpp \
-    ./MyleftKedu.cpp \
+    FileHandel/itemfileclass.cpp \
+    FileHandel/pltfilehandle.cpp \
+    FileHandel/qlptfilehandle.cpp \
+    GraphicsItems/MyGraphicsCircleItem.cpp \
+    GraphicsItems/MyGraphicsEllipseItem.cpp \
+    GraphicsItems/MyGraphicsRecItem.cpp \
+    GraphicsItems/MyGraphicsScene.cpp \
+    GraphicsItems/MyGraphicsView.cpp \
+    GraphicsItems/MyKedu.cpp \
+    GraphicsItems/MyMianArea.cpp \
+    GraphicsItems/MygraphicsLinePre.cpp \
+    GraphicsItems/MyleftKedu.cpp \
+    GraphicsItems/mygraphicscodeitem.cpp \
+    GraphicsItems/mygraphicscurvelineitem.cpp \
+    GraphicsItems/mygraphicsgroupitem.cpp \
+    GraphicsItems/mygraphicslineitem.cpp \
+    GraphicsItems/mygraphicspixmapitem.cpp \
+    GraphicsItems/mygraphicspolygonitem.cpp \
+    GraphicsItems/mygraphicstextitem.cpp \
+    GraphicsItems/mylabel.cpp \
+    ItemHandle/itemalignhandle.cpp \
+    ItemHandle/itemprinthandle.cpp \
+    ItemHandle/itemsizehandle.cpp \
+    Widgets/advancedwidget.cpp \
+    Widgets/bottomdockwidget.cpp \
+    Widgets/configtabwidget.cpp \
+    Widgets/configtabwidgetarea.cpp \
+    Widgets/configtabwidgetlasercontrol.cpp \
+    Widgets/configtabwidgetother.cpp \
+    Widgets/configtabwidgetport.cpp \
+    Widgets/configtabwidgetred.cpp \
+    Widgets/configwidget.cpp \
+    Widgets/dialogcalculaterecommendvalues.cpp \
+    Widgets/dialogcalculationratio.cpp \
+    Widgets/dialogpasswordsetting.cpp \
+    Widgets/widgetco2.cpp \
+    Widgets/widgetfiber.cpp \
+    Widgets/widgetuv.cpp \
+    Widgets/widgetyag.cpp \
+    ./PrintParams.cpp \
     ./main.cpp \
     ./mainWindow.cpp \
-    ./PrintParams.cpp \
-    advancedwidget.cpp \
-    bottomdockwidget.cpp \
-    configtabwidget.cpp \
-    configtabwidgetarea.cpp \
-    configtabwidgetlasercontrol.cpp \
-    configtabwidgetother.cpp \
-    configtabwidgetport.cpp \
-    configtabwidgetred.cpp \
-    configwidget.cpp \
-    dialogcalculaterecommendvalues.cpp \
-    dialogcalculationratio.cpp \
-    dialogpasswordsetting.cpp \
-    itemfileclass.cpp \
-    mygraphicscodeitem.cpp \
-    mygraphicscurvelineitem.cpp \
-    mygraphicsgroupitem.cpp \
-    mygraphicsheplbrushrectitem.cpp \
-    mygraphicslineitem.cpp \
-    mygraphicspixmapitem.cpp \
-    mygraphicspolygonitem.cpp \
-    mygraphicstextitem.cpp \
-    mylabel.cpp \
-    thirdcurve.cpp \
-    widgetco2.cpp \
-    widgetfiber.cpp \
-    widgetuv.cpp \
-    widgetyag.cpp
+    ./thirdcurve.cpp
+
+
 FORMS += ./mainWindow.ui
-RESOURCES += mainWindow.qrc \
-    mainWindow.qrc
+RESOURCES += mainWindow.qrc
 
 DISTFILES += \
     .editorconfig \
@@ -107,7 +117,9 @@ DISTFILES += \
     .qmake.stash \
     QtLightPrint.pri \
     QtLightPrint.pro.user \
-    cpp.hint
+    cpp.hint \
+    lang_English.qm \
+    lang_zh_CN.qm
 TRANSLATIONS += lang_English.ts\
                 lang_zh_CN.ts\
 

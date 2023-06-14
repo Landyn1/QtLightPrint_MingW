@@ -27,6 +27,9 @@ class QLabel;
 class QGraphicsPathItem;
 class QGraphicsLineItem;
 class ItemAdjust;
+class ItemChangeHandle;
+class ItemScaleHandle;
+class ItemSelectHandle;
 class MyGraphicsView  : public QGraphicsView
 {
 	Q_OBJECT
@@ -58,7 +61,9 @@ public:
     QPointF lastPos;
     double angle = 0;
     double space = 0 ;
-
+    ItemChangeHandle *itemchangehandler;
+    ItemScaleHandle *itemscalehandler;
+    ItemSelectHandle *itemselecthandler;
 
 
     MyGraphicsView(QWidget* parent = NULL);
@@ -71,21 +76,10 @@ public:
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    void save_lefttop();
-    //void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
-    void midtop_set(QPointF p1,QPointF p2);
-    void lefttop_set(QPointF p1,QPointF p2);
-    void righttop_set(QPointF p1,QPointF p2);
-    void leftbuttom_set(QPointF p1,QPointF p2);
-    void midbuttom_set(QPointF p1,QPointF p2);
-    void rightbuttom_set(QPointF p1,QPointF p2);
-    void leftmid_set(QPointF p1,QPointF p2);
-    void rightmid_set(QPointF p1,QPointF p2);
     void setItemAd(QList<QGraphicsItem*> items);
-    void setSelecT();
 
-private:
+public:
    // QMenu* _generalMenu;              // 主要的右键菜单
 
    // QPoint* _graphicsRightMousePos;    // 记录触发右键菜单的鼠标位置

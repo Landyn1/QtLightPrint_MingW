@@ -2,6 +2,7 @@
 #define ITEMPRINTHANDLE_H
 #include<QWidget>
 #include"mainWindow.h"
+
 #include<QObject>
 #include"GraphicsItems/MyGraphicsCircleItem.h"
 #include"GraphicsItems/MyGraphicsEllipseItem.h"

@@ -1428,6 +1428,8 @@ void mainWindow::initDrawConnect()
                     emit view->sceneChange();
                     view->item_id++;
                     view->row++;
+                    item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    item->setSelected(true);
                 }
             }
             setItemMoveble(false);

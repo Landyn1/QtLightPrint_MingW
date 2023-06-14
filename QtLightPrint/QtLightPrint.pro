@@ -38,7 +38,10 @@ HEADERS += ./ItemAdjust.h \
     GraphicsItems/mygraphicstextitem.h \
     GraphicsItems/mylabel.h \
     ItemHandle/itemalignhandle.h \
+    ItemHandle/itemchangehandle.h \
     ItemHandle/itemprinthandle.h \
+    ItemHandle/itemscalehandle.h \
+    ItemHandle/itemselecthandle.h \
     ItemHandle/itemsizehandle.h \
     Widgets/advancedwidget.h \
     Widgets/bottomdockwidget.h \
@@ -84,7 +87,10 @@ SOURCES += ./ItemAdjust.cpp \
     GraphicsItems/mygraphicstextitem.cpp \
     GraphicsItems/mylabel.cpp \
     ItemHandle/itemalignhandle.cpp \
+    ItemHandle/itemchangehandle.cpp \
     ItemHandle/itemprinthandle.cpp \
+    ItemHandle/itemscalehandle.cpp \
+    ItemHandle/itemselecthandle.cpp \
     ItemHandle/itemsizehandle.cpp \
     Widgets/advancedwidget.cpp \
     Widgets/bottomdockwidget.cpp \
